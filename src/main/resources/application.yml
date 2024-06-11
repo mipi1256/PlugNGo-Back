@@ -1,0 +1,83 @@
+#spring.application.name=final-project-java
+
+server:
+  port: 8181
+
+spring:
+  application:
+    name: final-project-java
+  datasource:
+    url: jdbc:mysql://192.168.0.17:3306/electric_db?serverTimezone=Asia/Seoul
+    username: finalproject
+    password: final
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+      database-platform: org.hibernate.dialect.MySQL8Dialect
+      hibernate:
+        ddl-auto: update
+      database: mysql
+  servlet:
+    multipart:
+      max-file-size: 10MB # 1?? ??? ?? ???
+      max-request-size: 20MB # ?? ??? ?? ???
+
+# swagger setting
+springdoc:
+  swagger-ui:
+    path: /myapi.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
