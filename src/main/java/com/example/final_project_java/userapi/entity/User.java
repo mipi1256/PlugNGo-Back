@@ -21,7 +21,7 @@ import static com.example.final_project_java.userapi.entity.Role.*;
 @Builder
 
 @Entity
-@Table(name = "tbl_user")
+@Table(name = "user")
 public class User {
 
    @Id
@@ -31,9 +31,11 @@ public class User {
 
    private String name;
 
+   @Column(nullable = false)
    private String nickName;
 
    @Email
+   @Column(nullable = false)
    private String email;
 
    private String password;
@@ -52,6 +54,11 @@ public class User {
    private int carNumber;
 
    private Year birthYear;
+
+   @Enumerated(EnumType.STRING)
+   private LoginMethod loginMethod;
+
+
 
 
 
