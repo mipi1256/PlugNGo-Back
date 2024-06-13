@@ -7,8 +7,8 @@ spring:
   application:
     name: final-project-java
   datasource:
-    url: jdbc:mysql://192.168.0.17:3306/electric_db?serverTimezone=Asia/Seoul
-    username: finalproject
+    url: jdbc:mysql://spring-database.cb6kkieswnlv.ap-northeast-2.rds.amazonaws.com:3306/plugngo?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: plugngo
     password: final
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
