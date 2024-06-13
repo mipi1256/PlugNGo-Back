@@ -7,8 +7,8 @@ spring:
   application:
     name: final-project-java
   datasource:
-    url: jdbc:mysql://192.168.0.17:3306/electric_db?serverTimezone=Asia/Seoul
-    username: finalproject
+    url: jdbc:mysql://spring-database.cb6kkieswnlv.ap-northeast-2.rds.amazonaws.com:3306/plugngo?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: plugngo
     password: final
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -26,7 +26,17 @@ springdoc:
   swagger-ui:
     path: /myapi.html
 
+google:
+  login:
+    url: https://accounts.google.com/o/oauth2/v2/auth?
+  redirect:
+    uri: http://localhost:8181/google/login/redirect
+  client:
+    id: 38359620790-3grahr6odqnthcc4hmvoaaknlc53to2l.apps.googleusercontent.com
+    secret: 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
 
+jwt:
+  secret: 3liVxSuFV6bJ2Udgs42idV0RDLI3cvAuhK6irsnEXi8IWHMD0Ia+a17WPPw7KY4Dd7uNyXbXa0VUKMA7DTK/IA==
 
 
 

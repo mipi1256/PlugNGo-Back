@@ -10,10 +10,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 @Entity
 @Table(name = "reservation_charger")
 public class ReservationCharger {
 
+    @Id
     private String chargingStationId; // 충전소 ID
 
     private String carId; // 차 ID
