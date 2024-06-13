@@ -1,5 +1,6 @@
 package com.example.final_project_java.car.entity;
 
+import com.example.final_project_java.userapi.entity.User;
 import com.google.api.client.util.DateTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,10 +27,11 @@ public class RentCar {
 
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "user_id")
-   private String userId;
+   private User userId;
 
    @OneToOne(fetch = FetchType.LAZY)
-   private String carId;
+   @JoinColumn(name = "car_id")
+   private Car carId;
 
    @CreationTimestamp
    private LocalDateTime rentDate;
