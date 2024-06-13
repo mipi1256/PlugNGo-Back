@@ -1,9 +1,8 @@
 package com.example.final_project_java.charger.Entity;
 
+import com.example.final_project_java.userapi.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Setter @Getter @ToString
 @EqualsAndHashCode
@@ -15,12 +14,19 @@ import java.time.LocalDateTime;
 public class ReservationCharger {
 
     @Id
-    private String chargingStationId; // 충전소 ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int chargeNo;
 
-    private String carId; // 차 ID
-
-    private LocalDateTime rentTime; // 예약 시간
+    private int rentTime; // 예약 시간 (분 단위)
 
     private int rentChargePrice; // 가격
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "charge_station_id")
+    private ChargingStation station;
 
 }
