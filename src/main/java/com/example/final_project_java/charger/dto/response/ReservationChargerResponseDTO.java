@@ -5,7 +5,6 @@ import lombok.*;
 @Setter @Getter @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 public class ReservationChargerResponseDTO {
 
