@@ -61,6 +61,9 @@ public class User {
 
    private String accessToken; // 소셜 로그인 시 발급받는 accessToken을 저장 -> 로그아웃 때 필요
 
+   // 구글
+   private String provider;
+   private String providerId;
 
    // access token 저장 필드
    public void changeAccessToken(String accessToken) {

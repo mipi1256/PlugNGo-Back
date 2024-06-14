@@ -4,6 +4,8 @@ import com.example.final_project_java.userapi.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Setter @Getter @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class ReservationCharger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chargeNo;
 
-    private int rentTime; // 예약 시간 (분 단위)
+    private LocalDateTime rentTime; // 예약 날짜와 시간
 
     private int rentChargePrice; // 가격
 

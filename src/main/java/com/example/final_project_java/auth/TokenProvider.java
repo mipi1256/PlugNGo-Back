@@ -28,7 +28,8 @@ public class TokenProvider {
     * @param userEntity - 토큰의 내용(클레임)에 포함될 유저 정보
     * @return - 생성된 JSON을 암호화 한 토큰값
     */
-   public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit ) {
+
+   public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
             Instant.now().plus(1, ChronoUnit.DAYS)
@@ -62,9 +63,9 @@ public class TokenProvider {
    // 토큰에서 클레임을 추출하는 로직을 분리
    private Claims getClaims(String token, String secretKey) {
       Claims claims = Jwts.parserBuilder()
-              .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-              .build()
-              .parseClaimsJws(token).getBody();
+            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .build()
+            .parseClaimsJws(token).getBody();
       return claims;
    }
 
@@ -81,10 +82,10 @@ public class TokenProvider {
       log.info("claims: {}", claims);
 
       return TokenUserInfo.builder()
-              .userId(claims.getSubject())
-              .email(claims.get("email", String.class))
-              .role(Role.valueOf(claims.get("role", String.class)))
-              .build();
+            .userId(claims.getSubject())
+            .email(claims.get("email", String.class))
+            .role(Role.valueOf(claims.get("role", String.class)))
+            .build();
    }
 
 }
