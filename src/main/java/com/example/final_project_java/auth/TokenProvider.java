@@ -18,7 +18,7 @@ import java.util.Map;
 @Slf4j
 public class TokenProvider {
 
-   @Value("${jwt.secret}")
+//   @Value("${jwt.secret}")
    private String SECRET_KEY;
 
    /**
