@@ -58,6 +58,10 @@ public class User {
    @Enumerated(EnumType.STRING)
    private LoginMethod loginMethod;
 
+   // 구글
+   private String provider;
+   private String providerId;
+
 
 
 
