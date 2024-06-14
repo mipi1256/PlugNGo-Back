@@ -14,8 +14,7 @@ public class ChargingStation {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    private int chargeId;
 
     @Column(name = "charge_station_id")
     private String stationId; // 충전소 ID
@@ -29,7 +28,6 @@ public class ChargingStation {
     private String chargerType; // 충전기 타입
     private int chargingPrice; // 가격
     private String facilities; // 이용 시설
-    private String timeAvailable; // 충전 가능 시간
     private String availability; // 충전 가능 유무 (이용 가능 / 이용자 제한)
     private String latitude; // 위도
     private String longitude; // 경도
