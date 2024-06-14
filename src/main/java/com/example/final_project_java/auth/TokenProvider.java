@@ -1,6 +1,8 @@
 package com.example.final_project_java.auth;
 
+import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -18,7 +20,7 @@ import java.util.Map;
 @Slf4j
 public class TokenProvider {
 
-//   @Value("${jwt.secret}")
+   @Value("${jwt.secret}")
    private String SECRET_KEY;
 
    /**
@@ -26,7 +28,7 @@ public class TokenProvider {
     * @param userEntity - 토큰의 내용(클레임)에 포함될 유저 정보
     * @return - 생성된 JSON을 암호화 한 토큰값
     */
-   public String createToken(User userEntity) {
+   public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
             Instant.now().plus(1, ChronoUnit.DAYS)
@@ -51,6 +53,38 @@ public class TokenProvider {
             .setClaims(claims)
             .compact();
 
+   }
+
+   public String createAccessKey(User userEntity) {
+      return createToken(userEntity, SECRET_KEY, 5, ChronoUnit.HOURS);
+   }
+
+   // 토큰에서 클레임을 추출하는 로직을 분리
+   private Claims getClaims(String token, String secretKey) {
+      Claims claims = Jwts.parserBuilder()
+            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .build()
+            .parseClaimsJws(token).getBody();
+      return claims;
+   }
+
+   /**
+    * 클라이언트가 전송한 토큰을 디코딩하여 토큰의 위조 여부를 확인
+    * 토큰을 json으로 파싱해서 클레임(토큰 정보)을 리턴
+    *
+    * @param token - 필터가 전달해 준 토큰
+    * @return - 토큰 안에 있는 인증된 유저 정보를 반환
+    */
+   public TokenUserInfo validateAndGetTokenUserInfo(String token) {
+      Claims claims = getClaims(token, SECRET_KEY);
+
+      log.info("claims: {}", claims);
+
+      return TokenUserInfo.builder()
+            .userId(claims.getSubject())
+            .email(claims.get("email", String.class))
+            .role(Role.valueOf(claims.get("role", String.class)))
+            .build();
    }
 
 }

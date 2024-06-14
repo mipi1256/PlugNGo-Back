@@ -40,7 +40,7 @@ public class User {
 
    private String password;
 
-   private int phoneNumber;
+   private String phoneNumber;
 
    @Enumerated(EnumType.STRING)
    @Builder.Default
@@ -57,6 +57,10 @@ public class User {
 
    @Enumerated(EnumType.STRING)
    private LoginMethod loginMethod;
+
+   // 구글
+   private String provider;
+   private String providerId;
 
 
 
