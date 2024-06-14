@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Date;
 
 import static com.example.final_project_java.userapi.entity.Role.*;
 
@@ -40,7 +41,7 @@ public class User {
 
    private String password;
 
-   private int phoneNumber;
+   private String phoneNumber;
 
    @Enumerated(EnumType.STRING)
    @Builder.Default
@@ -58,10 +59,13 @@ public class User {
    @Enumerated(EnumType.STRING)
    private LoginMethod loginMethod;
 
+   private String accessToken; // 소셜 로그인 시 발급받는 accessToken을 저장 -> 로그아웃 때 필요
 
 
-
-
+   // access token 저장 필드
+   public void changeAccessToken(String accessToken) {
+      this.accessToken = accessToken;
+   }
 
 
 
