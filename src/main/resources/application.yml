@@ -26,6 +26,34 @@ springdoc:
   swagger-ui:
     path: /myapi.html
 
+jwt:
+  secret: w9uTOtlPQvRzj7vv6FmF3/2K79DHTFsjUfQ2BDyoYwlGIUhze3cPG7zgq9DYq4sWpk05RGsVIdEXiZNgfIdiVw==
+
+request:
+  permit-all-patterns:
+    - /
+    - /car/**
+    - /api/auth/**
+    - /api/board/list
+    - /api/board/detail/**
+    - /login/**
+    - /charge/**
+
+# kakao login
+kakao:
+  client_id: c5dad018ecb6e841a078eaf95dc88336
+  redirect_url: http://localhost:3000/oauth/kakao
+  client_secret: eanoHKJ7M6Z0vKpHsHSj1eqNkhNECVBK
+
+# naver login
+naver:
+  client_id: Gjv33ITkKHcgByVmXeCs
+  redirect_url: http://localhost:3000/oauth/naver
+  client_secret: h40BqSHUw0
+
+message:
+  API_KEY: NCS65OKWNUYJ571O
+  SECRET_KEY: KBIXE9FNNESONSCWWZXZJA0Q3NVYZQGO
 
 
 

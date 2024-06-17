@@ -95,7 +95,7 @@ public class CarController {
 
 
    // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드
-   private static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {
+   public static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {
       if (result.hasErrors()) { // 입력값 검증 단계에서 문제가 있었다면 true
          List<FieldError> fieldErrors = result.getFieldErrors();
          fieldErrors.forEach(err -> {

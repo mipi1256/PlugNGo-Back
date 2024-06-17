@@ -17,7 +17,10 @@ public class ReservationCharger {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int chargeNo;
+    private int chargeNo; // 예약 순서
+
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    private String reservationNo; // 예약 번호
 
     private LocalDateTime rentTime; // 예약 날짜와 시간
 
@@ -25,10 +28,10 @@ public class ReservationCharger {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user; // 회원 ID, 핸드폰 번호
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "charge_station_id")
-    private ChargingStation station;
+    @JoinColumn(name = "id")
+    private ChargingStation station; // 충전소 ID
 
 }
