@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,12 +31,13 @@ public class CarService {
    public CarListResponseDTO create(final CarCreateRequestDTO requestDTO, final String userId) {
       User user = getUser(userId);
 
-      if (user.getRole() == Role.ADMIN) {
-         carRepository.save(requestDTO.toEntity(user));
+      if (user.getRole() != Role.ADMIN) {
+         log.warn("권한 없습니다! 나가주세요");
+         throw new RuntimeException("추가 권한 없습니다!");
       }
 
-      return retrieve(userId);
-
+      carRepository.save(requestDTO.toEntity(user));
+      return getList();
    }
 
    // 전기차 목록
@@ -54,13 +56,28 @@ public class CarService {
    }
 
 
-
    // 전기차 상세보기 가져오기
    public CarListResponseDTO retrieve(String carId) {
 
+      Car car = carRepository.findById(carId).orElseThrow(
+            () -> {
+               log.info("ID 업습니니다, ID: {}", carId);
+               throw new RuntimeException("Car with the given ID not found");
+            }
+      );
+
+      CarDetailResponseDTO carDetailResponseDTO = new CarDetailResponseDTO(car);
+
+      List<CarDetailResponseDTO> dtoList = Collections.singletonList(carDetailResponseDTO);
+
+      return CarListResponseDTO.builder()
+            .carList(dtoList)
+            .build();
+
+      /*
       Car car = getCar(carId);
 
-      List<Car> entityList = carRepository.findAll();
+      Optional<Car> entityList = carRepository.findById(carId);
 
       List<CarDetailResponseDTO> dtoList = entityList.stream()
             .map(CarDetailResponseDTO::new)
@@ -69,27 +86,25 @@ public class CarService {
       return CarListResponseDTO.builder()
             .carList(dtoList)
             .build();
-
+      */
    }
 
    // 전기차 아이디 통해서 불러오기
    private Car getCar(String carId) {
-      Car car = carRepository.findById(carId).orElseThrow(
-            () -> new RuntimeException("전기차 정보가 없습니다.")
+      return carRepository.findById(carId).orElseThrow(
+            () -> new RuntimeException("조회 차 없습니다" + carId)
       );
-      return car;
    }
 
    // 사용자 Role 통해서 정보 불러오기
    public User getUser(String userId) {
-      User user = userRepository.findById(userId).orElseThrow(
+      return userRepository.findById(userId).orElseThrow(
             () -> new RuntimeException("회원 정보가 없습니다.")
       );
-      return user;
    }
 
    // 전기차 삭제
-   public CarListResponseDTO delete(final String carId, final String userId){
+   public CarListResponseDTO delete(final String carId, final String userId) {
 
       Car car = carRepository.findById(carId).orElseThrow(
             () -> {
@@ -98,19 +113,29 @@ public class CarService {
             }
       );
       carRepository.deleteById(carId);
-
-      return retrieve(userId);
-
-
+      return getList();
    }
 
 
    public CarListResponseDTO update(final CarModifyRequestDTO requestDTO, final String userId) {
-      Optional<Car> targetEntity = carRepository.findById(requestDTO.getCarId());
+      Car car = carRepository.findById(requestDTO.getCarId()).orElseThrow(
+            () -> {
+               log.info("수정할 전기차 없습니다.");
+               throw new RuntimeException("수정할 차 없습니다.");
+            }
+      );
 
-      targetEntity.ifPresent(carRepository::save);
+      car.setCarName(requestDTO.getCarName());
+      car.setCarCompany(requestDTO.getCarCompany());
+      car.setMaximumPassenger(requestDTO.getMaximumPassenger());
+      car.setCarYear(requestDTO.getCarYear());
+      car.setCarPrice(requestDTO.getCarPrice());
+      car.setCarPicture(requestDTO.getCarPicture());
+      car.setCarOptions(requestDTO.getCarOptions());
 
-      return retrieve(userId);
+      carRepository.save(car);
+
+      return getList();
 
 
    }
