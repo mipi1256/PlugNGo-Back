@@ -22,6 +22,7 @@ import static com.example.final_project_java.userapi.entity.Role.*;
 
 @Entity
 @Table(name = "user")
+@IdClass(UserId.class)
 public class User {
 
    @Id
@@ -29,13 +30,14 @@ public class User {
    @GeneratedValue(strategy = GenerationType.UUID)
    private String id;
 
+   @Column(nullable = false)
    private String name;
 
-   @Column(nullable = false)
    private String nickName;
 
    @Email
-   @Column(nullable = false)
+   @Id
+   @Column(name = "email", nullable = false)
    private String email;
 
    private String password;
@@ -51,21 +53,20 @@ public class User {
 
    private String profilePicture;
 
-   private int carNumber;
-
    private Year birthYear;
 
+   @Id
+   @Column(name = "login_method")
    @Enumerated(EnumType.STRING)
    private LoginMethod loginMethod;
 
-   // 구글
-   private String provider;
-   private String providerId;
+   private String accessToken; // 소셜 로그인 시 발급받는 accessToken을 저장 -> 로그아웃 때 필요
 
 
-
-
-
+   // access token 저장 필드
+   public void changeAccessToken(String accessToken) {
+      this.accessToken = accessToken;
+   }
 
 
 

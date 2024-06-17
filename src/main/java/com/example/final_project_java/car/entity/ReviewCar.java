@@ -25,12 +25,16 @@ public class ReviewCar {
    private int rCarNo;
 
    @ManyToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "user_id")
-   private User userId;
+   @JoinColumns({
+           @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+           @JoinColumn(name = "email", referencedColumnName = "email"),
+           @JoinColumn(name = "login_method", referencedColumnName = "login_method")
+   })
+   private User user;
 
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "car_id")
-   private Car carId;
+   private Car car;
 
    private String rentCarPicture;
 

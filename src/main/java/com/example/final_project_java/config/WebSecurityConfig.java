@@ -61,8 +61,11 @@ public class WebSecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
                   authorizeRequests
-                        .requestMatchers(HttpMethod.PATCH, "/car").hasAnyRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/car/{id}").hasAnyRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/car").authenticated()
 //                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
 //                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()

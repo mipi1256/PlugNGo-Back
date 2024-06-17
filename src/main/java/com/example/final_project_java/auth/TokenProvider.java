@@ -28,6 +28,7 @@ public class TokenProvider {
     * @param userEntity - 토큰의 내용(클레임)에 포함될 유저 정보
     * @return - 생성된 JSON을 암호화 한 토큰값
     */
+
    public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(

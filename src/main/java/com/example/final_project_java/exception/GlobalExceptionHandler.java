@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
 
    @ExceptionHandler({RuntimeException.class, NoRegisteredArgumentException.class})
    public ResponseEntity<?> handleRuntimeException(RuntimeException e) {
+      e.printStackTrace();
       return ResponseEntity.badRequest().body(e.getMessage());
    }
 
