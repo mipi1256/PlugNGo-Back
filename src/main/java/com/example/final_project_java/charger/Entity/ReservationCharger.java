@@ -24,7 +24,11 @@ public class ReservationCharger {
     private int rentChargePrice; // 가격
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumns({
+            @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            @JoinColumn(name = "email", referencedColumnName = "email"),
+            @JoinColumn(name = "login_method", referencedColumnName = "login_method")
+    })
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)

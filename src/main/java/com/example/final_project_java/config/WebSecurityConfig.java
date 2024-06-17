@@ -61,6 +61,8 @@ public class WebSecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
                   authorizeRequests
+                        .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/car").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/car/{id}").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/car").authenticated()
@@ -68,7 +70,7 @@ public class WebSecurityConfig {
                         .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                         .permitAll()
                         // 위에서 따로 설정하지 않은 나머지 요청들은 권한 검사가 필요하다.
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
             )
             .exceptionHandling(ExceptionHandling -> {
                // 인증 과정에서 예외가 발생한 경우 예외를 전달한다. (401)
