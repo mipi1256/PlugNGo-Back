@@ -1,5 +1,6 @@
 package com.example.final_project_java.userapi.dto.response;
 
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -44,6 +45,7 @@ public class KakaoUserDTO {
                 .password("password!")
                 .profilePicture(this.kakaoAccount.profile.profileImageUrl)
                 .accessToken(accessToken)
+                .loginMethod(LoginMethod.KAKAO)
                 .build();
     }
 

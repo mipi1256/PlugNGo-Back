@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class KakaoService {
 
     private final UserRepository userRepository;
@@ -99,7 +101,7 @@ public class KakaoService {
         // 요청 보내기
         RestTemplate template = new RestTemplate();
         ResponseEntity<KakaoUserDTO> responseEntity
-                = template.exchange(requestURI, HttpMethod.POST, new HttpEntity<>(headers), KakaoUserDTO.class);
+                = template.exchange(requestURI, HttpMethod.GET, new HttpEntity<>(headers), KakaoUserDTO.class);
 
         // 응답 바디 꺼내기
         KakaoUserDTO responseData = responseEntity.getBody();
