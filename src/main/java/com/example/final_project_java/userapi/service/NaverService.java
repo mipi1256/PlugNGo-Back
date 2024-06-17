@@ -1,13 +1,13 @@
 package com.example.final_project_java.userapi.service;
 
 import com.example.final_project_java.auth.TokenProvider;
-import com.example.final_project_java.userapi.dto.response.KakaoUserDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
+import com.example.final_project_java.userapi.dto.response.NaverUserDTO;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,14 +26,14 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class KakaoService {
+public class NaverService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
             log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;
@@ -48,34 +48,34 @@ public class KakaoService {
         return token;
     }
 
-    //  카카오 토큰 받을때 필요한 것
-    @Value("${kakao.client_id}")
-    private String KAKAO_CLIENT_ID;
+    // 네이버 토큰 받을때 필요한 것
+    @Value("${naver.client_id}")
+    private String NAVER_CLIENT_ID;
 
-    @Value("${kakao.redirect_url}")
-    private String KAKAO_REDIRECT_URL;
+    @Value("${naver.redirect_url}")
+    private String NAVER_REDIRECT_URL;
 
-    @Value("${kakao.client_secret}")
-    private String KAKAO_CLIENT_SECRET;
+    @Value("${naver.client_secret}")
+    private String NAVER_CLIENT_SECRET;
 
 
     // 사용자 정보 얻어오는 호출 등 사용
-    public LoginResponseDTO kakaoService (String code) {
-        // 인가 코드를 통해 토큰 발급 받기
-        String accessToken = getKakaoAccessToken(code);
-        log.info("access_token:{} ", accessToken);
+    public LoginResponseDTO naverService(String code, String state) {
 
-        //토큰을 통해 사용자 정보 가져오기
-        KakaoUserDTO userDTO = getKakaoUserInfo(accessToken);
+        String accessToken = getNaverAccessToken(code, state);
+        log.info("access_token: {}", accessToken);
 
-        // 카카오 로그인 이메일 중복 체크
+        // 토큰을 통해 사용자 정보 가져오기
+        NaverUserDTO userDTO = getNaverUserInfo(accessToken);
+
+        // 네이버 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
-        if(!isDuplicate(userDTO.getKakaoAccount().getEmail())) {
+        if(!isDuplicate(userDTO.getNaverAccount().getEmail())) {
             User saved = userRepository.save(userDTO.toEntity(accessToken));
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
         User foundUser
-                = userRepository.findByEmail(userDTO.getKakaoAccount().getEmail()).orElseThrow();
+                = userRepository.findByEmail(userDTO.getNaverAccount().getEmail()).orElseThrow();
 
         // 우리 사이트에서 사용하는 jwt를 생성.
         Map<String, String> token = getTokenMap(foundUser);
@@ -89,32 +89,31 @@ public class KakaoService {
     }
 
     // 사용자 정보 가져오기
-    private KakaoUserDTO getKakaoUserInfo(String accessToken) {
+    private NaverUserDTO getNaverUserInfo(String accessToken) {
         // 요청 uri
-        String requestURI = "https://kapi.kakao.com/v2/user/me";
+        String redirectURI = "https://openapi.naver.com/v1/nid/me";
 
-        // 요청 헤더
+        // 요청헤더
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // 요청 보내기
         RestTemplate template = new RestTemplate();
-        ResponseEntity<KakaoUserDTO> responseEntity
-                = template.exchange(requestURI, HttpMethod.GET, new HttpEntity<>(headers), KakaoUserDTO.class);
+        ResponseEntity<NaverUserDTO> responseEntity
+                = template.exchange(redirectURI, HttpMethod.GET, new HttpEntity<>(headers), NaverUserDTO.class );
+
 
         // 응답 바디 꺼내기
-        KakaoUserDTO responseData = responseEntity.getBody();
+        NaverUserDTO responseData = responseEntity.getBody();
         log.info("user profile:{}", responseData);
 
         return responseData;
-
     }
 
     // 토큰만 뽑는 부분
-    private String getKakaoAccessToken(String code) {
+    private String getNaverAccessToken(String code, String state) {
         // 요청 uri
-        String requestURI = "https://kauth.kakao.com/oauth/token";
+        String requestURI = "https://nid.naver.com/oauth2.0/token";
 
         // 요청 헤더
         HttpHeaders headers = new HttpHeaders();
@@ -122,11 +121,12 @@ public class KakaoService {
 
         // 요청 바디(파라미터) 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code"); // 카카오 공식 문서 기준 값으로 세팅
-        params.add("client_id", KAKAO_CLIENT_ID); // 카카오 디벨로퍼 REST API 키
-        params.add("redirect_uri", KAKAO_REDIRECT_URL); // 카카오 디벨로퍼 등록된 redirect uri
+        params.add("grant_type", "authorization_code"); // 네이버 공식 문서 기준 값으로 세팅
+        params.add("client_id", NAVER_CLIENT_ID); // 네이버 디벨로퍼 REST API 키
+        params.add("client_secret", NAVER_CLIENT_SECRET); // 네이버 디벨로퍼 client secret
+        params.add("redirect_uri", NAVER_REDIRECT_URL); // 네이버 디벨로퍼 등록된 redirect uri
         params.add("code", code); // 프론트에서 인가 코드 요청시 전달받은 코드값
-        params.add("client_secret", KAKAO_CLIENT_SECRET); // 카카오 디벨로퍼 client secret(활성화 시 추가해 줘야 함)
+        params.add("state", state); // 프론트에서 인가 코드 요청시 전달받은 state값
 
         // 헤더와 바디 정보를 합치기 위해 HttpEntity 객체 생성
         HttpEntity<Object> requestEntity = new HttpEntity<>(params, headers);
