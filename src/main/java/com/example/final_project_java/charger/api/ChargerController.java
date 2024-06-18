@@ -1,22 +1,17 @@
 package com.example.final_project_java.charger.api;
 
-import com.example.final_project_java.auth.TokenUserInfo;
-import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.charger.dto.request.ReservationChargerModifyRequestDTO;
 import com.example.final_project_java.charger.dto.request.ReservationChargerRequestDTO;
+import com.example.final_project_java.charger.dto.request.PageDTO;
 import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
 import com.example.final_project_java.charger.service.ChargerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -28,10 +23,10 @@ public class ChargerController {
 
     // 충전소 목록 요청
     @GetMapping
-    public ResponseEntity<?> retrieveChargerList() {
-        log.info("/charge : GET!");
+    public ResponseEntity<?> retrieveChargerList(PageDTO pageDTO) {
+        log.info("/charge?page={}&size={}", pageDTO.getPage(), pageDTO.getSize());
 
-        ChargerListResponseDTO responseDTO = chargerService.retrieve();
+        ChargerListResponseDTO responseDTO = chargerService.retrieve(pageDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
