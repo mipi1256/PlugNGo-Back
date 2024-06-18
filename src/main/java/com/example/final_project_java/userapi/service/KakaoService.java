@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.service;
 import com.example.final_project_java.auth.TokenProvider;
 import com.example.final_project_java.userapi.dto.response.KakaoUserDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class KakaoService {
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
             log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;
