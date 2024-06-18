@@ -48,40 +48,44 @@ public class ChargerController {
 //        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
 //        if (validatedResult != null) return validatedResult;
 
-        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getUserId(), requestDTO.getId());
+        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getEmail(), requestDTO.getId());
         return ResponseEntity.ok().body(responseDTO);
     }
 
     // 충전소 예약 취소
-//    @DeleteMapping("/reservation/{chargeNo}")
-//    public ResponseEntity<?> deleteReservation(
-//            @PathVariable("no") int chargeNo
-//    ) {
-//        log.info("/charge/reservation/{} : DELETE", chargeNo);
-//
-//        try {
-//            ReservationChargerResponseDTO responseDTO = chargerService.delete(chargeNo);
-//            return ResponseEntity.ok().body(responseDTO);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @DeleteMapping("/reservation/{no}")
+    public ResponseEntity<?> deleteReservation(
+            @PathVariable("no") String chargeNo
+    ) {
+        log.info("/charge/reservation/{} : DELETE", chargeNo);
+
+        if (chargeNo == null || chargeNo.trim().equals("")) {
+            return ResponseEntity.badRequest().body("ID를 전달해 주세요!");
+        }
+
+        try {
+            ReservationChargerResponseDTO responseDTO = chargerService.delete(chargeNo);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     // 충전소 예약 변경
-//    @PatchMapping
-//    public ResponseEntity<?> updateReservation(
-//            @Validated @RequestBody ReservationChargerModifyRequestDTO requestDTO,
-//            BindingResult result
-//    ) {
-////        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-////        if (validatedResult != null) return validatedResult;
-//
-//        try {
-//            return ResponseEntity.ok().body(chargerService.update(requestDTO));
-//        } catch (Exception e) {
-//            return ResponseEntity.internalServerError()
-//                    .body(e.getMessage());
-//        }
-//    }
+    @PatchMapping("/reservation")
+    public ResponseEntity<?> updateReservation(
+            @Validated @RequestBody ReservationChargerModifyRequestDTO requestDTO,
+            BindingResult result
+    ) {
+//        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+//        if (validatedResult != null) return validatedResult;
+
+        try {
+            return ResponseEntity.ok().body(chargerService.update(requestDTO, requestDTO.getChargeNo()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(e.getMessage());
+        }
+    }
 
 }

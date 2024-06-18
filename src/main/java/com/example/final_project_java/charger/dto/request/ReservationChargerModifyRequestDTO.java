@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ReservationChargerModifyRequestDTO {
 
     @NotBlank
-    private int chargeNo;
+    private String chargeNo;
 
     private LocalDateTime rentTime;
 
