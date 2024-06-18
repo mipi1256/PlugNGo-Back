@@ -99,7 +99,7 @@ public class KakaoService {
         // 요청 보내기
         RestTemplate template = new RestTemplate();
         ResponseEntity<KakaoUserDTO> responseEntity
-                = template.exchange(requestURI, HttpMethod.POST, new HttpEntity<>(headers), KakaoUserDTO.class);
+                = template.exchange(requestURI, HttpMethod.GET, new HttpEntity<>(headers), KakaoUserDTO.class);
 
         // 응답 바디 꺼내기
         KakaoUserDTO responseData = responseEntity.getBody();
