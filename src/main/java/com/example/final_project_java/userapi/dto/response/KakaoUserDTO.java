@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 
@@ -38,11 +39,11 @@ public class KakaoUserDTO {
         }
     }
 
-    public User toEntity(String accessToken) {
+    public User toEntity(String accessToken, PasswordEncoder passwordEncoder) {
         return User.builder()
                 .email(this.kakaoAccount.email)
                 .name(this.kakaoAccount.profile.nickname)
-                .password("password!")
+                .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
                 .profilePicture(this.kakaoAccount.profile.profileImageUrl)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.KAKAO)

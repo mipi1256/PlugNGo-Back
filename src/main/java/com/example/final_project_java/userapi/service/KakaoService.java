@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.service;
 import com.example.final_project_java.auth.TokenProvider;
 import com.example.final_project_java.userapi.dto.response.KakaoUserDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -30,10 +32,12 @@ public class KakaoService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
+
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
             log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;
@@ -71,7 +75,7 @@ public class KakaoService {
         // 카카오 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
         if(!isDuplicate(userDTO.getKakaoAccount().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken));
+            User saved = userRepository.save(userDTO.toEntity(accessToken, passwordEncoder));
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
         User foundUser
