@@ -2,18 +2,23 @@ package com.example.final_project_java.charger.service;
 
 import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.charger.Entity.ReservationCharger;
+import com.example.final_project_java.charger.dto.request.PageDTO;
 import com.example.final_project_java.charger.dto.request.ReservationChargerModifyRequestDTO;
 import com.example.final_project_java.charger.dto.request.ReservationChargerRequestDTO;
 import com.example.final_project_java.charger.dto.response.ChargerDetailResponseDTO;
 import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
+import com.example.final_project_java.charger.dto.response.pageResponseDTO;
 import com.example.final_project_java.charger.repository.ChargerRepository;
 import com.example.final_project_java.charger.repository.ReservationChargerRepository;
 import com.example.final_project_java.userapi.entity.User;
-import com.example.final_project_java.userapi.entity.UserId;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +37,28 @@ public class ChargerService {
     private final ReservationChargerRepository reservationRepository;
 
     // 전국 전기차 충전소 목록
-    public ChargerListResponseDTO retrieve() {
-        List<ChargingStation> entityList = chargerRepository.findAll();
+    public ChargerListResponseDTO retrieve(PageDTO dto) {
 
-        List<ChargerDetailResponseDTO> dtoList = entityList.stream()
+        // Pageable 객체 생성
+        Pageable pageable = PageRequest.of(
+                dto.getPage() - 1,
+                dto.getSize(),
+                Sort.by("address").ascending()
+        );
+
+        Page<ChargingStation> stations = chargerRepository.findAll(pageable);
+
+        List<ChargingStation> stationList = stations.getContent();
+
+        List<ChargerDetailResponseDTO> detailList
+                = stationList.stream()
                 .map(ChargerDetailResponseDTO::new)
                 .toList();
 
         return ChargerListResponseDTO.builder()
-                .chargers(dtoList)
+                .count(detailList.size())
+                .pageInfo(new pageResponseDTO(stations))
+                .stations(detailList)
                 .build();
     }
 

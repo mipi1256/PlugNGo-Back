@@ -37,7 +37,7 @@ public class ReservationCharger {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "charge_id")
     private ChargingStation station; // 충전소 ID
 
 }
