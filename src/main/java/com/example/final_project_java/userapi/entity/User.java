@@ -11,7 +11,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.util.Date;
 
 import static com.example.final_project_java.userapi.entity.Role.*;
 
@@ -23,6 +22,7 @@ import static com.example.final_project_java.userapi.entity.Role.*;
 
 @Entity
 @Table(name = "user")
+@IdClass(UserId.class)
 public class User {
 
    @Id
@@ -30,12 +30,14 @@ public class User {
    @GeneratedValue(strategy = GenerationType.UUID)
    private String id;
 
+   @Column(nullable = false)
    private String name;
 
    private String nickName;
 
    @Email
-   @Column(nullable = false)
+   @Id
+   @Column(name = "email", nullable = false)
    private String email;
 
    private String password;
@@ -53,6 +55,8 @@ public class User {
 
    private Year birthYear;
 
+   @Id
+   @Column(name = "login_method")
    @Enumerated(EnumType.STRING)
    private LoginMethod loginMethod;
 

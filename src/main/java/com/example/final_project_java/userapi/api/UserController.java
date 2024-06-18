@@ -4,6 +4,7 @@ import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDT
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.service.GoogleService;
 import com.example.final_project_java.userapi.service.KakaoService;
+import com.example.final_project_java.userapi.service.NaverService;
 import com.example.final_project_java.userapi.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.Response;
-import retrofit2.http.POST;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +26,13 @@ public class UserController {
    private final UserService userService;
 
    private final KakaoService kakaoService;
+   private final NaverService naverService;
+
 
    private final GoogleService googleService;
 
+
+   // 카카오 로그인
    @GetMapping("/kakaoLogin")
    public ResponseEntity<?> kakaoLogin(String code) {
       log.info("/api/auth/kakoLogin - GET code: {}", code);
@@ -37,8 +40,17 @@ public class UserController {
 
       return ResponseEntity.ok().body(responseDTO);
    }
+  
+   // 네이버 로그인
+   @GetMapping("/naverLogin")
+   public ResponseEntity<?> naverLogin(String code, String state) {
+      log.info("/api/auth/kakoLogin - GET code: {}, state: {}", code, state);
+      LoginResponseDTO responseDTO = naverService.naverService(code, state);
 
-   // 구글 토큰 받을때 필요한 것
+      return ResponseEntity.ok().body(responseDTO);
+   }
+  
+  // 구글 토큰 받을때 필요한 것
    @Value("${sns.google.login.url}")
    private String googleLogin;
 
@@ -60,6 +72,7 @@ public class UserController {
       return ResponseEntity.ok().body(responseDTO);
 
    }
+
 
 
 

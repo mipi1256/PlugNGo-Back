@@ -1,13 +1,11 @@
 package com.example.final_project_java.car.entity;
 
 import com.example.final_project_java.userapi.entity.User;
-import com.google.api.client.util.DateTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -26,12 +24,16 @@ public class RentCar {
    private int carNo;
 
    @OneToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "user_id")
-   private User userId;
+   @JoinColumns({
+           @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+           @JoinColumn(name = "email", referencedColumnName = "email"),
+           @JoinColumn(name = "login_method", referencedColumnName = "login_method")
+   })
+   private User user;
 
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "car_id")
-   private Car carId;
+   private Car car;
 
    @Column(nullable = false)
    private LocalDateTime rentDate;

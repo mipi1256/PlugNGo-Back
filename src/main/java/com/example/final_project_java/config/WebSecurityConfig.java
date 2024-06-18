@@ -61,9 +61,14 @@ public class WebSecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
                   authorizeRequests
+
+                        .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/car").authenticated()
+//                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
+//                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                         .requestMatchers("/api/auth/load-profile").authenticated()
                         .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                         .permitAll()
