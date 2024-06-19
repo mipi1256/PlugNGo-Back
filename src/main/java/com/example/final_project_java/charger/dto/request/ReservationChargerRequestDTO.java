@@ -18,13 +18,15 @@ public class ReservationChargerRequestDTO {
     // 충전소 예약하기 -> 회원이름, 휴대폰번호, 충전소 ID, 시간
 
     private String email;
-    private int id;
+    private String phoneNumber;
+    private int chargeId;
     private LocalDateTime rentTime;
 
     public ReservationCharger toEntity(User user, ChargingStation charge) {
         return ReservationCharger.builder()
                 .user(user)
                 .station(charge)
+                .phoneNumber(user.getPhoneNumber())
                 .rentTime(this.rentTime)
                 .build();
     }
