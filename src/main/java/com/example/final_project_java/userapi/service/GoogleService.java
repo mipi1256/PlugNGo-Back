@@ -3,7 +3,6 @@ package com.example.final_project_java.userapi.service;
 import com.example.final_project_java.auth.TokenProvider;
 import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.GoogleUserResponseDTO;
-import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
@@ -11,16 +10,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,7 +33,7 @@ public class GoogleService {
 
    // 이메일 중복확인
    public boolean isDuplicate(String email) {
-      if (userRepository.existsByEmail(email)) {
+      if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.GOOGLE)) {
          log.info("중복된 이메일입니다. -> {}", email);
          return true;
       } else return false;
@@ -61,7 +61,10 @@ public class GoogleService {
    @Value("${sns.google.client.secret}")
    private String googleClientSecret;
 
-   public GoogleLoginResponseDTO googleService(String code, PasswordEncoder encoder) {
+//   @Value("${sns.google.scope}")
+//   private String googleScope;
+
+   public GoogleLoginResponseDTO googleService(String code) {
       String accessToken = getGoogleAccessToken(code);
       log.info("access_token: {}", code);
 
@@ -70,7 +73,7 @@ public class GoogleService {
 
       // 구글 로그인 이메일 중복 체크
       if (!isDuplicate(userResponseDTO.getGoogleEmail())) {
-         User saved = userRepository.save(userResponseDTO.toEntity(encoder, accessToken));
+         User saved = userRepository.save(userResponseDTO.toEntity(accessToken));
       }
 
       User foundUser = userRepository.findByEmail(userResponseDTO.getGoogleEmail()).orElseThrow();
@@ -113,21 +116,26 @@ public class GoogleService {
 
 
    private String getGoogleAccessToken(String code) {
+      String decode = URLDecoder.decode(code, StandardCharsets.UTF_8);
+      log.info("decode: {}", decode);
 
       // 요청 URI
       String requestUri = "https://oauth2.googleapis.com/token";
 
       // 요청 헤더 설정
       HttpHeaders headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+      headers.add("Content-type", "application/x-www-form-urlencoded");
+//      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+      // 코드를 디코드를 하기 위해 추가
+
 
       // 요청 바디에 파라미터 세팅
       MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-      params.add("code", code);
-      params.add("client_id", googleClientId);
-      params.add("redirect_uri", googleRedirectUri);
-      params.add("client_secret", googleClientSecret);
       params.add("grant_type", "authorization_code");
+      params.add("client_id", googleClientId);
+      params.add("client_secret", googleClientSecret);
+      params.add("redirect_uri", googleRedirectUri);
+      params.add("code", code);
 
       // REST API를 호출하기 위한 RestTemplate 객체 생성
       RestTemplate template = new RestTemplate();
@@ -135,17 +143,37 @@ public class GoogleService {
       // 헤더 정보와 파라미터를 하나로 묶기
       HttpEntity<Object> requestEntity = new HttpEntity<>(params, headers);
 
-      ResponseEntity<Map> responseEntity
-            = template.exchange(requestUri, HttpMethod.POST, requestEntity, Map.class);
+      ResponseEntity<Map> responseEntity;
+      try {
+         responseEntity = template.exchange(
+               requestUri,
+               HttpMethod.POST,
+               requestEntity,
+               Map.class
+         );
+      } catch (HttpClientErrorException e) {
+         log.error("Failed to retrieve access token: " + e.getResponseBodyAsString());
+         throw e; // Optionally rethrow or handle differently
+      }
+
+//            = template.exchange(requestUri, HttpMethod.POST, requestEntity, Map.class);
 
       // 응답 데이터에서 JSON 추출
-      Map<String, Object> responseJSON = (Map<String, Object>) responseEntity.getBody();
-      log.info("응답 JSON 데이터: {}", responseJSON);
+//      Map<String, Object> responseJSON = (Map<String, Object>) responseEntity.getBody();
+//      log.info("응답 JSON 데이터: {}", responseJSON);
+//      // access token 추출
+//      String accessToken = (String) responseJSON.get("access_token");
+//      return accessToken;
 
-      // access token 추출
-      String accessToken = (String) responseJSON.get("access_token");
+      // Extract the access token from the response
+      Map<String, Object> responseJSON = responseEntity.getBody();
+      if (responseJSON != null && responseJSON.containsKey("access_token")) {
+         return (String) responseJSON.get("access_token");
+      } else {
+         throw new RuntimeException("Failed to retrieve access token from Google");
+      }
 
-      return accessToken;
+
    }
 
 

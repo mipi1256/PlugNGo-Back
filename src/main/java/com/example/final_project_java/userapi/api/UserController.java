@@ -64,10 +64,10 @@ public class UserController {
    private String googleClientSecret;
 
 
-   @GetMapping("/googleLogin")
-   public ResponseEntity<?> googleLogin(String code, PasswordEncoder encoder) {
+   @PostMapping("/googleLogin")
+   public ResponseEntity<?> googleLogin(String code) {
       log.info("/api/auth/googleLogin - CODE: {}", code);
-      GoogleLoginResponseDTO responseDTO = googleService.googleService(code, encoder);
+      GoogleLoginResponseDTO responseDTO = googleService.googleService(code);
 
       return ResponseEntity.ok().body(responseDTO);
 

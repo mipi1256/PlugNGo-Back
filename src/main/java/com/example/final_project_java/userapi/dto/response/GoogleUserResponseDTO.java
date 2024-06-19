@@ -23,11 +23,11 @@ public class GoogleUserResponseDTO {
 
    private String password = "googlePassword123!";
 
-   public User toEntity(PasswordEncoder encoder, String accessToken) {
+   public User toEntity(String accessToken) {
       return User.builder()
             .email(googleEmail)
             .name(googleName)
-            .password(encoder.encode(password))
+            .password(password)
             .profilePicture(googleProfilePicture)
             .loginMethod(LoginMethod.GOOGLE)
             .accessToken(accessToken)
