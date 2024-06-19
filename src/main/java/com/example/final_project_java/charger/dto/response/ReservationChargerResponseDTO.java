@@ -22,7 +22,6 @@ public class ReservationChargerResponseDTO { // 전기차 충전소 예약
     private String stationName;
     private LocalDateTime rentTime;
     private int rentChargePrice;
-    private String chargerName;
     private String address;
 
     public ReservationChargerResponseDTO(User user, ChargingStation charge, ReservationCharger reservation) {
@@ -33,7 +32,6 @@ public class ReservationChargerResponseDTO { // 전기차 충전소 예약
         this.stationName = charge.getStationName();
         this.rentTime = reservation.getRentTime();
         this.rentChargePrice = reservation.getRentChargePrice();
-        this.chargerName = charge.getStationName();
         this.address = charge.getAddress();
     }
 

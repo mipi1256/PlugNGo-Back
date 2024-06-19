@@ -1,22 +1,17 @@
 package com.example.final_project_java.charger.api;
 
-import com.example.final_project_java.auth.TokenUserInfo;
-import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.charger.dto.request.ReservationChargerModifyRequestDTO;
 import com.example.final_project_java.charger.dto.request.ReservationChargerRequestDTO;
+import com.example.final_project_java.charger.dto.request.PageDTO;
 import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
 import com.example.final_project_java.charger.service.ChargerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -27,7 +22,7 @@ public class ChargerController {
     private final ChargerService chargerService;
 
     // 충전소 목록 요청
-    @GetMapping
+    @GetMapping("/home")
     public ResponseEntity<?> retrieveChargerList() {
         log.info("/charge : GET!");
 
@@ -48,7 +43,7 @@ public class ChargerController {
 //        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
 //        if (validatedResult != null) return validatedResult;
 
-        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getEmail(), requestDTO.getId());
+        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getEmail(), requestDTO.getChargeId());
         return ResponseEntity.ok().body(responseDTO);
     }
 

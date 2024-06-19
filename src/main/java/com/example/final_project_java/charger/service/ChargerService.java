@@ -10,7 +10,6 @@ import com.example.final_project_java.charger.dto.response.ReservationChargerRes
 import com.example.final_project_java.charger.repository.ChargerRepository;
 import com.example.final_project_java.charger.repository.ReservationChargerRepository;
 import com.example.final_project_java.userapi.entity.User;
-import com.example.final_project_java.userapi.entity.UserId;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class ChargerService {
     private final ChargerRepository chargerRepository;
     private final ReservationChargerRepository reservationRepository;
 
-    // 전국 전기차 충전소 목록
+    //전국 전기차 충전소 목록
     public ChargerListResponseDTO retrieve() {
         List<ChargingStation> entityList = chargerRepository.findAll();
 
@@ -40,7 +39,7 @@ public class ChargerService {
                 .toList();
 
         return ChargerListResponseDTO.builder()
-                .chargers(dtoList)
+                .stations(dtoList)
                 .build();
     }
 

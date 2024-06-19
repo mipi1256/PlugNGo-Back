@@ -1,7 +1,6 @@
 package com.example.final_project_java.charger.Entity;
 
 import com.example.final_project_java.userapi.entity.User;
-import com.example.final_project_java.userapi.entity.UserId;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +26,8 @@ public class ReservationCharger {
 
     private int rentChargePrice; // 가격
 
+    private String phoneNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
@@ -37,7 +38,7 @@ public class ReservationCharger {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "charge_id")
     private ChargingStation station; // 충전소 ID
 
 }
