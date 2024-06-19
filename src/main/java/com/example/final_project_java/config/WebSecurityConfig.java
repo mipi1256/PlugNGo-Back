@@ -60,20 +60,21 @@ public class WebSecurityConfig {
             // 먼저 배치된 필터로 넘어가서 처리가 가능하게 됩니다.
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
-                  authorizeRequests
-
-                        .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/car").authenticated()
+                        authorizeRequests
+                              .requestMatchers(HttpMethod.GET, "/googleLogin").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
+                              .requestMatchers(HttpMethod.PUT, "/car").authenticated()
 //                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
 //                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
-                        .requestMatchers("/api/auth/load-profile").authenticated()
-                        .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
-                        .permitAll()
-                        // 위에서 따로 설정하지 않은 나머지 요청들은 권한 검사가 필요하다.
-                        .anyRequest().permitAll()
+                              .requestMatchers("/api/auth/load-profile").authenticated()
+                              .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
+                              .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
+                              .permitAll()
+                              // 위에서 따로 설정하지 않은 나머지 요청들은 권한 검사가 필요하다.
+                              .anyRequest().permitAll()
             )
             .exceptionHandling(ExceptionHandling -> {
                // 인증 과정에서 예외가 발생한 경우 예외를 전달한다. (401)
