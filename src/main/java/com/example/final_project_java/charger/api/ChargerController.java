@@ -22,11 +22,11 @@ public class ChargerController {
     private final ChargerService chargerService;
 
     // 충전소 목록 요청
-    @GetMapping
-    public ResponseEntity<?> retrieveChargerList(PageDTO pageDTO) {
-        log.info("/charge?page={}&size={}", pageDTO.getPage(), pageDTO.getSize());
+    @GetMapping("/home")
+    public ResponseEntity<?> retrieveChargerList() {
+        log.info("/charge : GET!");
 
-        ChargerListResponseDTO responseDTO = chargerService.retrieve(pageDTO);
+        ChargerListResponseDTO responseDTO = chargerService.retrieve();
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -43,7 +43,7 @@ public class ChargerController {
 //        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
 //        if (validatedResult != null) return validatedResult;
 
-        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getEmail(), requestDTO.getId());
+        ReservationChargerResponseDTO responseDTO = chargerService.reservation(requestDTO, requestDTO.getEmail(), requestDTO.getChargeId());
         return ResponseEntity.ok().body(responseDTO);
     }
 

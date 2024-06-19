@@ -33,7 +33,7 @@ public class GoogleService {
 
    // 이메일 중복확인
    public boolean isDuplicate(String email) {
-      if (userRepository.existsByEmail(email)) {
+      if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.GOOGLE)) {
          log.info("중복된 이메일입니다. -> {}", email);
          return true;
       } else return false;
