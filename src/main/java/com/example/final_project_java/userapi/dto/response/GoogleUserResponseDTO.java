@@ -29,11 +29,11 @@ public class GoogleUserResponseDTO {
       this.googleProfilePicture = googleProfilePicture;
    }
 
-   public User toEntity(String accessToken) {
+   public User toEntity(String accessToken, PasswordEncoder encoder) {
       return User.builder()
             .email(googleEmail)
             .name(googleName)
-            .password(password)
+            .password(encoder.encode(password))
             .profilePicture(googleProfilePicture)
             .loginMethod(LoginMethod.GOOGLE)
             .accessToken(accessToken)

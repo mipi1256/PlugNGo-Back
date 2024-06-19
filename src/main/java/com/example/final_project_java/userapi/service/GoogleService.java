@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -37,6 +38,7 @@ public class GoogleService {
 
    private final UserRepository userRepository;
    private final TokenProvider tokenProvider;
+   private final PasswordEncoder encoder;
 
    @Value("${sns.google.client.id}")
    private String googleClientId;
@@ -49,11 +51,13 @@ public class GoogleService {
          String email = payload.getEmail();
          String name = (String) payload.get("name");
          String pictureUrl = (String) payload.get("picture");
+         String accessToken = (String) payload.get("access_token");
+         log.info("access_token: {}", accessToken);
 
          GoogleUserResponseDTO userResponseDTO = new GoogleUserResponseDTO(email, name, pictureUrl);
 
          if (!isDuplicate(userResponseDTO.getGoogleEmail())) {
-            userRepository.save(userResponseDTO.toEntity(null));
+            userRepository.save(userResponseDTO.toEntity(accessToken, encoder));
          }
 
          User foundUser = userRepository.findByEmail(userResponseDTO.getGoogleEmail()).orElseThrow();
