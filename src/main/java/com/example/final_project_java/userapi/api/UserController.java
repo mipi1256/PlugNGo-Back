@@ -1,5 +1,6 @@
 package com.example.final_project_java.userapi.api;
 
+import com.example.final_project_java.userapi.dto.request.GoogleLoginRequestDTO;
 import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.service.GoogleService;
@@ -65,9 +66,9 @@ public class UserController {
 
 
    @PostMapping("/googleLogin")
-   public ResponseEntity<?> googleLogin(String code) {
-      log.info("/api/auth/googleLogin - CODE: {}", code);
-      GoogleLoginResponseDTO responseDTO = googleService.googleService(code);
+   public ResponseEntity<?> googleLogin(@RequestBody GoogleLoginRequestDTO request) {
+      log.info("/api/auth/googleLogin - CODE: {}", request.getCode());
+      GoogleLoginResponseDTO responseDTO = googleService.googleService(request.getCode());
 
       return ResponseEntity.ok().body(responseDTO);
 

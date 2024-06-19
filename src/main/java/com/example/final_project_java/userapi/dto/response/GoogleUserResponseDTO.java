@@ -23,6 +23,12 @@ public class GoogleUserResponseDTO {
 
    private String password = "googlePassword123!";
 
+   public GoogleUserResponseDTO(String googleEmail, String googleName, String googleProfilePicture) {
+      this.googleEmail = googleEmail;
+      this.googleName = googleName;
+      this.googleProfilePicture = googleProfilePicture;
+   }
+
    public User toEntity(String accessToken) {
       return User.builder()
             .email(googleEmail)
