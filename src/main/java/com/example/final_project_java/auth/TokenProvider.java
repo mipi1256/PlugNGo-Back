@@ -1,5 +1,6 @@
 package com.example.final_project_java.auth;
 
+import com.example.final_project_java.userapi.dto.response.GoogleUserResponseDTO;
 import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
 import io.jsonwebtoken.Claims;
@@ -88,6 +89,36 @@ public class TokenProvider {
             .build();
    }
 
+   public String createGoogleToken(GoogleUserResponseDTO userResponseDTO, String secretKey, long duration, ChronoUnit unit) {
+
+      Date expiry = Date.from(
+            Instant.now().plus(1, ChronoUnit.DAYS)
+      );
+
+      // 토큰 생성
+      Map<String, String> claims = new HashMap<>();
+      claims.put("email", userResponseDTO.getGoogleEmail());
+
+
+      return Jwts.builder()
+            // token Header
+            .signWith(
+                  Keys.hmacShaKeyFor(SECRET_KEY.getBytes()),
+                  SignatureAlgorithm.HS512
+            )
+            .setIssuer("Page운영자") // iss: 발급자 정보
+            .setIssuedAt(new Date()) // iat: 발급 시간
+            .setExpiration(expiry) // exp: 만료 시간
+            .setSubject(userResponseDTO.getId())
+            .setClaims(claims)
+            .compact();
+
+   }
+
+
+   public String createGoogleAcccesKey(GoogleUserResponseDTO userResponseDTO) {
+      return createGoogleToken(userResponseDTO, SECRET_KEY, 5, ChronoUnit.DAYS);
+   }
 }
 
 

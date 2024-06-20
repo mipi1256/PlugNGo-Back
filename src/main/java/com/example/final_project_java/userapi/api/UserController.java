@@ -50,19 +50,6 @@ public class UserController {
 
       return ResponseEntity.ok().body(responseDTO);
    }
-  
-  // 구글 토큰 받을때 필요한 것
-   @Value("${sns.google.login.url}")
-   private String googleLogin;
-
-   @Value("${sns.google.redirect.uri}")
-   private String googleRedirectUri;
-
-   @Value("${sns.google.client.id}")
-   private String googleClientId;
-
-   @Value("${sns.google.client.secret}")
-   private String googleClientSecret;
 
 
    @PostMapping("/googleLogin")
@@ -73,9 +60,6 @@ public class UserController {
       return ResponseEntity.ok().body(responseDTO);
 
    }
-
-
-
 
 
 
