@@ -22,9 +22,9 @@ public class ChargerController {
     private final ChargerService chargerService;
 
     // 충전소 목록 요청
-    @GetMapping("/home")
+    @GetMapping("/list")
     public ResponseEntity<?> retrieveChargerList() {
-        log.info("/charge : GET!");
+        log.info("/charge/list : GET!");
 
         ChargerListResponseDTO responseDTO = chargerService.retrieve();
         return ResponseEntity.ok().body(responseDTO);
