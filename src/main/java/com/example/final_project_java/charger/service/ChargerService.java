@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +37,7 @@ public class ChargerService {
                 .toList();
 
         return ChargerListResponseDTO.builder()
-                .stations(dtoList)
+                .chargers(dtoList)
                 .build();
     }
 
@@ -60,7 +58,7 @@ public class ChargerService {
     }
 
     // 충전소 예약 취소
-    public ReservationChargerResponseDTO delete(final String chargeNo) throws Exception {
+    public ChargerListResponseDTO delete(final String chargeNo) throws Exception {
         ReservationCharger reservation = reservationRepository.findById(chargeNo).orElseThrow(
                 () -> {
                     log.error("ID가 존재하지 않아 삭제에 실패하였습니다. 예약번호 : {}", chargeNo);
@@ -69,7 +67,7 @@ public class ChargerService {
         );
         reservationRepository.deleteById(chargeNo);
 
-        return null;
+        return retrieve();
     }
 
     // 충전소 예약 수정

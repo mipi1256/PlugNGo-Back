@@ -19,6 +19,9 @@ public class ReservationChargerRequestDTO {
 
     private String email;
     private String phoneNumber;
+    private String name;
+    private String stationName;
+    private String address;
     private int chargeId;
     private LocalDateTime rentTime;
 
@@ -26,6 +29,9 @@ public class ReservationChargerRequestDTO {
         return ReservationCharger.builder()
                 .user(user)
                 .station(charge)
+                .name(user.getName())
+                .stationName(charge.getStationName())
+                .address(charge.getAddress())
                 .phoneNumber(user.getPhoneNumber())
                 .rentTime(this.rentTime)
                 .build();
