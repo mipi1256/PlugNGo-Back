@@ -3,7 +3,6 @@ package com.example.final_project_java.car.api;
 import com.example.final_project_java.auth.TokenUserInfo;
 import com.example.final_project_java.car.dto.request.CarCreateRequestDTO;
 import com.example.final_project_java.car.dto.request.CarModifyRequestDTO;
-import com.example.final_project_java.car.dto.response.CarDetailResponseDTO;
 import com.example.final_project_java.car.dto.response.CarListResponseDTO;
 import com.example.final_project_java.car.service.CarService;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,7 @@ public class CarController {
                                       @Validated @RequestBody CarCreateRequestDTO requestDTO,
                                       BindingResult result
    ) {
-      log.info("/car GET! - dto: {}", requestDTO);
+      log.info("/car POST! - dto: {}", requestDTO);
       log.info("TokenUserInfo: {}", userInfo);
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
@@ -69,8 +68,8 @@ public class CarController {
 
    // 전기차 삭제
    @DeleteMapping("/{id}")
-   public ResponseEntity<?> deleteTodo(@AuthenticationPrincipal TokenUserInfo userInfo,
-                                       @PathVariable("id") String carId) {
+   public ResponseEntity<?> deleteCar(@AuthenticationPrincipal TokenUserInfo userInfo,
+                                      @PathVariable("id") String carId) {
       log.info("/car/{} DELETE request!", carId);
 
       if (carId == null || carId.trim().equals("")) {
@@ -88,7 +87,7 @@ public class CarController {
    }
 
    // 전기차 수정
-   @PatchMapping
+   @PatchMapping("/{id}")
    public ResponseEntity<?> updateCarInfo(@AuthenticationPrincipal TokenUserInfo userInfo,
                                           @Validated @RequestBody CarModifyRequestDTO requestDTO,
                                           BindingResult result) {
