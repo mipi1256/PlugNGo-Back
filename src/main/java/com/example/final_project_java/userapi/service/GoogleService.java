@@ -14,16 +14,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,9 +35,16 @@ public class GoogleService {
 
    private final UserRepository userRepository;
    private final TokenProvider tokenProvider;
+   private final PasswordEncoder encoder;
 
    @Value("${sns.google.client.id}")
    private String googleClientId;
+
+   @Value("${sns.google.client.secret}")
+   private String googleClientSecret;
+
+   @Value("${sns.google.redirect.uri}")
+   private String googleRedirectUri;
 
    public GoogleLoginResponseDTO googleService(String idTokenString) {
       GoogleIdToken idToken = verifyGoogleIdToken(idTokenString);
@@ -51,9 +56,10 @@ public class GoogleService {
          String pictureUrl = (String) payload.get("picture");
 
          GoogleUserResponseDTO userResponseDTO = new GoogleUserResponseDTO(email, name, pictureUrl);
+         String accessToken = tokenProvider.createGoogleAcccesKey(userResponseDTO);
 
          if (!isDuplicate(userResponseDTO.getGoogleEmail())) {
-            userRepository.save(userResponseDTO.toEntity(null));
+            userRepository.save(userResponseDTO.toEntity(accessToken, encoder));
          }
 
          User foundUser = userRepository.findByEmail(userResponseDTO.getGoogleEmail()).orElseThrow();
@@ -79,6 +85,8 @@ public class GoogleService {
          return null;
       }
    }
+
+
 
    private Map<String, String> getTokenMap(User user) {
       String accessToken = tokenProvider.createAccessKey(user);

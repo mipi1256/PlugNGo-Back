@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @ToString
 public class GoogleUserResponseDTO {
 
+   private String id;
+
    String googleEmail;
    String googleName;
    String googleProfilePicture;
@@ -29,11 +31,11 @@ public class GoogleUserResponseDTO {
       this.googleProfilePicture = googleProfilePicture;
    }
 
-   public User toEntity(String accessToken) {
+   public User toEntity(String accessToken, PasswordEncoder encoder) {
       return User.builder()
             .email(googleEmail)
             .name(googleName)
-            .password(password)
+            .password(encoder.encode(password))
             .profilePicture(googleProfilePicture)
             .loginMethod(LoginMethod.GOOGLE)
             .accessToken(accessToken)
