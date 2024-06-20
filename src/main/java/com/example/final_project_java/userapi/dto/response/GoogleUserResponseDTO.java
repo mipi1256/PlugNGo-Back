@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @ToString
 public class GoogleUserResponseDTO {
 
+   private String id;
+
    String googleEmail;
    String googleName;
    String googleProfilePicture;
