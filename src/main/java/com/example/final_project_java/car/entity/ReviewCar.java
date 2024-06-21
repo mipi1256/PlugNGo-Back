@@ -1,5 +1,6 @@
 package com.example.final_project_java.car.entity;
 
+import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.userapi.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,10 @@ public class ReviewCar {
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "car_id")
    private Car car;
+
+   @ManyToOne
+   @JoinColumn(name = "charge_id")
+   private ChargingStation chargingStation;
 
    private String rentCarPicture;
 

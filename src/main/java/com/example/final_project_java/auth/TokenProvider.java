@@ -1,6 +1,7 @@
 package com.example.final_project_java.auth;
 
 import com.example.final_project_java.userapi.dto.response.GoogleUserResponseDTO;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
 import io.jsonwebtoken.Claims;
@@ -86,6 +87,7 @@ public class TokenProvider {
             .userId(claims.getSubject())
             .email(claims.get("email", String.class))
             .role(Role.valueOf(claims.get("role", String.class)))
+            .loginMethod(LoginMethod.valueOf(claims.get("loginMethod", String.class)))
             .build();
    }
 

@@ -90,6 +90,7 @@ public class ReviewCarController {
                                              @Validated @RequestBody ReviewCarModifyRequestDTO requestDTO,
                                              BindingResult result) {
       log.info("/car/review Update Review Request!");
+      log.info("/car/review UPDATE DTO: {}", requestDTO);
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 
