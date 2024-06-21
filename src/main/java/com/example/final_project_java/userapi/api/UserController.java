@@ -1,8 +1,10 @@
 package com.example.final_project_java.userapi.api;
 
 import com.example.final_project_java.userapi.dto.request.GoogleLoginRequestDTO;
+import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
+import com.example.final_project_java.userapi.dto.response.UserSignUpResponseDTO;
 import com.example.final_project_java.userapi.service.GoogleService;
 import com.example.final_project_java.userapi.service.KakaoService;
 import com.example.final_project_java.userapi.service.NaverService;
@@ -13,8 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +67,45 @@ public class UserController {
       return ResponseEntity.ok().body(responseDTO);
 
    }
+
+   @PostMapping
+   public ResponseEntity<?> signUp(
+         @Validated @RequestPart("user") UserSignUpRequestDTO dto,
+         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+         BindingResult result
+   ) {
+      log.info("/api/auth POST! - {}", dto);
+
+      ResponseEntity<FieldError> resultEntity = getFieldErrorResponseEntity(result);
+      if (resultEntity != null) return resultEntity;
+
+      try {
+         String uploadedFilePath = null;
+         if (profileImage != null) {
+            log.info("attached file name: {}", profileImage.getOriginalFilename());
+            // 전달받은 프로필 이미지를 먼저 지정된 경로에 저장한 후 저장 경로를 DB에 세팅하자.
+            uploadedFilePath = userService.uploadProfileImage(profileImage);
+         }
+
+         UserSignUpResponseDTO responseDTO = userService.create(dto, uploadedFilePath);
+         return ResponseEntity.ok().body(responseDTO);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+
+
+   private static ResponseEntity<FieldError> getFieldErrorResponseEntity(BindingResult result) {
+      if (result.hasErrors()) {
+         log.warn(result.toString());
+         return ResponseEntity.badRequest()
+               .body(result.getFieldError());
+      }
+      return null;
+   }
+
+
 
 
 
