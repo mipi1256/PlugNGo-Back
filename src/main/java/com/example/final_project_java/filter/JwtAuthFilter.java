@@ -46,6 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       log.info("JWT Token Filter is running... - token: {}", token);
 
       String requestURI = request.getRequestURI();
+      log.info("requestURI: {}", requestURI);
       boolean isPermitAllUrl = permitAllPatterns.stream()
             .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
       log.info("isPermitAllUrl: {}", isPermitAllUrl);

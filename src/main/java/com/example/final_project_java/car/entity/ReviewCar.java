@@ -35,11 +35,11 @@ public class ReviewCar {
 
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "car_id")
-   private Car car;
+   private String car;
 
    @ManyToOne
    @JoinColumn(name = "charge_id")
-   private ChargingStation chargingStation;
+   private int chargingStation;
 
    private String rentCarPicture;
 

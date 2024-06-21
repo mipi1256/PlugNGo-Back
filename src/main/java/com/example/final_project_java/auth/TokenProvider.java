@@ -100,6 +100,9 @@ public class TokenProvider {
       // 토큰 생성
       Map<String, String> claims = new HashMap<>();
       claims.put("email", userResponseDTO.getGoogleEmail());
+      claims.put("role", String.valueOf(userResponseDTO.getRole()));
+      claims.put("loginMethod", String.valueOf(userResponseDTO.getLoginMethod()));
+      claims.put("userId", userResponseDTO.getId());
 
 
       return Jwts.builder()
@@ -119,7 +122,7 @@ public class TokenProvider {
 
 
    public String createGoogleAcccesKey(GoogleUserResponseDTO userResponseDTO) {
-      return createGoogleToken(userResponseDTO, SECRET_KEY, 5, ChronoUnit.DAYS);
+      return createGoogleToken(userResponseDTO, SECRET_KEY, 100, ChronoUnit.DAYS);
    }
 }
 

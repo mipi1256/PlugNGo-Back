@@ -45,6 +45,7 @@ public class CarController {
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          log.info("추가 못했습니다");
+         e.printStackTrace();
          return ResponseEntity.internalServerError().body(e.getMessage());
       }
    }
