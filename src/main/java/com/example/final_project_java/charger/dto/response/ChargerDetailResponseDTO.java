@@ -10,7 +10,6 @@ import lombok.*;
 @Builder
 public class ChargerDetailResponseDTO {
 
-    private int id; // AUTO_INCREMENT
     private String stationId; // 충전소 id
     private String stationName; // 충전소명
     private String address; // 충전소 위치
@@ -27,7 +26,6 @@ public class ChargerDetailResponseDTO {
 
     // 엔터티 -> DTO
     public ChargerDetailResponseDTO(ChargingStation station) {
-        this.id = station.getChargeId();
         this.stationId = station.getStationId();
         this.stationName = station.getStationName();
         this.address = station.getAddress();
