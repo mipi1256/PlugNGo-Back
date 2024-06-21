@@ -28,11 +28,25 @@ public class ChargerService {
     private final ChargerRepository chargerRepository;
     private final ReservationChargerRepository reservationRepository;
 
-    //전국 전기차 충전소 목록
+    // 전국 전기차 충전소 목록
     public ChargerListResponseDTO retrieve() {
         List<ChargingStation> entityList = chargerRepository.findAll();
 
         List<ChargerDetailResponseDTO> dtoList = entityList.stream()
+                .map(ChargerDetailResponseDTO::new)
+                .toList();
+
+        return ChargerListResponseDTO.builder()
+                .chargers(dtoList)
+                .build();
+    }
+
+    // Plug & Go 충전소 목록
+    public ChargerListResponseDTO plugAndGoRetrieve() {
+        List<ChargingStation> entityList = chargerRepository.findAll();
+
+        List<ChargerDetailResponseDTO> dtoList = entityList.stream()
+                .filter(ChargingStation::isReservation_possible)
                 .map(ChargerDetailResponseDTO::new)
                 .toList();
 

@@ -23,6 +23,8 @@ public class ChargerDetailResponseDTO {
     private String latitude; // 위도
     private String longitude; // 경도
 
+    private boolean reservationPossible; // 예약 가능 여부 (플앤고 충전소만)
+
     // 엔터티 -> DTO
     public ChargerDetailResponseDTO(ChargingStation station) {
         this.id = station.getChargeId();
@@ -37,6 +39,8 @@ public class ChargerDetailResponseDTO {
         this.available = station.getAvailable();
         this.latitude = station.getLatitude();
         this.longitude = station.getLongitude();
+
+        this.reservationPossible = station.isReservation_possible();
     }
 
 }
