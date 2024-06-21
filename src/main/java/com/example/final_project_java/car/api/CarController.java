@@ -5,6 +5,10 @@ import com.example.final_project_java.car.dto.request.CarCreateRequestDTO;
 import com.example.final_project_java.car.dto.request.CarModifyRequestDTO;
 import com.example.final_project_java.car.dto.response.CarListResponseDTO;
 import com.example.final_project_java.car.service.CarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Car API", description = "전기차 조회, 추가, 삭제, 수정 api 입니다. ")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -92,6 +97,7 @@ public class CarController {
                                           @Validated @RequestBody CarModifyRequestDTO requestDTO,
                                           BindingResult result) {
       log.info("/car PATCH!! 수정");
+      log.info("/requestDTO: {}", requestDTO);
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 

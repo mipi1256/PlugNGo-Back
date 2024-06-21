@@ -5,6 +5,7 @@ import com.example.final_project_java.car.dto.request.CarModifyRequestDTO;
 import com.example.final_project_java.car.dto.response.CarDetailResponseDTO;
 import com.example.final_project_java.car.dto.response.CarListResponseDTO;
 import com.example.final_project_java.car.entity.Car;
+import com.example.final_project_java.car.entity.CarOptions;
 import com.example.final_project_java.car.repository.CarRepository;
 import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
@@ -18,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.example.final_project_java.car.entity.CarOptions.valueOf;
 
 @Service
 @Slf4j
@@ -59,12 +62,7 @@ public class CarService {
    // 전기차 상세보기 가져오기
    public CarListResponseDTO retrieve(String carId) {
 
-      Car car = carRepository.findById(carId).orElseThrow(
-            () -> {
-               log.info("ID 업습니니다, ID: {}", carId);
-               throw new RuntimeException("Car with the given ID not found");
-            }
-      );
+      Car car = getCar(carId);
 
       CarDetailResponseDTO carDetailResponseDTO = new CarDetailResponseDTO(car);
 
@@ -131,7 +129,7 @@ public class CarService {
       car.setCarYear(requestDTO.getCarYear());
       car.setCarPrice(requestDTO.getCarPrice());
       car.setCarPicture(requestDTO.getCarPicture());
-      car.setCarOptions(requestDTO.getCarOptions());
+      car.setCarOptions(valueOf(requestDTO.getCarOptions()));
 
       carRepository.save(car);
 

@@ -2,6 +2,7 @@ package com.example.final_project_java.car.dto.request;
 
 import com.example.final_project_java.car.entity.CarOptions;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,19 +24,19 @@ public class CarModifyRequestDTO {
    @NotBlank
    private String carCompany;
 
-   @NotBlank
+   @NotNull
    private int maximumPassenger;
 
-   @NotBlank
+   @NotNull
    private Year carYear;
 
-   @NotBlank
+   @NotNull
    private int carPrice;
 
    private String carPicture;
 
    @NotBlank
-   private CarOptions carOptions;
+   private String carOptions;
 
 
 
