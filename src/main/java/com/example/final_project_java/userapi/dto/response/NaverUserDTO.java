@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.Year;
 
 @Setter
@@ -45,10 +46,9 @@ public class NaverUserDTO {
         return User.builder()
                 .email(this.naverAccount.email)
                 .name(this.naverAccount.name)
-                .nickName(this.naverAccount.nickname)
                 .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
                 .profilePicture(this.naverAccount.profileImageUrl)
-                .birthYear(this.naverAccount.birthYear == null ? Year.now() : Year.parse(this.naverAccount.birthYear))
+                .birthday(LocalDate.from(this.naverAccount.birthYear == null ? Year.now() : Year.parse(this.naverAccount.birthYear)))
                 .phoneNumber(this.naverAccount.mobile)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.NAVER)
