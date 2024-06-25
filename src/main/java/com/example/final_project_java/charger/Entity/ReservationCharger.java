@@ -36,6 +36,8 @@ public class ReservationCharger {
     private String phoneNumber;
 
     private String name;
+    
+    private int time; // 시간 단위
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
