@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.service;
 
 import com.example.final_project_java.auth.TokenProvider;
 import com.example.final_project_java.auth.TokenUserInfo;
+import com.example.final_project_java.aws.S3Service;
 import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
@@ -22,8 +23,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -34,6 +38,7 @@ public class UserService {
    private final UserRepository userRepository;
    private final PasswordEncoder passwordEncoder;
    private TokenProvider tokenProvider;
+   private final S3Service s3Service;
 
    @Value("${upload.path}")
    private String uploadRootPath;
@@ -46,12 +51,28 @@ public class UserService {
    }
 
    public UserSignUpResponseDTO create (final UserSignUpRequestDTO dto, final String uploadRootPath) {
-      return null;
+      String email = dto.getEmail();
+
+      if (isDuplicateByEmail(email)) {
+         throw new RuntimeException("중복된 이메일 입니다.");
+      }
+
+      // 패스워드 인코딩
+      String encoded = passwordEncoder.encode(dto.getPassword());
+      dto.setPassword(encoded);
+
+      User saved = userRepository.save(dto.toEntity(uploadRootPath));
+      log.info("회원 가입 정상 수행됨! - saved user - {}", saved);
+
+      return new UserSignUpResponseDTO(saved);
    }
 
 
-   public String uploadProfileImage(MultipartFile profileImage) {
-      return null;
+   public String uploadProfileImage(MultipartFile profileImage) throws IOException {
+
+      String uniqueFileName = UUID.randomUUID()+ "_" + profileImage.getOriginalFilename();
+
+      return s3Service.uploadToS3Bucket(profileImage.getBytes(), uniqueFileName);
    }
 
    public LoginResponseDTO authenticate(LoginRequestDTO dto) {
@@ -92,12 +113,7 @@ public class UserService {
    public String findProfilePath(String userId) {
       User user
             = userRepository.findById(userId).orElseThrow(() -> new RuntimeException());
-      String profileImg = user.getProfilePicture();
-      if (profileImg.startsWith("http://")) {
-         return profileImg;
-      }
-      // DB에는 파일명만 저장. -> service가 가지고 있는 Root Path와 연결해서 리턴
-      return uploadRootPath + "/" + profileImg;
+      return user.getProfilePicture();
    }
 
    public String logout(TokenUserInfo userInfo) {

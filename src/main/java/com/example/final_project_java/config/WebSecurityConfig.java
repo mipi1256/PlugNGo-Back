@@ -61,6 +61,7 @@ public class WebSecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
+                              .requestMatchers(HttpMethod.POST, "/signin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/googleLogin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
