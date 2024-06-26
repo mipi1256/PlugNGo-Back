@@ -1,5 +1,6 @@
 package com.example.final_project_java.userapi.dto.request;
 
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @EqualsAndHashCode(of = "email")
@@ -26,10 +28,10 @@ public class UserSignUpRequestDTO {
    private String password;
 
    @NotBlank
-   private String name;
+   private String userName;
 
    @NotNull
-   private LocalDate birthday;
+   private String birthday;
 
    @NotNull
    private String phoneNumber;
@@ -38,9 +40,11 @@ public class UserSignUpRequestDTO {
       return User.builder()
             .email(email)
             .password(password)
-            .name(name)
-            .birthday(birthday)
+            .name(userName)
+            .birthday(LocalDate.parse(birthday))
             .phoneNumber(phoneNumber)
+            .profilePicture(uploadFilePath)
+            .loginMethod(LoginMethod.COMMON)
             .build();
    }
 

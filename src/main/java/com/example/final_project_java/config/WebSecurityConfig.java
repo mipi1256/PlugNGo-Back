@@ -61,7 +61,6 @@ public class WebSecurityConfig {
             .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
             .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                              .requestMatchers(HttpMethod.POST, "/signin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/googleLogin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
                               .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
@@ -74,6 +73,7 @@ public class WebSecurityConfig {
 //                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
 //                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                               .requestMatchers("/api/auth/load-profile").authenticated()
+                              .requestMatchers("/api/auth/logout").authenticated()
                               .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
                               .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                               .permitAll()

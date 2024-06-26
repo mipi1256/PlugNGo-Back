@@ -68,11 +68,11 @@ public class UserService {
    }
 
 
-   public String uploadProfileImage(MultipartFile profileImage) throws IOException {
+   public String uploadProfileImage(MultipartFile profilePicture) throws IOException {
 
-      String uniqueFileName = UUID.randomUUID()+ "_" + profileImage.getOriginalFilename();
+      String uniqueFileName = UUID.randomUUID()+ "_" + profilePicture.getOriginalFilename();
 
-      return s3Service.uploadToS3Bucket(profileImage.getBytes(), uniqueFileName);
+      return s3Service.uploadToS3Bucket(profilePicture.getBytes(), uniqueFileName);
    }
 
    public LoginResponseDTO authenticate(LoginRequestDTO dto) {
@@ -85,6 +85,7 @@ public class UserService {
       String rawPassword = dto.getPassword(); // 입력한 비번
       String encodedPassword = user.getPassword(); // DB에 저장된 암호화된 비번
 
+
       if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
          throw new RuntimeException("비밀번호가 틀렸습니다.");
       }
@@ -94,6 +95,7 @@ public class UserService {
       // 로그인 성공 후에 클라이언트에게 뭘 리턴해 줄 것인가?
       // -> JWT를 클라이언트에 발급해 주어야 한다! -> 로그인 유지를 위해!
       Map<String, String> token = getTokenMap(user);
+      log.info("token - {}", token);
 
       userRepository.save(user);
 
@@ -104,6 +106,7 @@ public class UserService {
    // AccessKey와 RefreshKey를 새롭게 발급받아 Map으로 포장해 주는 메서드.
    private Map<String, String> getTokenMap(User user) {
       String accessToken = tokenProvider.createAccessKey(user);
+      log.info("access token - {}", accessToken);
 
       Map<String, String> token = new HashMap<>();
       token.put("access_token", accessToken);

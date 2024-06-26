@@ -39,11 +39,8 @@ import java.util.Map;
 public class UserController {
 
    private final UserService userService;
-
    private final KakaoService kakaoService;
    private final NaverService naverService;
-
-
    private final GoogleService googleService;
 
 
@@ -75,6 +72,7 @@ public class UserController {
 
    }
 
+   // 이메일 중복 확인 요청 처리
    @GetMapping("/check")
    public ResponseEntity<?> check(String email) {
       if (email.trim().isEmpty()) {
@@ -88,10 +86,10 @@ public class UserController {
 
    }
 
-   @PostMapping
+   @PostMapping("/signup")
    public ResponseEntity<?> signUp(
          @Validated @RequestPart("user") UserSignUpRequestDTO dto,
-         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+         @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture,
          BindingResult result
    ) {
       log.info("/api/auth POST! - {}", dto);
@@ -101,15 +99,16 @@ public class UserController {
 
       try {
          String uploadedFilePath = null;
-         if (profileImage != null) {
-            log.info("attached file name: {}", profileImage.getOriginalFilename());
+         if (profilePicture != null) {
+            log.info("attached file name: {}", profilePicture.getOriginalFilename());
             // 전달받은 프로필 이미지를 먼저 지정된 경로에 저장한 후 저장 경로를 DB에 세팅하자.
-            uploadedFilePath = userService.uploadProfileImage(profileImage);
+            uploadedFilePath = userService.uploadProfileImage(profilePicture);
          }
 
          UserSignUpResponseDTO responseDTO = userService.create(dto, uploadedFilePath);
          return ResponseEntity.ok().body(responseDTO);
       } catch (IOException e) {
+         log.info("Error - {}", e);
          throw new RuntimeException(e);
       }
    }
@@ -120,9 +119,11 @@ public class UserController {
       log.info("/api/auth/signin- POST - {}", dto);
 
       ResponseEntity<FieldError> response = getFieldErrorResponseEntity(result);
+      log.info("response - {}", response);
       if (result != null) return response;
 
       LoginResponseDTO responseDTO = userService.authenticate(dto);
+      log.info("responseData", responseDTO);
       return ResponseEntity.ok().body(responseDTO);
 
    }
