@@ -21,15 +21,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
-@RequestMapping("/api/tosspay")
 public class WidgetController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping(value = "/confirm")
+    @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
-
-        System.out.println("jsonBody는? -> " + jsonBody);
 
         JSONParser parser = new JSONParser(); // json 객체를 번역
 
@@ -66,11 +63,17 @@ public class WidgetController {
         // 결제를 승인하면 결제수단에서 금액이 차감돼요.
         // @docs https://docs.tosspayments.com/guides/payment-widget/integration#3-결제-승인하기
         URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
+        System.out.println('1');
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        System.out.println('2');
         connection.setRequestProperty("Authorization", authorizations);
+        System.out.println('3');
         connection.setRequestProperty("Content-Type", "application/json");
+        System.out.println('4');
         connection.setRequestMethod("POST");
+        System.out.println('5');
         connection.setDoOutput(true);
+        System.out.println('6');
 
 
         OutputStream outputStream = connection.getOutputStream();
