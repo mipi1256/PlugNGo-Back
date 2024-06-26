@@ -10,7 +10,6 @@ import lombok.*;
 @Builder
 public class ChargerDetailResponseDTO {
 
-    private int id; // AUTO_INCREMENT
     private String stationId; // 충전소 id
     private String stationName; // 충전소명
     private String address; // 충전소 위치
@@ -23,9 +22,10 @@ public class ChargerDetailResponseDTO {
     private String latitude; // 위도
     private String longitude; // 경도
 
+    private boolean reservationPossible; // 예약 가능 여부 (플앤고 충전소만)
+
     // 엔터티 -> DTO
     public ChargerDetailResponseDTO(ChargingStation station) {
-        this.id = station.getChargeId();
         this.stationId = station.getStationId();
         this.stationName = station.getStationName();
         this.address = station.getAddress();
@@ -37,6 +37,8 @@ public class ChargerDetailResponseDTO {
         this.available = station.getAvailable();
         this.latitude = station.getLatitude();
         this.longitude = station.getLongitude();
+
+        this.reservationPossible = station.isReservation_possible();
     }
 
 }

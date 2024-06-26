@@ -34,6 +34,15 @@ public class ChargerController {
         ChargerListResponseDTO responseDTO = chargerService.retrieve();
         return ResponseEntity.ok().body(responseDTO);
     }
+    
+    // Plug & Go 충전소 목록 요청
+    @GetMapping("/reservation")
+    public ResponseEntity<?> plugAndGoRetrieveChargerList() {
+        log.info("/charge/reservation : GET!");
+
+        ChargerListResponseDTO responseDTO = chargerService.plugAndGoRetrieve();
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
     // 충전소 예약하기
     @PostMapping("/reservation")

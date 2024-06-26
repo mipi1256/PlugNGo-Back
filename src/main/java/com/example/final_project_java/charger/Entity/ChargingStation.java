@@ -13,10 +13,6 @@ import lombok.*;
 public class ChargingStation {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int chargeId;
-
     private String stationId; // 충전소 ID
 
     private String province; // 시
