@@ -37,6 +37,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
          setErrorResponse(response, ErrorCode.INVALID_AUTH);
       } catch (Exception e) {
          log.warn("알 수 없는 예외 발생!");
+         e.printStackTrace();
       }
    }
 
