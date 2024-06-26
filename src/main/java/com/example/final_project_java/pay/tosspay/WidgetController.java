@@ -47,6 +47,9 @@ public class WidgetController {
         obj.put("orderId", orderId);
         obj.put("amount", amount);
         obj.put("paymentKey", paymentKey);
+        System.out.println("주문번호 : " + orderId);
+        System.out.println("주문내용 : " + paymentKey);
+        System.out.println("결제금액 : " + amount);
 
         // TODO: 개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
         // @docs https://docs.tosspayments.com/reference/using-api/api-keys
@@ -63,17 +66,11 @@ public class WidgetController {
         // 결제를 승인하면 결제수단에서 금액이 차감돼요.
         // @docs https://docs.tosspayments.com/guides/payment-widget/integration#3-결제-승인하기
         URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
-        System.out.println('1');
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        System.out.println('2');
         connection.setRequestProperty("Authorization", authorizations);
-        System.out.println('3');
         connection.setRequestProperty("Content-Type", "application/json");
-        System.out.println('4');
         connection.setRequestMethod("POST");
-        System.out.println('5');
         connection.setDoOutput(true);
-        System.out.println('6');
 
 
         OutputStream outputStream = connection.getOutputStream();
