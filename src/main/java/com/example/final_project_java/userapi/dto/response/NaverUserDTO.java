@@ -34,10 +34,6 @@ public class NaverUserDTO {
         @JsonProperty("profile_image")
         private String profileImageUrl;
 
-        private String birthday;
-
-        private String birthYear;
-
         private String mobile;
 
     }
@@ -48,7 +44,6 @@ public class NaverUserDTO {
                 .name(this.naverAccount.name)
                 .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
                 .profilePicture(this.naverAccount.profileImageUrl)
-                .birthday(LocalDate.from(this.naverAccount.birthYear == null ? Year.now() : Year.parse(this.naverAccount.birthYear)))
                 .phoneNumber(this.naverAccount.mobile)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.NAVER)

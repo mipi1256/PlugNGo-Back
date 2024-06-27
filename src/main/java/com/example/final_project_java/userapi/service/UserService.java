@@ -40,8 +40,8 @@ public class UserService {
    private final TokenProvider tokenProvider;
    private final S3Service s3Service;
 
-   @Value("${upload.path}")
-   private String uploadRootPath;
+//   @Value("${upload.path}")
+//   private String uploadRootPath;
 
    public boolean isDuplicateByEmail(String email) {
       if (userRepository.existsByEmail(email)) {
