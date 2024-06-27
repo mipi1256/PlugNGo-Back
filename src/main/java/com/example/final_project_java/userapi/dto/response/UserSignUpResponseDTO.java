@@ -16,9 +16,12 @@ public class UserSignUpResponseDTO {
 
    private String password;
 
+   private String name;
+
    public UserSignUpResponseDTO(User saved) {
       this.email = saved.getEmail();
       this.password = saved.getPassword();
+      this.name = saved.getName();
    }
 
 

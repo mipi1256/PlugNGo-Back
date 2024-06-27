@@ -37,7 +37,7 @@ public class UserService {
 
    private final UserRepository userRepository;
    private final PasswordEncoder passwordEncoder;
-   private TokenProvider tokenProvider;
+   private final TokenProvider tokenProvider;
    private final S3Service s3Service;
 
    @Value("${upload.path}")
@@ -97,6 +97,7 @@ public class UserService {
       Map<String, String> token = getTokenMap(user);
       log.info("token - {}", token);
 
+      user.setAccessToken(token.get("access_token"));
       userRepository.save(user);
 
       return new LoginResponseDTO(user, token);

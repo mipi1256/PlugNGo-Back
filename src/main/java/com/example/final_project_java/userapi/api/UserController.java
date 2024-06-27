@@ -95,6 +95,7 @@ public class UserController {
       log.info("/api/auth POST! - {}", dto);
 
       ResponseEntity<FieldError> resultEntity = getFieldErrorResponseEntity(result);
+      log.info("resultEntity - {}", resultEntity);
       if (resultEntity != null) return resultEntity;
 
       try {
@@ -120,10 +121,10 @@ public class UserController {
 
       ResponseEntity<FieldError> response = getFieldErrorResponseEntity(result);
       log.info("response - {}", response);
-      if (result != null) return response;
+      if (response != null) return response;
 
       LoginResponseDTO responseDTO = userService.authenticate(dto);
-      log.info("responseData", responseDTO);
+      log.info("responseData: {}", responseDTO);
       return ResponseEntity.ok().body(responseDTO);
 
    }
