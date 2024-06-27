@@ -21,15 +21,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
-@RequestMapping("/api/tosspay")
 public class WidgetController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping(value = "/confirm")
+    @RequestMapping(value = "/confirm")
     public ResponseEntity<JSONObject> confirmPayment(@RequestBody String jsonBody) throws Exception {
-
-        System.out.println("jsonBody는? -> " + jsonBody);
 
         JSONParser parser = new JSONParser(); // json 객체를 번역
 
@@ -50,6 +47,9 @@ public class WidgetController {
         obj.put("orderId", orderId);
         obj.put("amount", amount);
         obj.put("paymentKey", paymentKey);
+        System.out.println("주문번호 : " + orderId);
+        System.out.println("주문내용 : " + paymentKey);
+        System.out.println("결제금액 : " + amount);
 
         // TODO: 개발자센터에 로그인해서 내 결제위젯 연동 키 > 시크릿 키를 입력하세요. 시크릿 키는 외부에 공개되면 안돼요.
         // @docs https://docs.tosspayments.com/reference/using-api/api-keys

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 
@@ -33,9 +34,6 @@ public class User {
    @Column(nullable = false)
    private String name;
 
-   private String nickName;
-
-   @Email
    @Id
    @Column(name = "email", nullable = false)
    private String email;
@@ -53,7 +51,7 @@ public class User {
 
    private String profilePicture;
 
-   private Year birthYear;
+   private LocalDate birthday;
 
    @Id
    @Column(name = "login_method")

@@ -2,9 +2,10 @@ package com.example.final_project_java.userapi.entity;
 
 public enum LoginMethod {
 
-   KAKAO, NAVER, GOOGLE
+   KAKAO, NAVER, GOOGLE, COMMON
 
 }
+
 
 
 

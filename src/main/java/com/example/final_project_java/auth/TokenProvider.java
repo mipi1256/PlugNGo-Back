@@ -34,7 +34,7 @@ public class TokenProvider {
    public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
-            Instant.now().plus(1, ChronoUnit.DAYS)
+            Instant.now().plus(100, ChronoUnit.DAYS)
       );
 
       // 토큰 생성
@@ -42,6 +42,10 @@ public class TokenProvider {
       claims.put("email", userEntity.getEmail());
       claims.put("phoneNumber", userEntity.getPhoneNumber());
       claims.put("role", userEntity.getRole().toString());
+      claims.put("loginMethod", String.valueOf(userEntity.getLoginMethod()));
+      claims.put("userId", userEntity.getId());
+      claims.put("phoneNumber", userEntity.getPhoneNumber());
+      claims.put("name", userEntity.getName());
 
       log.info("phoneNumber : {}", userEntity.getPhoneNumber());
 
@@ -63,7 +67,11 @@ public class TokenProvider {
    }
 
    public String createAccessKey(User userEntity) {
-      return createToken(userEntity, SECRET_KEY, 5, ChronoUnit.HOURS);
+
+      String token = createToken(userEntity, SECRET_KEY, 100, ChronoUnit.DAYS);
+      log.info("token - {}", token);
+
+      return token;
    }
 
    // 토큰에서 클레임을 추출하는 로직을 분리
@@ -99,12 +107,15 @@ public class TokenProvider {
    public String createGoogleToken(GoogleUserResponseDTO userResponseDTO, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
-            Instant.now().plus(1, ChronoUnit.DAYS)
+            Instant.now().plus(100, ChronoUnit.DAYS)
       );
 
       // 토큰 생성
       Map<String, String> claims = new HashMap<>();
       claims.put("email", userResponseDTO.getGoogleEmail());
+      claims.put("role", String.valueOf(userResponseDTO.getRole()));
+      claims.put("loginMethod", String.valueOf(userResponseDTO.getLoginMethod()));
+      claims.put("userId", userResponseDTO.getId());
 
 
       return Jwts.builder()
@@ -124,7 +135,7 @@ public class TokenProvider {
 
 
    public String createGoogleAcccesKey(GoogleUserResponseDTO userResponseDTO) {
-      return createGoogleToken(userResponseDTO, SECRET_KEY, 5, ChronoUnit.DAYS);
+      return createGoogleToken(userResponseDTO, SECRET_KEY, 100, ChronoUnit.DAYS);
    }
 }
 
