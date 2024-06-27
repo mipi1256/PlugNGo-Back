@@ -13,6 +13,7 @@ import lombok.*;
 public class TokenUserInfo {
    private String userId;
    private String email;
+   private String phoneNumber;
    private Role role;
    private LoginMethod loginMethod;
 
