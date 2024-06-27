@@ -43,6 +43,8 @@ public class TokenProvider {
       claims.put("role", userEntity.getRole().toString());
       claims.put("loginMethod", String.valueOf(userEntity.getLoginMethod()));
       claims.put("userId", userEntity.getId());
+      claims.put("phoneNumber", userEntity.getPhoneNumber());
+      claims.put("name", userEntity.getName());
 
 
       return Jwts.builder()

@@ -28,7 +28,7 @@ public class UserSignUpRequestDTO {
    private String password;
 
    @NotBlank
-   private String userName;
+   private String name;
 
    @NotNull
    private String birthday;
@@ -40,7 +40,7 @@ public class UserSignUpRequestDTO {
       return User.builder()
             .email(email)
             .password(password)
-            .name(userName)
+            .name(name)
             .birthday(LocalDate.parse(birthday))
             .phoneNumber(phoneNumber)
             .profilePicture(uploadFilePath)
