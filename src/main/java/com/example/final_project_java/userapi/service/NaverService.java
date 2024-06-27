@@ -73,7 +73,12 @@ public class NaverService {
         // 네이버 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
         if(!isDuplicate(userDTO.getNaverAccount().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken, passwordEncoder));
+            // User saved = userRepository.save(userDTO.toEntity(accessToken, passwordEncoder));
+            User newNaverUser = userDTO.toEntity(null, passwordEncoder);
+            Map<String, String> tokenMap = getTokenMap(newNaverUser);
+            newNaverUser.setAccessToken(tokenMap.get("access_token"));
+            User saved = userRepository.save(newNaverUser);
+            return new LoginResponseDTO(newNaverUser, tokenMap);
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
         User foundUser

@@ -75,7 +75,11 @@ public class KakaoService {
         // 카카오 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
         if(!isDuplicate(userDTO.getKakaoAccount().getEmail())) {
-            User saved = userRepository.save(userDTO.toEntity(accessToken, passwordEncoder));
+            User newKakaoUser = userDTO.toEntity(null, passwordEncoder);
+            Map<String, String> tokenMap = getTokenMap(newKakaoUser);
+            newKakaoUser.setAccessToken(tokenMap.get("access_token"));
+            User saved = userRepository.save(newKakaoUser);
+            return new LoginResponseDTO(newKakaoUser, tokenMap);
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
         User foundUser
@@ -85,7 +89,7 @@ public class KakaoService {
         Map<String, String> token = getTokenMap(foundUser);
 
         // 기존에 로그인했던 사용자의 access token값을 update
-        foundUser.changeAccessToken(accessToken);
+        foundUser.changeAccessToken(token.get("access_token"));
         userRepository.save(foundUser);
 
         return new LoginResponseDTO(foundUser, token);
