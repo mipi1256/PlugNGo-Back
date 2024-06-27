@@ -40,11 +40,14 @@ public class TokenProvider {
       // 토큰 생성
       Map<String, String> claims = new HashMap<>();
       claims.put("email", userEntity.getEmail());
+      claims.put("phoneNumber", userEntity.getPhoneNumber());
       claims.put("role", userEntity.getRole().toString());
       claims.put("loginMethod", String.valueOf(userEntity.getLoginMethod()));
       claims.put("userId", userEntity.getId());
       claims.put("phoneNumber", userEntity.getPhoneNumber());
       claims.put("name", userEntity.getName());
+
+      log.info("phoneNumber : {}", userEntity.getPhoneNumber());
 
 
       return Jwts.builder()
@@ -53,11 +56,12 @@ public class TokenProvider {
                   Keys.hmacShaKeyFor(SECRET_KEY.getBytes()),
                   SignatureAlgorithm.HS512
             )
+              .setClaims(claims)
             .setIssuer("Page운영자") // iss: 발급자 정보
             .setIssuedAt(new Date()) // iat: 발급 시간
             .setExpiration(expiry) // exp: 만료 시간
             .setSubject(userEntity.getId())
-            .setClaims(claims)
+
             .compact();
 
    }
@@ -94,6 +98,7 @@ public class TokenProvider {
       return TokenUserInfo.builder()
             .userId(claims.getSubject())
             .email(claims.get("email", String.class))
+            .phoneNumber(claims.get("phoneNumber", String.class))
             .role(Role.valueOf(claims.get("role", String.class)))
             .loginMethod(LoginMethod.valueOf(claims.get("loginMethod", String.class)))
             .build();
