@@ -15,7 +15,7 @@ public class TokenUserInfo {
    private String email;
    private Role role;
    private LoginMethod loginMethod;
-
+   private String phoneNumber;
 }
 
 

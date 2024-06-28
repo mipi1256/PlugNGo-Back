@@ -92,7 +92,7 @@ public class TokenProvider {
       log.info("claims: {}", claims);
 
       return TokenUserInfo.builder()
-            .userId(claims.getSubject())
+            .userId(claims.get("userId", String.class))
             .email(claims.get("email", String.class))
             .role(Role.valueOf(claims.get("role", String.class)))
             .loginMethod(LoginMethod.valueOf(claims.get("loginMethod", String.class)))
