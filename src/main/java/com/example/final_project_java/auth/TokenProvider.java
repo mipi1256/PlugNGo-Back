@@ -96,7 +96,7 @@ public class TokenProvider {
       log.info("claims: {}", claims);
 
       return TokenUserInfo.builder()
-            .userId(claims.getSubject())
+            .userId(claims.get("userId", String.class))
             .email(claims.get("email", String.class))
             .phoneNumber(claims.get("phoneNumber", String.class))
             .role(Role.valueOf(claims.get("role", String.class)))

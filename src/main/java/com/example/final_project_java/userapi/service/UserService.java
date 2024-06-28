@@ -6,7 +6,10 @@ import com.example.final_project_java.auth.TokenUserInfo;
 import com.example.final_project_java.aws.S3Service;
 import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
+import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
+import com.example.final_project_java.userapi.dto.response.UserInfoListResponseDTO;
+import com.example.final_project_java.userapi.dto.response.UserInfoResponseDTO;
 import com.example.final_project_java.userapi.dto.response.UserSignUpResponseDTO;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
@@ -25,9 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -141,6 +143,36 @@ public class UserService {
       return null;
    }
 
+   // 회원 정보 수정하기
+   public UserInfoListResponseDTO update(final UserUpdateRequestDTO requestDTO,
+                                     final String userId) throws Exception {
+      Optional<User> targetEntity = userRepository.findUserByUserIdOnly(userId);
+
+      targetEntity.ifPresent(user -> {
+         log.info("user Entity Present");
+         user.setName(requestDTO.getUserName());
+         user.setPhoneNumber(requestDTO.getPhoneNumber());
+         user.setBirthday(requestDTO.getBirthDay());
+
+         userRepository.save(user);
+      });
+
+      return retrieve(userId);
+
+   }
+
+   public UserInfoListResponseDTO retrieve(String userId) {
+      Optional<User> user = userRepository.findUserByUserIdOnly(userId);
+
+      List<UserInfoResponseDTO> collect = user.stream()
+              .map(UserInfoResponseDTO::new)
+              .collect(Collectors.toList());
+
+      return UserInfoListResponseDTO.builder()
+              .users(collect)
+              .build();
+
+   }
 
 
 

@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
                               .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/car").authenticated()
+                              .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
 //                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
 //                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                               .requestMatchers("/api/auth/load-profile").authenticated()
@@ -77,8 +78,9 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
                               .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                               .permitAll()
+
                               // 위에서 따로 설정하지 않은 나머지 요청들은 권한 검사가 필요하다.
-                              .anyRequest().permitAll()
+                              .anyRequest().authenticated()
             )
             .exceptionHandling(ExceptionHandling -> {
                // 인증 과정에서 예외가 발생한 경우 예외를 전달한다. (401)
