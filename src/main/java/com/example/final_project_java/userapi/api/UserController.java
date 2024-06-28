@@ -4,6 +4,7 @@ import com.example.final_project_java.auth.TokenUserInfo;
 import com.example.final_project_java.userapi.dto.request.GoogleLoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
+import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
 import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.UserSignUpResponseDTO;
@@ -18,7 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
@@ -178,11 +181,32 @@ public class UserController {
       }
    }
 
+   @PutMapping("/update")
+   private ResponseEntity<?> updateUserInfo(
+           @AuthenticationPrincipal TokenUserInfo userInfo,
+           @Validated @RequestBody UserUpdateRequestDTO requestDTO,
+           BindingResult result
+   ) {
+      ResponseEntity<FieldError> validatedResult = getFieldErrorResponseEntity(result);
+      if (validatedResult != null) return validatedResult;
+
+      log.info("/api/auth/update - PUT");
+      log.info("dto: {}", requestDTO);
+      log.info("userInfo: {}", userInfo);
+
+      try {
+         return ResponseEntity.ok().body(userService.update(requestDTO, userInfo.getUserId()));
+      } catch (Exception e) {
+         return ResponseEntity.internalServerError()
+                 .body(e.getMessage());
+      }
+   }
+
 
    private static ResponseEntity<FieldError> getFieldErrorResponseEntity(BindingResult result) {
       if (result.hasErrors()) {
          log.warn(result.toString());
-         return ResponseEntity.badRequest()
+         return org.springframework.http.ResponseEntity.badRequest()
                .body(result.getFieldError());
       }
       return null;
