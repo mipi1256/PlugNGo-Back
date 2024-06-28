@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +50,7 @@ public class ChargerService {
         List<ChargerDetailResponseDTO> dtoList = entityList.stream()
                 .filter(ChargingStation::isReservation_possible)
                 .map(ChargerDetailResponseDTO::new)
+                .sorted(Comparator.comparing(ChargerDetailResponseDTO::getChargingPrice).reversed())
                 .toList();
 
         return ChargerListResponseDTO.builder()

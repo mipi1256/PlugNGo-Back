@@ -31,6 +31,7 @@ public class CarDetailResponseDTO {
       this.carCompany = car.getCarCompany();
       this.maximumPassenger = car.getMaximumPassenger();
       this.carYear = car.getCarYear();
+      this.carPrice = car.getCarPrice();
       this.carPicture = car.getCarPicture();
       this.carOptions = car.getCarOptions();
 

@@ -51,7 +51,7 @@ public class CarController {
    }
 
    // 전기차 목록 요청
-   @GetMapping
+   @GetMapping("/res")
    public ResponseEntity<?> getCarList() {
       log.info("/car GET! 목록 조회!!!");
       CarListResponseDTO responseDTO = carService.getList();
