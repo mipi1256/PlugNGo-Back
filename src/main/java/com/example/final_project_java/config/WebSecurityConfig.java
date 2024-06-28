@@ -76,6 +76,7 @@ public class WebSecurityConfig {
                               .requestMatchers("/api/auth/load-profile").authenticated()
                               .requestMatchers("/api/auth/logout").authenticated()
                               .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
+                              .requestMatchers(HttpMethod.POST, "/confirm").permitAll()
                               .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                               .permitAll()
 
