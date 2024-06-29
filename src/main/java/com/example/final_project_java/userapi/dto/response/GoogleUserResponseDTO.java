@@ -10,6 +10,7 @@ import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Setter @Getter
 @ToString
@@ -24,6 +25,8 @@ public class GoogleUserResponseDTO {
    Role role = Role.COMMON;
 
    LoginMethod loginMethod = LoginMethod.GOOGLE;
+
+   private Map<String, String> token; // 인증 토큰 (핵심)
 
    @JsonProperty("connected_at")
    private LocalDateTime connectedAt;

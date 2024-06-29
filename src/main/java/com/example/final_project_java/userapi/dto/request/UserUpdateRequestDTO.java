@@ -25,7 +25,7 @@ public class UserUpdateRequestDTO {
     private String phoneNumber;
 
     @NotNull
-    @JsonFormat(pattern = "yyyyMMdd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
     private LocalDate birthDay;
 
     public User toEntity() {

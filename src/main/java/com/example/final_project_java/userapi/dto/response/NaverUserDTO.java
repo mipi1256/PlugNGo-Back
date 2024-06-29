@@ -19,6 +19,10 @@ public class NaverUserDTO {
     @JsonProperty("response")
     private NaverAccount naverAccount;
 
+    private LocalDate birthDay;
+
+    private String userId;
+
     @Setter @Getter
     @ToString
     public static class NaverAccount {
@@ -40,6 +44,7 @@ public class NaverUserDTO {
 
     public User toEntity(String accessToken, PasswordEncoder passwordEncoder) {
         return User.builder()
+                .id(userId)
                 .email(this.naverAccount.email)
                 .name(this.naverAccount.name)
                 .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
@@ -47,6 +52,7 @@ public class NaverUserDTO {
                 .phoneNumber(this.naverAccount.mobile)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.NAVER)
+                .birthday(birthDay)
                 .build();
     }
 

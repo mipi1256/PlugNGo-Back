@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -28,12 +29,18 @@ public class GoogleLoginResponseDTO {
 
    private Role role;
 
+   private LocalDate birthDay;
+
+   private String phoneNumber;
+
    public GoogleLoginResponseDTO(User user, Map<String, String> token) {
       this.email = user.getEmail();
       this.userName = user.getName();
       this.joinDate = user.getJoinDate();
       this.token = token;
       this.role = user.getRole();
+      this.birthDay = user.getBirthday();
+      this.phoneNumber = user.getPhoneNumber();
    }
 
 

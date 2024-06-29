@@ -44,10 +44,12 @@ public class TokenProvider {
       claims.put("role", userEntity.getRole().toString());
       claims.put("loginMethod", String.valueOf(userEntity.getLoginMethod()));
       claims.put("userId", userEntity.getId());
-      claims.put("phoneNumber", userEntity.getPhoneNumber());
       claims.put("name", userEntity.getName());
+      claims.put("birthDay", String.valueOf(userEntity.getBirthday()));
 
       log.info("phoneNumber : {}", userEntity.getPhoneNumber());
+      log.info("birthDay: {}", userEntity.getBirthday());
+      log.info("claims: {}", claims);
 
 
       return Jwts.builder()
@@ -134,7 +136,7 @@ public class TokenProvider {
    }
 
 
-   public String createGoogleAcccesKey(GoogleUserResponseDTO userResponseDTO) {
+   public String createGoogleAccessKey(GoogleUserResponseDTO userResponseDTO) {
       return createGoogleToken(userResponseDTO, SECRET_KEY, 100, ChronoUnit.DAYS);
    }
 }
