@@ -37,4 +37,15 @@ public class ReservationChargerResponseDTO { // 전기차 충전소 예약
         this.time = reservation.getTime();
     }
 
+    public ReservationChargerResponseDTO(ReservationCharger reservation) {
+        this.chargeNo = reservation.getChargeNo();
+        this.name = reservation.getUser().getName();
+        this.phoneNumber = reservation.getUser().getPhoneNumber();
+        this.stationName = reservation.getStationName();
+        this.rentTime = reservation.getRentTime();
+        this.rentChargePrice = reservation.getRentChargePrice();
+        this.address = reservation.getAddress();
+        this.time = reservation.getTime();
+    }
+
 }
