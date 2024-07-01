@@ -62,7 +62,7 @@ public class ChargerService {
     public ReservationChargerResponseDTO reservation(
             final ReservationChargerRequestDTO requestDTO,
             final String email,
-            final int chargeId
+            final String chargeId
             ) {
 
         User user = getUser(email);
@@ -99,8 +99,8 @@ public class ChargerService {
         return null;
     }
 
-    private ChargingStation getChargingStation(int chargeId) {
-        ChargingStation station = chargerRepository.findById(String.valueOf(chargeId)).orElseThrow(
+    private ChargingStation getChargingStation(String chargeId) {
+        ChargingStation station = chargerRepository.findById(chargeId).orElseThrow(
                 () -> new RuntimeException("충전소 정보가 없습니다.")
         );
         return station;
