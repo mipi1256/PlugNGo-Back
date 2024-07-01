@@ -34,7 +34,7 @@ public class CarCreateRequestDTO {
    private CarOptions carOptions;
 
    // DTO -> Entity
-   public Car toEntity (User user) {
+   public Car toEntity() {
       return Car.builder()
             .carName(carName)
             .carCompany(carCompany)
