@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.dto.response;
 import com.example.final_project_java.userapi.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -17,7 +18,7 @@ public class UserInfoResponseDTO {
     private String userName;
     private String phoneNumber;
 
-    @JsonFormat(pattern = "yyyyMMdd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDay;
 
     public UserInfoResponseDTO(User user) {
