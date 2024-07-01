@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,7 +153,7 @@ public class UserService {
          log.info("user Entity Present");
          user.setName(requestDTO.getUserName());
          user.setPhoneNumber(requestDTO.getPhoneNumber());
-         user.setBirthday(requestDTO.getBirthDay());
+         user.setBirthday(LocalDate.parse(requestDTO.getBirthDay()));
 
          userRepository.save(user);
       });
