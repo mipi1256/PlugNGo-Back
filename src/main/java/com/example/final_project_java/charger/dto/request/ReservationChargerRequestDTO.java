@@ -35,12 +35,12 @@ public class ReservationChargerRequestDTO {
                 .user(user)
                 .station(charge)
                 .address(this.address)
-                .name(user.getName()) // 사용자 이름을 엔티티의 name 필드에 매핑
+                .name(user.getName())
                 .phoneNumber(this.phoneNumber)
                 .rentChargePrice(this.price)
                 .rentTime(this.startDate.toLocalDateTime())
                 .time(this.selectedValue)
-                .stationName(this.stationName) // 충전소 이름을 stationName 필드에 매핑
+                .stationName(this.stationName)
                 .build();
     }
 
