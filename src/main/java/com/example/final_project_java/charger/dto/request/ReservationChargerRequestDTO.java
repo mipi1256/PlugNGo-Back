@@ -7,6 +7,8 @@ import com.example.final_project_java.userapi.entity.UserId;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Setter @Getter @ToString
 @EqualsAndHashCode
@@ -17,24 +19,33 @@ public class ReservationChargerRequestDTO {
 
     // 충전소 예약하기 -> 회원이름, 휴대폰번호, 충전소 ID, 시간
 
-    private String email;
-    private String phoneNumber;
+    private String chargeId;
     private String name;
+    private String phoneNumber;
+    private String email;
     private String stationName;
     private String address;
-    private int chargeId;
-    private LocalDateTime rentTime;
+    private String speed;
+    private int price;
+    private int selectedValue;
+    private ZonedDateTime startDate;
 
     public ReservationCharger toEntity(User user, ChargingStation charge) {
         return ReservationCharger.builder()
                 .user(user)
                 .station(charge)
-                .name(user.getName())
-                .stationName(charge.getStationName())
-                .address(charge.getAddress())
-                .phoneNumber(user.getPhoneNumber())
-                .rentTime(this.rentTime)
+                .address(this.address)
+                .name(user.getName()) // 사용자 이름을 엔티티의 name 필드에 매핑
+                .phoneNumber(this.phoneNumber)
+                .rentChargePrice(this.price)
+                .rentTime(this.startDate.toLocalDateTime())
+                .time(this.selectedValue)
+                .stationName(this.stationName) // 충전소 이름을 stationName 필드에 매핑
                 .build();
     }
 
+    public void setStartDate(String startDate) {
+        this.startDate = ZonedDateTime.parse(startDate).withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+    }
 }
+
