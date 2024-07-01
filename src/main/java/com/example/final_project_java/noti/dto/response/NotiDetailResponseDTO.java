@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class NotiDetailResponseDTO {
 
-   private String notiId;
+   private int notiId;
    private String notiWriter;
    private String notiTitle;
    private String notiContent;

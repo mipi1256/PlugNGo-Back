@@ -22,8 +22,8 @@ public class Noti {
 
    @Id
    @Column(name = "noti_id")
-   @GeneratedValue(strategy = GenerationType.UUID)
-   private String notiId;
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private int notiId;
 
    @Column(nullable = false)
    private String notiTitle;
