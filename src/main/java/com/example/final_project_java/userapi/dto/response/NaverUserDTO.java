@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.Year;
 
 @Setter
@@ -17,6 +18,10 @@ public class NaverUserDTO {
 
     @JsonProperty("response")
     private NaverAccount naverAccount;
+
+    private LocalDate birthDay;
+
+    private String userId;
 
     @Setter @Getter
     @ToString
@@ -33,25 +38,21 @@ public class NaverUserDTO {
         @JsonProperty("profile_image")
         private String profileImageUrl;
 
-        private String birthday;
-
-        private String birthYear;
-
         private String mobile;
 
     }
 
     public User toEntity(String accessToken, PasswordEncoder passwordEncoder) {
         return User.builder()
+                .id(userId)
                 .email(this.naverAccount.email)
                 .name(this.naverAccount.name)
-                .nickName(this.naverAccount.nickname)
                 .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
                 .profilePicture(this.naverAccount.profileImageUrl)
-                .birthYear(this.naverAccount.birthYear == null ? Year.now() : Year.parse(this.naverAccount.birthYear))
                 .phoneNumber(this.naverAccount.mobile)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.NAVER)
+                .birthday(birthDay)
                 .build();
     }
 

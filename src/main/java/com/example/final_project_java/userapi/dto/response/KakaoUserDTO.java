@@ -14,13 +14,15 @@ import java.time.LocalDateTime;
 @ToString
 public class KakaoUserDTO {
 
-    private long id;
+    private String id;
 
     @JsonProperty("connected_at")
     private LocalDateTime connectedAt;
 
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
+
+    private String phoneNumber;
 
     @Setter @Getter
     @ToString
@@ -45,6 +47,7 @@ public class KakaoUserDTO {
                 .name(this.kakaoAccount.profile.nickname)
                 .password(passwordEncoder.encode("password!")) // 비밀번호 암호화
                 .profilePicture(this.kakaoAccount.profile.profileImageUrl)
+                .phoneNumber(phoneNumber)
                 .accessToken(accessToken)
                 .loginMethod(LoginMethod.KAKAO)
                 .build();

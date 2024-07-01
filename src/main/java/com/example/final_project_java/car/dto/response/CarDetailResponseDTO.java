@@ -18,8 +18,8 @@ public class CarDetailResponseDTO {
    private String id;
    private String carName;
    private String carCompany;
-   private int maximumPassenger;
    private Year carYear;
+   private int maximumPassenger;
    private int carPrice;
    private String carPicture;
    private CarOptions carOptions;
@@ -31,6 +31,7 @@ public class CarDetailResponseDTO {
       this.carCompany = car.getCarCompany();
       this.maximumPassenger = car.getMaximumPassenger();
       this.carYear = car.getCarYear();
+      this.carPrice = car.getCarPrice();
       this.carPicture = car.getCarPicture();
       this.carOptions = car.getCarOptions();
 

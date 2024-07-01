@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.service;
 import com.example.final_project_java.auth.TokenProvider;
 import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.GoogleUserResponseDTO;
+import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
@@ -56,15 +57,19 @@ public class GoogleService {
          String pictureUrl = (String) payload.get("picture");
 
          GoogleUserResponseDTO userResponseDTO = new GoogleUserResponseDTO(email, name, pictureUrl);
-         String accessToken = tokenProvider.createGoogleAcccesKey(userResponseDTO);
+         String accessToken = tokenProvider.createGoogleAccessKey(userResponseDTO);
+
+         log.info("google access token : {}", accessToken);
 
          if (!isDuplicate(userResponseDTO.getGoogleEmail())) {
+
             userRepository.save(userResponseDTO.toEntity(accessToken, encoder));
          }
 
          User foundUser = userRepository.findByEmail(userResponseDTO.getGoogleEmail()).orElseThrow();
 
          Map<String, String> token = getTokenMap(foundUser);
+         log.info("accessToken : {}", token);
 
          return new GoogleLoginResponseDTO(foundUser, token);
       } else {
@@ -92,7 +97,7 @@ public class GoogleService {
       String accessToken = tokenProvider.createAccessKey(user);
 
       Map<String, String> token = new HashMap<>();
-      token.put("access-token", accessToken);
+      token.put("access_token", accessToken);
       return token;
    }
 

@@ -1,6 +1,8 @@
 package com.example.final_project_java.car.dto.request;
 
+import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.entity.ReviewCar;
+import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.userapi.entity.User;
 import jakarta.validation.constraints.*;
 import lombok.*;

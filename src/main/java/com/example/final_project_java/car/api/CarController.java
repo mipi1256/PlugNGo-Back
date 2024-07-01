@@ -37,6 +37,7 @@ public class CarController {
    ) {
       log.info("/car POST! - dto: {}", requestDTO);
       log.info("TokenUserInfo: {}", userInfo);
+      log.info("userId - {}", userInfo.getUserId());
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 
@@ -45,12 +46,13 @@ public class CarController {
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          log.info("추가 못했습니다");
+         e.printStackTrace();
          return ResponseEntity.internalServerError().body(e.getMessage());
       }
    }
 
    // 전기차 목록 요청
-   @GetMapping
+   @GetMapping("/res")
    public ResponseEntity<?> getCarList() {
       log.info("/car GET! 목록 조회!!!");
       CarListResponseDTO responseDTO = carService.getList();
@@ -98,6 +100,8 @@ public class CarController {
                                           BindingResult result) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
+      log.info("requestDTO name: {}", requestDTO.getCarName());
+      log.info("requestDTO carOption -{}", requestDTO.getCarOptions());
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 
@@ -105,6 +109,7 @@ public class CarController {
          CarListResponseDTO responseDTO = carService.update(requestDTO, userInfo.getUserId());
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
+         e.printStackTrace();
          return ResponseEntity.internalServerError()
                .body(e.getMessage());
       }

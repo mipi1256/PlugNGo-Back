@@ -28,14 +28,16 @@ public class ReservationCharger {
     private LocalDateTime rentTime; // 예약 날짜와 시간
 
     private int rentChargePrice; // 가격
-    
+
     private String stationName; // 충전소명
-    
+
     private String address; // 충전소 위치
 
     private String phoneNumber;
 
     private String name;
+
+    private int time; // 시간 단위
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({

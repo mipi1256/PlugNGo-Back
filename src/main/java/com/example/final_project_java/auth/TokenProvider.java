@@ -34,13 +34,22 @@ public class TokenProvider {
    public String createToken(User userEntity, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
-            Instant.now().plus(1, ChronoUnit.DAYS)
+            Instant.now().plus(100, ChronoUnit.DAYS)
       );
 
       // 토큰 생성
       Map<String, String> claims = new HashMap<>();
       claims.put("email", userEntity.getEmail());
+      claims.put("phoneNumber", userEntity.getPhoneNumber());
       claims.put("role", userEntity.getRole().toString());
+      claims.put("loginMethod", String.valueOf(userEntity.getLoginMethod()));
+      claims.put("userId", userEntity.getId());
+      claims.put("name", userEntity.getName());
+      claims.put("birthDay", String.valueOf(userEntity.getBirthday()));
+
+      log.info("phoneNumber : {}", userEntity.getPhoneNumber());
+      log.info("birthDay: {}", userEntity.getBirthday());
+      log.info("claims: {}", claims);
 
 
       return Jwts.builder()
@@ -49,17 +58,22 @@ public class TokenProvider {
                   Keys.hmacShaKeyFor(SECRET_KEY.getBytes()),
                   SignatureAlgorithm.HS512
             )
+              .setClaims(claims)
             .setIssuer("Page운영자") // iss: 발급자 정보
             .setIssuedAt(new Date()) // iat: 발급 시간
             .setExpiration(expiry) // exp: 만료 시간
             .setSubject(userEntity.getId())
-            .setClaims(claims)
+
             .compact();
 
    }
 
    public String createAccessKey(User userEntity) {
-      return createToken(userEntity, SECRET_KEY, 5, ChronoUnit.HOURS);
+
+      String token = createToken(userEntity, SECRET_KEY, 100, ChronoUnit.DAYS);
+      log.info("token - {}", token);
+
+      return token;
    }
 
    // 토큰에서 클레임을 추출하는 로직을 분리
@@ -84,8 +98,9 @@ public class TokenProvider {
       log.info("claims: {}", claims);
 
       return TokenUserInfo.builder()
-            .userId(claims.getSubject())
+            .userId(claims.get("userId", String.class))
             .email(claims.get("email", String.class))
+            .phoneNumber(claims.get("phoneNumber", String.class))
             .role(Role.valueOf(claims.get("role", String.class)))
             .loginMethod(LoginMethod.valueOf(claims.get("loginMethod", String.class)))
             .build();
@@ -94,12 +109,15 @@ public class TokenProvider {
    public String createGoogleToken(GoogleUserResponseDTO userResponseDTO, String secretKey, long duration, ChronoUnit unit) {
 
       Date expiry = Date.from(
-            Instant.now().plus(1, ChronoUnit.DAYS)
+            Instant.now().plus(100, ChronoUnit.DAYS)
       );
 
       // 토큰 생성
       Map<String, String> claims = new HashMap<>();
       claims.put("email", userResponseDTO.getGoogleEmail());
+      claims.put("role", String.valueOf(userResponseDTO.getRole()));
+      claims.put("loginMethod", String.valueOf(userResponseDTO.getLoginMethod()));
+      claims.put("userId", userResponseDTO.getId());
 
 
       return Jwts.builder()
@@ -118,8 +136,8 @@ public class TokenProvider {
    }
 
 
-   public String createGoogleAcccesKey(GoogleUserResponseDTO userResponseDTO) {
-      return createGoogleToken(userResponseDTO, SECRET_KEY, 5, ChronoUnit.DAYS);
+   public String createGoogleAccessKey(GoogleUserResponseDTO userResponseDTO) {
+      return createGoogleToken(userResponseDTO, SECRET_KEY, 100, ChronoUnit.DAYS);
    }
 }
 
