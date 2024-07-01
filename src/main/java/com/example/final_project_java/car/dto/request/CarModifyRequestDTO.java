@@ -35,7 +35,6 @@ public class CarModifyRequestDTO {
 
    private String carPicture;
 
-   @NotBlank
    private String carOptions;
 
 

@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.PATCH, "/car/review").authenticated()
                               .requestMatchers(HttpMethod.DELETE, "/car/review/{id}").authenticated()
                               .requestMatchers(HttpMethod.POST, "/car/review").authenticated()
-                              .requestMatchers(HttpMethod.PATCH, "/car").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/car/{id}").authenticated()
                               .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/car").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
