@@ -29,6 +29,7 @@ public class GoogleLoginResponseDTO {
 
    private Role role;
 
+   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
    private LocalDate birthDay;
 
    private String phoneNumber;

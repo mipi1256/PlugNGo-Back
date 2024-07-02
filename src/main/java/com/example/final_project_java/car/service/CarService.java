@@ -7,8 +7,10 @@ import com.example.final_project_java.car.dto.response.CarListResponseDTO;
 import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.entity.CarOptions;
 import com.example.final_project_java.car.repository.CarRepository;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
+import com.example.final_project_java.userapi.entity.UserId;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.final_project_java.car.entity.CarOptions.*;
 import static com.example.final_project_java.car.entity.CarOptions.valueOf;
 
 @Service
@@ -32,14 +35,14 @@ public class CarService {
    private final UserRepository userRepository;
 
    public CarListResponseDTO create(final CarCreateRequestDTO requestDTO, final String userId) {
-      User user = getUser(userId);
+      Optional<User> user = getUser(userId);
 
-      if (user.getRole() != Role.ADMIN) {
+      if (user.get().getRole() != Role.ADMIN) {
          log.warn("권한 없습니다! 나가주세요");
          throw new RuntimeException("추가 권한 없습니다!");
       }
 
-      carRepository.save(requestDTO.toEntity(user));
+      carRepository.save(requestDTO.toEntity());
       return getList();
    }
 
@@ -95,14 +98,20 @@ public class CarService {
    }
 
    // 사용자 Role 통해서 정보 불러오기
-   public User getUser(String userId) {
-      return userRepository.findById(userId).orElseThrow(
-            () -> new RuntimeException("회원 정보가 없습니다.")
-      );
+   private Optional<User> getUser(String userId) {
+      Optional<User> user = userRepository.findUserByUserIdOnly(userId);
+
+      return user;
    }
 
    // 전기차 삭제
    public CarListResponseDTO delete(final String carId, final String userId) {
+      Optional<User> user = getUser(userId);
+
+      if (user.get().getRole() != Role.ADMIN) {
+         log.warn("권한 없습니다! 나가주세요");
+         throw new RuntimeException("권한 없습니다!");
+      }
 
       Car car = carRepository.findById(carId).orElseThrow(
             () -> {
@@ -116,6 +125,13 @@ public class CarService {
 
 
    public CarListResponseDTO update(final CarModifyRequestDTO requestDTO, final String userId) {
+      Optional<User> user = getUser(userId);
+
+      if (user.get().getRole() != Role.ADMIN) {
+         log.warn("권한 없습니다! 나가주세요");
+         throw new RuntimeException("권한 없습니다!");
+      }
+
       Car car = carRepository.findById(requestDTO.getCarId()).orElseThrow(
             () -> {
                log.info("수정할 전기차 없습니다.");
@@ -129,7 +145,7 @@ public class CarService {
       car.setCarYear(requestDTO.getCarYear());
       car.setCarPrice(requestDTO.getCarPrice());
       car.setCarPicture(requestDTO.getCarPicture());
-      car.setCarOptions(valueOf(requestDTO.getCarOptions()));
+      car.setCarOptions(valueOf(requestDTO.getCarOptions().toUpperCase()));
 
       carRepository.save(car);
 

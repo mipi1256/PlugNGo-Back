@@ -25,15 +25,14 @@ public class UserUpdateRequestDTO {
     private String phoneNumber;
 
     @NotNull
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
-    private LocalDate birthDay;
+    private String birthDay;
 
     public User toEntity() {
         return User.builder()
                 .email(email)
                 .name(userName)
                 .phoneNumber(phoneNumber)
-                .birthday(birthDay)
+                .birthday(LocalDate.parse(birthDay))
                 .build();
     }
 

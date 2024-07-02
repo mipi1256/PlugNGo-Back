@@ -5,9 +5,7 @@ import com.example.final_project_java.userapi.dto.request.GoogleLoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
-import com.example.final_project_java.userapi.dto.response.GoogleLoginResponseDTO;
-import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
-import com.example.final_project_java.userapi.dto.response.UserSignUpResponseDTO;
+import com.example.final_project_java.userapi.dto.response.*;
 import com.example.final_project_java.userapi.service.GoogleService;
 import com.example.final_project_java.userapi.service.KakaoService;
 import com.example.final_project_java.userapi.service.NaverService;
@@ -179,6 +177,16 @@ public class UserController {
          default:
             return null;
       }
+   }
+
+   @GetMapping("/info")
+   private ResponseEntity<?> myInfo(
+           @AuthenticationPrincipal TokenUserInfo userInfo
+   ) {
+      log.info("/api/auth/info - GET");
+      UserInfoListResponseDTO responseDTO = userService.retrieve(userInfo.getUserId());
+      return ResponseEntity.ok().body(responseDTO);
+
    }
 
    @PutMapping("/update")

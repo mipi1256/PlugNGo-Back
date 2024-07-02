@@ -73,6 +73,37 @@ public class WebSecurityConfig {
                                         .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
                                         .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
                                         .requestMatchers(HttpMethod.DELETE, "/mypage").authenticated()
+      http
+            .csrf(csrfConfig -> csrfConfig.disable()) // CSRF 토큰공격을 방지하기 위한 장치 해제.
+            .cors(Customizer.withDefaults())
+            // 세션 관리 상태를 STATELESS로 설정해서 spring security가 제공하는 세션 생성 및 관리 기능 사용하지 않겠다.
+            .sessionManagement(SessionManagement ->
+                  SessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // spring에서 제공하는 기본 로그인 폼 사용 안함, http 기반 기본 인증도 안 쓰겠다.
+            .formLogin(form -> form.disable())
+            .httpBasic(AbstractHttpConfigurer::disable)
+            // 우리가 만든 jwtAuthFilter를 UsernamePasswordAuthenticationFilter보다 먼저 동작하도록 설정.
+            // security를 사용하면, 서버가 가동될 때 기본적으로 제공하는 여러가지 필터가 세팅이 되는데,
+            // jwtAuthFilter를 먼저 배치해서, 얘를 통과하면 인증이 완료가 되도록 처리
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+            // Exception filter를 Auth filter 앞에 배치를 하겠다는 뜻.
+            // 예외 처리만을 전담하는 필터를 생성새서, 예외가 발생하는 필터 앞단에 배치하면, 발생된 예외가
+            // 먼저 배치된 필터로 넘어가서 처리가 가능하게 됩니다.
+            .addFilterBefore(jwtExceptionFilter, JwtAuthFilter.class)
+            .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                              .requestMatchers(HttpMethod.GET, "/googleLogin").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/kakaoLogin").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/naverLogin").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/car/review").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/car/review/{id}").authenticated()
+                              .requestMatchers(HttpMethod.POST, "/car/review").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/car/{id}   ").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
+                              //.requestMatchers(HttpMethod.PUT, "/car").authenticated()
+                              .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/noti/{id}").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/noti/{id}").authenticated()
 //                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
 //                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                                         .requestMatchers("/api/auth/load-profile").authenticated()
