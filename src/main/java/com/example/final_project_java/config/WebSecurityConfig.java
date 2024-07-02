@@ -71,15 +71,19 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/car").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
-//                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
-//                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                               .requestMatchers("/api/auth/load-profile").authenticated()
                               .requestMatchers("/api/auth/logout").authenticated()
-                              .requestMatchers(HttpMethod.GET,"/events/list").permitAll()
-                              .requestMatchers(HttpMethod.GET,"/events/list/{no}").permitAll()
+                              .requestMatchers(HttpMethod.PATCH, "/noti/{id}").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/noti/{id}").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/mypage").authenticated()
                               .requestMatchers(HttpMethod.POST,"/events").authenticated()
                               .requestMatchers(HttpMethod.DELETE,"/events/{no}").authenticated()
+                              .requestMatchers("/api/auth/load-profile").authenticated()
+                              .requestMatchers("/api/auth/logout").authenticated()
                               .requestMatchers(HttpMethod.PATCH,"/events").authenticated()
+                              .requestMatchers(HttpMethod.GET,"/events/list").permitAll()
+                              .requestMatchers(HttpMethod.GET,"/events/list/{no}").permitAll()
                               .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
                               .requestMatchers(HttpMethod.POST, "/confirm").permitAll()
                               .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
@@ -105,47 +109,4 @@ public class WebSecurityConfig {
    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
