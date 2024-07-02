@@ -15,6 +15,9 @@ public class RentCarController {
 
    private final RentCarService rentCarService;
 
+   // 예약, 수정, 삭제, 마이페이지예약내용 보기 (목록), 예약 상세보기 나중에 디자인 생각하기
+   // 카 컨트롤러, 노티 컨트롤러 참고하기?
+
 }
 
 

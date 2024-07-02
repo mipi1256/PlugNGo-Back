@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -23,6 +24,9 @@ public class RentCar {
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    private int carNo;
 
+   @Builder.Default
+   private int reservationNo  = (int)(Math.random() * 89999) + 100000; // 예약 번호
+
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumns({
            @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
@@ -30,6 +34,8 @@ public class RentCar {
            @JoinColumn(name = "login_method", referencedColumnName = "login_method")
    })
    private User user;
+
+   private LocalDate birthday;
 
    @OneToOne(fetch = FetchType.LAZY)
    @JoinColumn(name = "car_id")
