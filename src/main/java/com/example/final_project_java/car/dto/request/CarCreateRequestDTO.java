@@ -33,6 +33,8 @@ public class CarCreateRequestDTO {
 
    private CarOptions carOptions;
 
+   private String category;
+
    // DTO -> Entity
    public Car toEntity() {
       return Car.builder()
@@ -43,6 +45,7 @@ public class CarCreateRequestDTO {
             .carPrice(carPrice)
             .carPicture(carPicture)
             .carOptions(carOptions)
+            .category(category)
             .build();
    }
 

@@ -37,6 +37,8 @@ public class CarModifyRequestDTO {
 
    private String carOptions;
 
+   private String category;
+
 
 
 }

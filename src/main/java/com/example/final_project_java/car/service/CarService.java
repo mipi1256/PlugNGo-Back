@@ -146,6 +146,7 @@ public class CarService {
       car.setCarPrice(requestDTO.getCarPrice());
       car.setCarPicture(requestDTO.getCarPicture());
       car.setCarOptions(valueOf(requestDTO.getCarOptions().toUpperCase()));
+      car.setCategory(requestDTO.getCategory());
 
       carRepository.save(car);
 
