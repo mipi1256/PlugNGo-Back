@@ -43,7 +43,8 @@ public class Car {
    @Column(nullable = false)
    private CarOptions carOptions;
 
-
+   @Column(nullable = false)
+   private String category; // 차 종류
 
 
 }
