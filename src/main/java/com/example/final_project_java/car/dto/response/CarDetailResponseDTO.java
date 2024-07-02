@@ -23,6 +23,7 @@ public class CarDetailResponseDTO {
    private int carPrice;
    private String carPicture;
    private CarOptions carOptions;
+   private String category;
 
    // DTO > Entity
    public CarDetailResponseDTO(Car car) {
@@ -34,7 +35,7 @@ public class CarDetailResponseDTO {
       this.carPrice = car.getCarPrice();
       this.carPicture = car.getCarPicture();
       this.carOptions = car.getCarOptions();
-
+      this.category = car.getCategory();
    }
 
 }
