@@ -26,5 +26,10 @@ public class MyPageService {
                 .toList();
     }
 
+    public void cancelStationReservation(Integer reservationNo) {
+        reservationRepository.deleteByReservationNo(reservationNo);
+        log.info("예약번호 '{}' 예약 취소됨.", reservationNo);
+    }
+
 
 }

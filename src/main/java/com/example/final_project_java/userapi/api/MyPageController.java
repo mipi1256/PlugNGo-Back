@@ -1,13 +1,15 @@
 package com.example.final_project_java.userapi.api;
 
+import com.example.final_project_java.auth.TokenUserInfo;
+import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
+import com.example.final_project_java.charger.service.ChargerService;
 import com.example.final_project_java.userapi.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class MyPageController {
 
    private final MyPageService myPageService;
 
+   // 예약한 충전소 목록 불러오기
    @GetMapping
    public ResponseEntity<?> myReserveStation() {
       log.info("/mypage : GET!");
@@ -27,5 +30,13 @@ public class MyPageController {
       return ResponseEntity.ok().body(responseDTO);
    }
 
+   @DeleteMapping
+   public ResponseEntity<?> cancelReservation(@RequestParam Integer reservationNo) {
+      log.info("/mypage?reservationNo={} : DELETE!", reservationNo);
+      System.out.println(reservationNo);
+
+      myPageService.cancelStationReservation(reservationNo);
+      return ResponseEntity.ok().build();
+   }
 
 }
