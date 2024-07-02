@@ -1,11 +1,13 @@
-package com.example.final_project_java.event.api;
+package com.example.final_project_java.review.api;
 
 import com.example.final_project_java.auth.TokenUserInfo;
-import com.example.final_project_java.event.dto.request.EventCreateRequestDTO;
-import com.example.final_project_java.event.dto.request.EventModifyRequestDTO;
-import com.example.final_project_java.event.dto.response.EventDetailResponseDTO;
 import com.example.final_project_java.event.dto.response.EventListResponseDTO;
-import com.example.final_project_java.event.service.EventService;
+import com.example.final_project_java.review.dto.request.ReviewCreateRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewModifyRequestDTO;
+import com.example.final_project_java.review.dto.response.ReviewDetailResponseDTO;
+import com.example.final_project_java.review.dto.response.ReviewListResponseDTO;
+import com.example.final_project_java.review.service.ReviewService;
+import com.example.final_project_java.userapi.entity.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,91 +22,87 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/events")
-public class EventController {
+@RequestMapping("/review")
+public class ReviewController {
 
-    private final EventService eventService;
+    private final ReviewService reviewService;
 
-    // 이벤트 목록 요청
+    // 리뷰 목록 요청
     @GetMapping("/list")
     public ResponseEntity<?> getList() {
-        log.info("/events/list - GET");
+        log.info("/review/list - GET");
 
-        EventListResponseDTO responseDTO = eventService.getList();
+        ReviewListResponseDTO responseDTO = reviewService.getList();
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    // 이벤트 글 상세보기 요청
+    // 리뷰 상세보기 요청
     @GetMapping("/list/{no}")
     public ResponseEntity<?> retrieve(
-            @PathVariable("no") int eventNo
+            @PathVariable("no") int reviewNo
     ) {
-        log.info("/events/list/{} - GET", eventNo);
+        log.info("/review/list/{} - GET", reviewNo);
 
         try {
-            EventDetailResponseDTO responseDTO = eventService.detail(eventNo);
+            ReviewDetailResponseDTO responseDTO = reviewService.detail(reviewNo);
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
-            log.info("조회 에러 발생! no : {}", eventNo);
+            log.info("조회 에러 발생! no : {}", reviewNo);
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    // 이벤트 등록 요청
+    // 리뷰 등록 요청
     @PostMapping
-    public ResponseEntity<?> createEvent(
+    public ResponseEntity<?> createReview(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody EventCreateRequestDTO requestDTO,
+            @Validated @RequestBody ReviewCreateRequestDTO requestDTO,
             BindingResult result
     ) {
-        log.info("/events - POST , dto : {}", requestDTO);
-        log.info("userInfo : {}", userInfo);
-        log.info("userInfo.id : {}", userInfo.getUserId());
+        log.info("/review - POST, dto : {}", requestDTO);
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        EventListResponseDTO responseDTO = eventService.create(requestDTO, userInfo.getUserId());
+        ReviewListResponseDTO responseDTO = reviewService.create(requestDTO, userInfo.getUserId());
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    // 이벤트 삭제 요청
+    // 리뷰 삭제 요청
     @DeleteMapping("/{no}")
-    public ResponseEntity<?> deleteEvent(
+    public ResponseEntity<?> deleteReview(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @PathVariable("no") int eventNo
+            @PathVariable("no") int reviewNo
     ) {
-        log.info("/events/{} - DELETE", eventNo);
+        log.info("/review/{} - DELETE", reviewNo);
 
         try {
-            EventListResponseDTO responseDTO = eventService.delete(eventNo, userInfo.getUserId());
+            ReviewListResponseDTO responseDTO = reviewService.delete(reviewNo, userInfo.getUserId());
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    // 이벤트 수정 요청
+    // 리뷰 수정 요청
     @PatchMapping("/{no}")
-    public ResponseEntity<?> updateEvent(
+    public ResponseEntity<?> updateReview(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody EventModifyRequestDTO requestDTO,
-            @PathVariable("no") int eventNo,
+            @Validated @RequestBody ReviewModifyRequestDTO requestDTO,
+            @PathVariable("no") int reviewNo,
             BindingResult result
     ) {
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        log.info("/events/{} - PATCH", eventNo);
+        log.info("/review/{} - PATCH", reviewNo);
 
         try {
-            return ResponseEntity.ok().body(eventService.update(eventNo, requestDTO, userInfo.getUserId()));
+            return ResponseEntity.ok().body(reviewService.update(reviewNo, requestDTO, userInfo.getUserId()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
-
 
     // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드
     private static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {
