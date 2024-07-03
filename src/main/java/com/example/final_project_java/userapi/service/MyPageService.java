@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -22,6 +23,7 @@ public class MyPageService {
         List<ReservationCharger> entityList = reservationRepository.findAll();
 
         return entityList.stream()
+                .sorted(Comparator.comparing(ReservationCharger::getRentTime))
                 .map(ReservationChargerResponseDTO::new)
                 .toList();
     }
