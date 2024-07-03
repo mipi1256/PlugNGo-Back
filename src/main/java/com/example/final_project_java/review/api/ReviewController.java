@@ -1,13 +1,12 @@
 package com.example.final_project_java.review.api;
 
 import com.example.final_project_java.auth.TokenUserInfo;
-import com.example.final_project_java.event.dto.response.EventListResponseDTO;
-import com.example.final_project_java.review.dto.request.ReviewCreateRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewCarCreateRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewChargeCreateRequestDTO;
 import com.example.final_project_java.review.dto.request.ReviewModifyRequestDTO;
 import com.example.final_project_java.review.dto.response.ReviewDetailResponseDTO;
 import com.example.final_project_java.review.dto.response.ReviewListResponseDTO;
 import com.example.final_project_java.review.service.ReviewService;
-import com.example.final_project_java.userapi.entity.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -52,11 +51,11 @@ public class ReviewController {
         }
     }
 
-    // 리뷰 등록 요청
-    @PostMapping
+    // 렌트카 리뷰 등록 요청
+    @PostMapping("/car")
     public ResponseEntity<?> createReview(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody ReviewCreateRequestDTO requestDTO,
+            @Validated @RequestBody ReviewCarCreateRequestDTO requestDTO,
             BindingResult result
     ) {
         log.info("/review - POST, dto : {}", requestDTO);
@@ -64,7 +63,22 @@ public class ReviewController {
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        ReviewListResponseDTO responseDTO = reviewService.create(requestDTO, userInfo.getUserId());
+        ReviewListResponseDTO responseDTO = reviewService.createCar(requestDTO, userInfo.getUserId(), requestDTO.getCarId());
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    // 충전소 리뷰 등록 요청
+    @PostMapping("/charge")
+    public ResponseEntity<?> createReview(
+            @AuthenticationPrincipal TokenUserInfo userInfo,
+            @Validated @RequestBody ReviewChargeCreateRequestDTO requestDTO,
+            BindingResult result
+    ) {
+        log.info("/review - POST, dto : {}", requestDTO);
+        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+        if (validatedResult != null) return validatedResult;
+
+        ReviewListResponseDTO responseDTO = reviewService.createCharge(requestDTO, userInfo.getUserId(), requestDTO.getStationId());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -75,9 +89,10 @@ public class ReviewController {
             @PathVariable("no") int reviewNo
     ) {
         log.info("/review/{} - DELETE", reviewNo);
+        log.info("userInfo - {}", userInfo);
 
         try {
-            ReviewListResponseDTO responseDTO = reviewService.delete(reviewNo, userInfo.getUserId());
+            ReviewListResponseDTO responseDTO = reviewService.delete(reviewNo, userInfo.getEmail());
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -98,7 +113,7 @@ public class ReviewController {
         log.info("/review/{} - PATCH", reviewNo);
 
         try {
-            return ResponseEntity.ok().body(reviewService.update(reviewNo, requestDTO, userInfo.getUserId()));
+            return ResponseEntity.ok().body(reviewService.update(reviewNo, requestDTO, userInfo.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
