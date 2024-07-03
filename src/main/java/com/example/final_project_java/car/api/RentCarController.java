@@ -31,7 +31,7 @@ public class RentCarController {
    @GetMapping("/resInfo/{userId}")
    public ResponseEntity<?> getRentReservation(@PathVariable("userId") String userId) {
       log.info("/resInfo GET! 목록 조회!");
-      RentCarListResponseDTO responseDTO = rentCarService.getRentList(userId);
+      RentCarListResponseDTO responseDTO = rentCarService.getRentListByUser(userId);
 
       return ResponseEntity.ok().body(responseDTO);
    }
@@ -73,7 +73,7 @@ public class RentCarController {
       if (validatedResult != null) return validatedResult;
 
       try {
-         RentCarDetailResponseDTO responseDTO = rentCarService.update(requestDTO, carNo);
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo);
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();

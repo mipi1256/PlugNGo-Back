@@ -1,11 +1,15 @@
 package com.example.final_project_java.car.repository;
 
 import com.example.final_project_java.car.entity.RentCar;
+import com.example.final_project_java.userapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
@@ -23,6 +27,9 @@ public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
 //    boolean existsByCarAndRentDateBetween(Car car, LocalDateTime rentDate, LocalDateTime turninDate); // 차랑 대여 날에 중복이 있는지
 
     List<RentCar> findByUserId(String userId);
+
+    @Query("SELECT u FROM User u WHERE id = :userId")
+    Optional<User> findUserByUserIdOnly(@Param("userId") String userId);
 
 }
 

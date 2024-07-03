@@ -1,5 +1,6 @@
 package com.example.final_project_java.car.service;
 
+import com.example.final_project_java.car.dto.request.RentCarCreateRequestDTO;
 import com.example.final_project_java.car.dto.request.RentCarRequestDTO;
 import com.example.final_project_java.car.dto.request.RentCarResModifyRequestDTO;
 import com.example.final_project_java.car.dto.response.RentCarDetailResponseDTO;
@@ -8,6 +9,7 @@ import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.entity.RentCar;
 import com.example.final_project_java.car.repository.CarRepository;
 import com.example.final_project_java.car.repository.RentCarRepository;
+import com.example.final_project_java.userapi.entity.Role;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +33,59 @@ public class RentCarService {
    private final UserRepository userRepository;
    private final RentCarRepository rentCarRepository;
 
-   // 전기차 예약 목록 보기
-//   public void getRentList (String userId) {
-//      getUserId(userId);
-//
-////      List<RentCar> entityList = rentCarRepository.findById();
-////
-////      List<RentCarDetailResponseDTO> dtoList = entityList.stream()
-////
-////              .map(RentCarDetailResponseDTO::new)
-////              .collect(Collectors.toList());
-////
-////      return RentCarListResponseDTO.builder()
-////              .rentList(dtoList)
-////              .build();
-//   }
+   // 권환 확인
+   public RentCarListResponseDTO create(RentCarCreateRequestDTO requestDTO, String userId) {
+      Optional<User> user = getUserRole(userId);
+
+      if (user.get().getRole() != Role.ADMIN) {
+         log.warn("권한이 없습니다. 나가주세요.");
+         throw new RuntimeException("조회 권한이 없습니다.");
+      }
+
+      rentCarRepository.save(requestDTO.toEntity());
+      return getList();
+   }
+
+   // 전기차 목록
+   public RentCarListResponseDTO getList() {
+
+      List<RentCar> entityList = rentCarRepository.findAll();
+
+      List<RentCarDetailResponseDTO> dtoList = entityList.stream()
+              .map(RentCarDetailResponseDTO::new)
+              .collect(Collectors.toList());
+
+      return RentCarListResponseDTO.builder()
+              .rentList(dtoList)
+              .build();
+   }
+
+
+   // 사용자 Role 통해서 정보 불러오기
+   private Optional<User> getUserRole(String userId) {
+
+      Optional<User> user = rentCarRepository.findUserByUserIdOnly(userId);
+
+      return user;
+   }
+
+
+   // 전기차 예약 목록 보기 (관리자가 모든 예약 보는것)
+   public RentCarListResponseDTO getRentList() {
+      List<RentCar> entityList = rentCarRepository.findAll();
+
+      List<RentCarDetailResponseDTO> dtoList = entityList.stream()
+              .map(RentCarDetailResponseDTO::new)
+              .collect(Collectors.toList());
+
+      return RentCarListResponseDTO.builder()
+              .rentList(dtoList)
+              .build();
+   }
+
 
    // 한 유저의 전기차 예약 목록을 가져온다.
-   public RentCarListResponseDTO getRentList(String userId) {
+   public RentCarListResponseDTO getRentListByUser(String userId) {
 
       User user = getUser(userId);
 
@@ -61,6 +98,8 @@ public class RentCarService {
               .rentList(dtoList)
               .build();
    }
+
+
 
    // 전기차 예약 상세보기 가져오기
    public RentCarListResponseDTO reservationInfo (int carNo) {
@@ -135,11 +174,13 @@ public class RentCarService {
       );
       rentCarRepository.deleteById(carNo);
 
-      return getRentList(userId);
+      return getRentList();
    }
 
    // 렌트카 예약 수정
-   public RentCarDetailResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo) {
+   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
+      User user = getUser(userId);
+
       Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
 
       targetEntity.ifPresent(reservation -> {
@@ -147,6 +188,19 @@ public class RentCarService {
          rentCarRepository.save(reservation);
       });
       return null;
+
+//      Optional<User> user = getUserRole(userId);
+//
+//      if (user.get().getRole() != Role.ADMIN) {
+//         log.warn("권한이 없습니다. 나가주세요.");
+//         throw new RuntimeException("권한이 없습니다.");
+//      }
+//
+//      rentCarRepository.findById(requestDTO.getCarNo()).orElseThrow(
+//              () -> {
+//                 log.info("수정할 예약이 없습니다.");
+//              }
+//      )
    }
 
 
