@@ -168,7 +168,7 @@ public class RentCarService {
    public RentCarListResponseDTO delete(int carNo, String userId) {
       RentCar deleteReservation = rentCarRepository.findById(carNo).orElseThrow(
               () -> {
-                 log.error("예약번호이 조회되지 않아 삭제가 불가능합니다. 예약순서: {}", carNo);
+                 log.error("예약번호가 조회되지 않아 삭제가 불가능합니다. 예약순서: {}", carNo);
                  throw new RuntimeException("예약번호가 존재하지 않아 삭제에 실패했습니다.");
               }
       );
@@ -183,12 +183,17 @@ public class RentCarService {
 
       Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
 
-      targetEntity.ifPresent(reservation -> {
-         reservation.setRentTime(requestDTO.getRentTime());
-         rentCarRepository.save(reservation);
-      });
-      return null;
+      if (targetEntity.isPresent()) {
+         RentCar reservation = targetEntity.get();
+         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
+         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
+         RentCar savedReservation = rentCarRepository.save(reservation);
+         return new RentCarListResponseDTO(savedReservation); // 반환할 DTO 생성 및 반환
+      } else {
+         throw new IllegalArgumentException("예약 번호로 찾을 수 없습니다." + carNo);
+      }
 
+   }
 //      Optional<User> user = getUserRole(userId);
 //
 //      if (user.get().getRole() != Role.ADMIN) {
@@ -201,8 +206,6 @@ public class RentCarService {
 //                 log.info("수정할 예약이 없습니다.");
 //              }
 //      )
-   }
-
 
 
 }

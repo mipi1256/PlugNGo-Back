@@ -59,7 +59,7 @@ public class RentCarController {
    }
 
    // 예약 수정하기 (픽업/반납 시간)
-   @PostMapping("/{carNo}")
+   @PatchMapping("/{carNo}")
    public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
                                           BindingResult result
