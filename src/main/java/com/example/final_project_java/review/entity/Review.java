@@ -13,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.CascadeType.ALL;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,19 +43,16 @@ public class Review {
 
     private int thumb; // 좋아요 수
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            @JoinColumn(name = "email", referencedColumnName = "email"),
-            @JoinColumn(name = "login_method", referencedColumnName = "login_method")})
-    private User user; // 회원 ID
+    private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id")
-    private Car car;
+    private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "station_id")
-    private ChargingStation station;
+    private String carId;
+
+    private String carName;
+
+    private String stationId;
+
+    private String stationName;
 
 }
