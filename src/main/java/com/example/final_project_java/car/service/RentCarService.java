@@ -35,9 +35,6 @@ public class RentCarService {
 //   public void getRentList (String userId) {
 //      getUserId(userId);
 //
-//
-//
-//
 ////      List<RentCar> entityList = rentCarRepository.findById();
 ////
 ////      List<RentCarDetailResponseDTO> dtoList = entityList.stream()
@@ -55,7 +52,7 @@ public class RentCarService {
 
       User user = getUser(userId);
 
-      List<RentCar> entityList = rentCarRepository.findByUser(userId);
+      List<RentCar> entityList = rentCarRepository.findByUserId(userId);
       List<RentCarDetailResponseDTO> dtoList = entityList.stream()
               .map(RentCarDetailResponseDTO::new)
               .collect(Collectors.toList());
@@ -99,13 +96,13 @@ public class RentCarService {
       Car carInfo = getCarInfo(carId);
 
       // 한 유저가 동일 예약한 날짜에 예약 못하게
-      if(rentCarRepository.existsByUserAndRentDateBetween(user, rentDate, turninDate)) {
+      if(rentCarRepository.existsByUserIdAndRentDateBetween(userId, rentDate, turninDate)) {
          throw new IllegalStateException("이미 예약하신 차가 있습니다.");
-      } else if(rentCarRepository.existsCar(carId)) {
+      } else if(rentCarRepository.existsByCarId(carId)) {
          throw new IllegalStateException("예약 불가능");
       }
 
-      rentCarRepository.save(requestDTO.toEntity(user, carInfo));
+      rentCarRepository.save(requestDTO.toEntity(user,carInfo));
       log.info("차량 예약 완료.");
 
       return null;

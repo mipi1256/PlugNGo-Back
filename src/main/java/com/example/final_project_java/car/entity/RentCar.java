@@ -34,8 +34,6 @@ public class RentCar {
 
    private String email;
 
-   private boolean reservationOK; // 원하는 날짜에 예약 가능한지 표시용
-
    private String carId; // 카 id
 
    private String carName;

@@ -23,6 +23,7 @@ public class RentCarRequestDTO {
     private String phoneNumber;
     private LocalDate birthday;
     private String email;
+    private String userId;
     private String carName;
     private LocalDateTime rentDate;
     private Time rentTime;
@@ -39,6 +40,7 @@ public class RentCarRequestDTO {
                 .phoneNumber(user.getPhoneNumber())
                 .birthday(user.getBirthday())
                 .email(user.getEmail())
+                .userId(user.getId())
                 .rentDate(rentDate) // 새로 유저에게 받아야 할 때
                 .rentTime(rentTime)
                 .turninDate(turninDate)
