@@ -1,6 +1,5 @@
 package com.example.final_project_java.car.entity;
 
-import com.example.final_project_java.userapi.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,24 +21,24 @@ public class RentCar {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   private int carNo;
+   private int carNo; // 렌트 순서(pk)
 
    @Builder.Default
    private int reservationNo  = (int)(Math.random() * 89999) + 100000; // 예약 번호
 
-   @OneToOne(fetch = FetchType.LAZY)
-   @JoinColumns({
-           @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-           @JoinColumn(name = "email", referencedColumnName = "email"),
-           @JoinColumn(name = "login_method", referencedColumnName = "login_method")
-   })
-   private User user;
+   private String userId; // 유저 id
+
+   private String userName;
 
    private LocalDate birthday;
 
-   @OneToOne(fetch = FetchType.LAZY)
-   @JoinColumn(name = "car_id")
-   private Car car;
+   private String email;
+
+   private boolean reservationOK; // 원하는 날짜에 예약 가능한지 표시용
+
+   private String carId; // 카 id
+
+   private String carName;
 
    @Column(nullable = false)
    private LocalDateTime rentDate;
@@ -58,6 +57,8 @@ public class RentCar {
 
    @Column(nullable = false)
    private String phoneNumber;
+
+   private String extra; // 비고
 
 
 }
