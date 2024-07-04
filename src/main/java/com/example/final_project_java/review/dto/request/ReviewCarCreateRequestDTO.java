@@ -22,13 +22,15 @@ public class ReviewCarCreateRequestDTO {
     @NotNull
     private int rating;
 
-    private String carId;
+    private String carName;
 
     public Review toEntity(User user, Car car) {
         return Review.builder()
                 .content(content)
                 .photo(photo)
                 .rating(rating)
+                .name(user.getName())
+                .email(user.getEmail())
                 .carId(car.getCarId())
                 .carName(car.getCarName())
                 .build();

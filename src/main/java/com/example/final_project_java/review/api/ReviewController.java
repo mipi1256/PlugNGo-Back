@@ -1,6 +1,7 @@
 package com.example.final_project_java.review.api;
 
 import com.example.final_project_java.auth.TokenUserInfo;
+import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.review.dto.request.ReviewCarCreateRequestDTO;
 import com.example.final_project_java.review.dto.request.ReviewChargeCreateRequestDTO;
 import com.example.final_project_java.review.dto.request.ReviewModifyRequestDTO;
@@ -26,12 +27,11 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // 리뷰 목록 요청
     @GetMapping("/list")
     public ResponseEntity<?> getList() {
         log.info("/review/list - GET");
 
-        ReviewListResponseDTO responseDTO = reviewService.getList();
+        List<ReviewDetailResponseDTO> responseDTO = reviewService.getList().getReviews();
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -64,7 +64,7 @@ public class ReviewController {
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        ReviewListResponseDTO responseDTO = reviewService.createCar(requestDTO, userInfo.getUserId(), requestDTO.getCarId());
+        ReviewListResponseDTO responseDTO = reviewService.createCar(requestDTO, userInfo.getEmail(), requestDTO.getCarName());
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -76,11 +76,12 @@ public class ReviewController {
             BindingResult result
     ) {
         log.info("/review - POST, dto : {}", requestDTO);
+        log.info("stationId : {}", requestDTO.getStationName());
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        ReviewListResponseDTO responseDTO = reviewService.createCharge(requestDTO, userInfo.getEmail(), requestDTO.getStationId());
+        ReviewListResponseDTO responseDTO = reviewService.createCharge(requestDTO, userInfo.getEmail(), requestDTO.getStationName());
         return ResponseEntity.ok().body(responseDTO);
     }
 
