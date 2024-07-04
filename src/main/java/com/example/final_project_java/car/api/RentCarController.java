@@ -59,29 +59,29 @@ public class RentCarController {
    }
 
    // 예약 수정하기 (픽업/반납 시간)
-   @PatchMapping("/{carNo}")
-   public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
-                                          @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
-                                          BindingResult result
-                                          ) {
-      log.info("/car PATCH!! 수정");
-      log.info("/requestDTO: {}", requestDTO);
-      log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
-      log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
-      ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-
-      if (validatedResult != null) return validatedResult;
-
-      try {
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo);
-         return ResponseEntity.ok().body(responseDTO);
-      } catch (Exception e) {
-         e.printStackTrace();
-         return ResponseEntity.internalServerError()
-                 .body(e.getMessage());
-      }
-
-   }
+//   @PatchMapping("/{carNo}")
+//   public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
+//                                          @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
+//                                          BindingResult result
+//                                          ) {
+//      log.info("/car PATCH!! 수정");
+//      log.info("/requestDTO: {}", requestDTO);
+//      log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
+//      log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
+//      ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+//
+//      if (validatedResult != null) return validatedResult;
+//
+//      try {
+//         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo);
+//         return ResponseEntity.ok().body(responseDTO);
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//         return ResponseEntity.internalServerError()
+//                 .body(e.getMessage());
+//      }
+//
+//   }
 
 
    // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드

@@ -178,22 +178,22 @@ public class RentCarService {
    }
 
    // 렌트카 예약 수정
-   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
-      User user = getUser(userId);
-
-      Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
-
-      if (targetEntity.isPresent()) {
-         RentCar reservation = targetEntity.get();
-         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
-         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
-         RentCar savedReservation = rentCarRepository.save(reservation);
-         return new RentCarListResponseDTO(savedReservation); // 반환할 DTO 생성 및 반환
-      } else {
-         throw new IllegalArgumentException("예약 번호로 찾을 수 없습니다." + carNo);
-      }
-
-   }
+//   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
+//      User user = getUser(userId);
+//
+//      Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
+//
+//      if (targetEntity.isPresent()) {
+//         RentCar reservation = targetEntity.get();
+//         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
+//         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
+//         RentCar savedReservation = rentCarRepository.save(reservation);
+//         return new RentCarListResponseDTO(savedReservation); // 반환할 DTO 생성 및 반환
+//      } else {
+//         throw new IllegalArgumentException("예약 번호로 찾을 수 없습니다." + carNo);
+//      }
+//
+//   }
 //      Optional<User> user = getUserRole(userId);
 //
 //      if (user.get().getRole() != Role.ADMIN) {

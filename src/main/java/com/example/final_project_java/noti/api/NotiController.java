@@ -3,6 +3,7 @@ package com.example.final_project_java.noti.api;
 import com.example.final_project_java.auth.TokenUserInfo;
 import com.example.final_project_java.noti.dto.request.NotiCreateRequestDTO;
 import com.example.final_project_java.noti.dto.request.NotiModifyRequestDTO;
+import com.example.final_project_java.noti.dto.response.NotiDetailResponseDTO;
 import com.example.final_project_java.noti.dto.response.NotiListResponseDTO;
 import com.example.final_project_java.noti.entity.Noti;
 import com.example.final_project_java.noti.service.NotiService;
@@ -28,7 +29,7 @@ public class NotiController {
    // 이용방법 목록 요청
    @GetMapping("/info")
    public ResponseEntity<?> getNotiList() {
-      log.info("/car/info GET! 목록 조회 요청!");
+      log.info("/noti/info GET! 목록 조회 요청!");
 
       NotiListResponseDTO responseDTO = notiService.getList();
 
@@ -36,12 +37,13 @@ public class NotiController {
    }
 
    // 이용방법 상세 요청
-   @GetMapping("/{id}")
+   @GetMapping("/info/{id}")
    public ResponseEntity<?> retriveNotiInfo(@PathVariable("id") String notiId) {
       log.info("/noti/{} GET Request! Noti 상세", notiId);
 
       try {
          NotiListResponseDTO responseDTO = notiService.retriveOne(notiId);
+         log.info("responseDTO - {}", responseDTO);
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          log.info("조회 에러 발생!  id: {}", notiId);
@@ -110,6 +112,17 @@ public class NotiController {
          return ResponseEntity.badRequest().body(e.getMessage());
       }
 
+   }
+
+   @PatchMapping("/views/{id}")
+   public ResponseEntity<?> updateNotiViews(@PathVariable("id") String notiId) {
+      try {
+         NotiDetailResponseDTO responseDTO = notiService.updateViews(notiId);
+         return ResponseEntity.ok().body(responseDTO);
+      } catch (Exception e) {
+         log.error("Error updating views for id: {}", notiId, e);
+         return ResponseEntity.internalServerError().body(e.getMessage());
+      }
    }
 
 

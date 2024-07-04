@@ -11,8 +11,11 @@ import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collections;
 import java.util.List;
@@ -115,7 +118,20 @@ public class NotiService {
       return getList();
    }
 
+   public NotiDetailResponseDTO updateViews(String notiId) throws Exception {
+      // Retrieve the notification
+      Noti noti = notiRespository.findById(notiId)
+            .orElseThrow(() -> new Exception("Notification not found"));
 
+      // Update the view count
+      noti.setViews(noti.getViews() + 1);
+
+      // Save the updated notification
+      notiRespository.save(noti);
+
+      // Return the updated notification details
+      return new NotiDetailResponseDTO(noti);
+   }
 
 
    // 이용방법 아이디 통해서 불러오기
@@ -134,6 +150,7 @@ public class NotiService {
 
       return user;
    }
+
 
 
 }
