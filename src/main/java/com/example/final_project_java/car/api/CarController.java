@@ -61,7 +61,7 @@ public class CarController {
    }
 
    // 전기차 상세보기 요청
-   @GetMapping("/{id}")
+   @GetMapping("/res/{id}")
    public ResponseEntity<?> retrieveCarInfo(@PathVariable("id") String carId) {
       log.info("/car/{} GET request!", carId);
       try {

@@ -68,6 +68,11 @@ public class ChargerService {
         User user = getUser(email);
         ChargingStation station = getChargingStation(chargeId);
 
+        // 한 유저가 한번에 충전소 2개 이상 예약 금지
+        if (reservationRepository.existsByUser(user)) {
+            throw new IllegalStateException("이미 예약하신 충전소가 있습니다.");
+        }
+
         reservationRepository.save(requestDTO.toEntity(user, station));
         log.info("충전소 예약 완료!");
 

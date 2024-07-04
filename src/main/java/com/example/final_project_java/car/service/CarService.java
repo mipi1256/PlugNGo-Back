@@ -110,7 +110,7 @@ public class CarService {
 
       if (user.get().getRole() != Role.ADMIN) {
          log.warn("권한 없습니다! 나가주세요");
-         throw new RuntimeException("추가 권한 없습니다!");
+         throw new RuntimeException("권한 없습니다!");
       }
 
       Car car = carRepository.findById(carId).orElseThrow(
@@ -129,7 +129,7 @@ public class CarService {
 
       if (user.get().getRole() != Role.ADMIN) {
          log.warn("권한 없습니다! 나가주세요");
-         throw new RuntimeException("추가 권한 없습니다!");
+         throw new RuntimeException("권한 없습니다!");
       }
 
       Car car = carRepository.findById(requestDTO.getCarId()).orElseThrow(
@@ -146,6 +146,7 @@ public class CarService {
       car.setCarPrice(requestDTO.getCarPrice());
       car.setCarPicture(requestDTO.getCarPicture());
       car.setCarOptions(valueOf(requestDTO.getCarOptions().toUpperCase()));
+      car.setCategory(requestDTO.getCategory());
 
       carRepository.save(car);
 

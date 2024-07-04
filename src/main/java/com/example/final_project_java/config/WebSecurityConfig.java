@@ -69,14 +69,30 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.POST, "/car/review").authenticated()
                               .requestMatchers(HttpMethod.PATCH, "/car/{id}").authenticated()
                               .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
-                              .requestMatchers(HttpMethod.PUT, "/car").authenticated()
+                              .requestMatchers(HttpMethod.POST, "/car").authenticated()
                               .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
-//                        .requestMatchers(HttpMethod.POST, "/send-one").authenticated()
-//                          .requestMatchers(HttpMethod.GET, "/charge").authenticated()
                               .requestMatchers("/api/auth/load-profile").authenticated()
                               .requestMatchers("/api/auth/logout").authenticated()
+                              .requestMatchers(HttpMethod.PATCH, "/noti/{id}").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/noti/{id}").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/mypage").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/admin").authenticated()
+                              .requestMatchers(HttpMethod.POST,"/events").authenticated()
+                              .requestMatchers(HttpMethod.DELETE,"/events/{no}").authenticated()
+                              .requestMatchers("/api/auth/load-profile").authenticated()
+                              .requestMatchers("/api/auth/logout").authenticated()
+                              .requestMatchers(HttpMethod.PATCH,"/events").authenticated()
+                              .requestMatchers(HttpMethod.POST, "/review").authenticated()
+//                              .requestMatchers(HttpMethod.POST, "/review/charge").authenticated()
+                              .requestMatchers(HttpMethod.GET, "/car/res").permitAll()
+                              .requestMatchers(HttpMethod.GET, "/car/res/{id}").permitAll()
+                              .requestMatchers(HttpMethod.GET,"/events/list").permitAll()
+                              .requestMatchers(HttpMethod.GET,"/events/list/{no}").permitAll()
                               .requestMatchers(HttpMethod.POST, "/api/auth/googleLogin").permitAll()
                               .requestMatchers(HttpMethod.POST, "/confirm").permitAll()
+                              .requestMatchers(HttpMethod.GET, "/review/list").permitAll()
+                              .requestMatchers(HttpMethod.GET, "/review/list/{no}").permitAll()
                               .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                               .permitAll()
 
@@ -100,47 +116,4 @@ public class WebSecurityConfig {
    }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
