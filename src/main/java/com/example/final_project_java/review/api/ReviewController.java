@@ -58,7 +58,8 @@ public class ReviewController {
             @Validated @RequestBody ReviewCarCreateRequestDTO requestDTO,
             BindingResult result
     ) {
-        log.info("/review - POST, dto : {}", requestDTO);
+        log.info("/review/car - POST, dto : {}", requestDTO);
+        log.info("Email: {}", userInfo.getEmail());
 
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
@@ -75,10 +76,11 @@ public class ReviewController {
             BindingResult result
     ) {
         log.info("/review - POST, dto : {}", requestDTO);
+
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
-        ReviewListResponseDTO responseDTO = reviewService.createCharge(requestDTO, userInfo.getUserId(), requestDTO.getStationId());
+        ReviewListResponseDTO responseDTO = reviewService.createCharge(requestDTO, userInfo.getEmail(), requestDTO.getStationId());
         return ResponseEntity.ok().body(responseDTO);
     }
 

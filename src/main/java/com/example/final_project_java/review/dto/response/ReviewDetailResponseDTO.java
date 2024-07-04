@@ -20,6 +20,7 @@ public class ReviewDetailResponseDTO {
     private String photo;
     private int rating;
     private int thumb; // 좋아요 수
+    private String email;
     private String name;
     private String carName;
     private String stationName;
@@ -31,6 +32,7 @@ public class ReviewDetailResponseDTO {
         this.photo = review.getPhoto();
         this.rating = review.getRating();
         this.thumb = review.getThumb();
+        this.email = review.getEmail();
         this.name = review.getName();
         this.carName = review.getCarName();
         this.stationName = review.getStationName();

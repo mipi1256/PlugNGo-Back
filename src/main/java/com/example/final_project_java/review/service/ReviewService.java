@@ -60,14 +60,14 @@ public class ReviewService {
     // 렌트카 리뷰 등록
     public ReviewListResponseDTO createCar(
             final ReviewCarCreateRequestDTO requestDTO,
-            final String userId,
+            final String email,
             final String carId) {
-        User foundUser = userRepository.findUserByUserIdOnly(userId).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow();
         Car car = carRepository.findById(carId).orElseThrow();
 
-        log.info("조회한 user: {}", foundUser.toString());
+        log.info("조회한 user: {}", user.toString());
 
-        Review review = requestDTO.toEntity(foundUser, car);
+        Review review = requestDTO.toEntity(user, car);
         log.info("완성된 Review: {}", review);
 
         reviewRepository.save(review);
@@ -79,12 +79,13 @@ public class ReviewService {
     // 충전소 리뷰 등록
     public ReviewListResponseDTO createCharge(
             final ReviewChargeCreateRequestDTO requestDTO,
-            final String userId,
+            final String email,
             final String stationId) {
-        User foundUser = userRepository.findUserByUserIdOnly(userId).orElseThrow();
-        ChargingStation station = chargerRepository.findById(stationId).orElseThrow();
-
+        User foundUser = userRepository.findByEmail(email).orElseThrow();
         log.info("조회한 user: {}", foundUser.toString());
+
+        ChargingStation station = chargerRepository.findById(stationId).orElseThrow();
+        log.info("조회한 충전소: {}", station.toString());
 
         Review review = requestDTO.toEntity(foundUser, station);
         log.info("완성된 Review: {}", review);
