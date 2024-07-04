@@ -1,14 +1,21 @@
 package com.example.final_project_java.car.api;
 
+import com.example.final_project_java.auth.TokenUserInfo;
+import com.example.final_project_java.car.dto.request.RentCarCreateRequestDTO;
+import com.example.final_project_java.car.dto.request.RentCarRequestDTO;
 import com.example.final_project_java.car.dto.request.RentCarResModifyRequestDTO;
+import com.example.final_project_java.car.dto.response.CarListResponseDTO;
 import com.example.final_project_java.car.dto.response.RentCarDetailResponseDTO;
 import com.example.final_project_java.car.dto.response.RentCarListResponseDTO;
 import com.example.final_project_java.car.service.RentCarService;
+import com.example.final_project_java.charger.dto.request.ReservationChargerRequestDTO;
+import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
 import com.example.final_project_java.userapi.entity.UserId;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -25,16 +32,44 @@ public class RentCarController {
    private final RentCarService rentCarService;
 
    // 예약, 수정, 삭제, 마이페이지예약내용 보기 (목록), 예약 상세보기 나중에 디자인 생각하기
-   // 카 컨트롤러, 노티 컨트롤러 참고하기?
 
-   // 예약 목록 보기 요청
+   // 전기차 목록 요청 (관리자가 모든 예약 확인)
+   @GetMapping
+   public ResponseEntity<?> getList() {
+      log.info("/car GET! 목록 조회!!!");
+      RentCarListResponseDTO responseDTO = rentCarService.getList();
+
+      return ResponseEntity.ok().body(responseDTO);
+   }
+
+
+   // 예약하기
+   @PostMapping("/reservation")
+   public ResponseEntity<?> reservationRentCar(
+           @AuthenticationPrincipal TokenUserInfo userInfo,
+           @Validated @RequestBody RentCarRequestDTO requestDTO,
+           BindingResult result
+   ) {
+      log.info("/charge/reservation : POST - dto : {}", requestDTO);
+      log.info("TokenUserInfo : {}", userInfo);
+
+      ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+      if (validatedResult != null) return validatedResult;
+
+      RentCarDetailResponseDTO responseDTO = rentCarService.reservation(requestDTO, requestDTO.getUserId(), requestDTO.getCarId(), requestDTO.getRentDate(), requestDTO.getTurninDate());
+      return ResponseEntity.ok().body(responseDTO);
+   }
+
+
+   // 유저 예약 목록 보기 요청
    @GetMapping("/resInfo/{userId}")
    public ResponseEntity<?> getRentReservation(@PathVariable("userId") String userId) {
-      log.info("/resInfo GET! 목록 조회!");
+      log.info("/resInfo/{} GET! 유저 예약 목록 조회!", userId);
       RentCarListResponseDTO responseDTO = rentCarService.getRentListByUser(userId);
 
       return ResponseEntity.ok().body(responseDTO);
    }
+
 
    // 전기차 예약 상세보기 요청
    @GetMapping("/resInfo/{carNo}")
@@ -54,26 +89,31 @@ public class RentCarController {
    public ResponseEntity<?> deleteRentCar(
            @PathVariable int carNo,
            @RequestParam String userId) {
-      RentCarListResponseDTO responseDTO = rentCarService.delete(carNo, userId);
+      RentCarListResponseDTO responseDTO = rentCarService.delete(carNo);
       return ResponseEntity.ok(responseDTO);
    }
+
 
    // 예약 수정하기 (픽업/반납 시간)
    @PatchMapping("/{carNo}")
    public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
+                                          String userId,
                                           BindingResult result
                                           ) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
       log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
       log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
-      ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+      log.info("requestDTO extra: {}", requestDTO.getExtra()); // 비고 수정
 
+      // 요청 데이터 검증 결과 처리
+      ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 
       try {
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo);
+         // 서비스 메서드 호출
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userId);
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();

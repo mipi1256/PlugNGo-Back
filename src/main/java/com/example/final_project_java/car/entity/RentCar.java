@@ -24,7 +24,7 @@ public class RentCar {
    private int carNo; // 렌트 순서(pk)
 
    @Builder.Default
-   private int reservationNo  = (int)(Math.random() * 89999) + 100000; // 예약 번호
+   private int reservationNo  = (int)(Math.random() * 89999) + 100000; // 예약 번호 (관리자 용)
 
    private String userId; // 유저 id
 

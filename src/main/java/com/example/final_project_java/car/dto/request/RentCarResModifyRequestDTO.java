@@ -21,6 +21,6 @@ public class RentCarResModifyRequestDTO {
 
     private Time turninTime; // 반납시간
 
-//    private String extra; // 비고 (에러 수정하고 꼭 추가하기!!!!!!!!)
+    private String extra; // 비고
 
 }
