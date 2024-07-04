@@ -16,12 +16,10 @@ import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -61,11 +59,12 @@ public class ReviewService {
     public ReviewListResponseDTO createCar(
             final ReviewCarCreateRequestDTO requestDTO,
             final String email,
-            final String carId) {
+            final String carName) {
         User user = userRepository.findByEmail(email).orElseThrow();
-        Car car = carRepository.findById(carId).orElseThrow();
-
         log.info("조회한 user: {}", user.toString());
+
+        Car car = carRepository.findByCarName(carName).orElseThrow();
+        log.info("선택한 차 : {}", car.toString());
 
         Review review = requestDTO.toEntity(user, car);
         log.info("완성된 Review: {}", review);
@@ -80,11 +79,11 @@ public class ReviewService {
     public ReviewListResponseDTO createCharge(
             final ReviewChargeCreateRequestDTO requestDTO,
             final String email,
-            final String stationId) {
+            final String stationName) {
         User foundUser = userRepository.findByEmail(email).orElseThrow();
         log.info("조회한 user: {}", foundUser.toString());
 
-        ChargingStation station = chargerRepository.findById(stationId).orElseThrow();
+        ChargingStation station = chargerRepository.findById(stationName).orElseThrow();
         log.info("조회한 충전소: {}", station.toString());
 
         Review review = requestDTO.toEntity(foundUser, station);
@@ -99,7 +98,7 @@ public class ReviewService {
     public ReviewListResponseDTO delete(final int reviewNo, final String email) throws Exception {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             log.warn("사용자를 찾을 수 없습니다.");
             throw new RuntimeException("사용자를 찾을 수 없습니다.");
         }

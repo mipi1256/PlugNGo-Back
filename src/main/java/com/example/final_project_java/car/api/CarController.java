@@ -56,6 +56,7 @@ public class CarController {
    public ResponseEntity<?> getCarList() {
       log.info("/car GET! 목록 조회!!!");
       CarListResponseDTO responseDTO = carService.getList();
+      log.info("car info : {}", responseDTO);
 
       return ResponseEntity.ok().body(responseDTO);
    }

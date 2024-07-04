@@ -24,6 +24,8 @@ public class ReviewChargeCreateRequestDTO {
 
     private String stationId;
 
+    private String stationName;
+
     private String email;
 
     public Review toEntity(User user, ChargingStation station) {
