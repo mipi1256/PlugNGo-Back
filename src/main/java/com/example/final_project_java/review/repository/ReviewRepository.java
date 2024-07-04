@@ -13,7 +13,7 @@ public interface ReviewRepository extends JpaRepository<Review, String> {
 
     Optional<Review> findByReviewNo(int reviewNo);
 
-    // 관리자페이지용
+    // 관리자페이지용 리뷰번호기준 리뷰 삭제
     @Modifying
     @Transactional
     @Query("DELETE FROM Review WHERE reviewNo = :reviewNo")

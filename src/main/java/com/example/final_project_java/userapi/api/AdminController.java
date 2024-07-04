@@ -5,6 +5,7 @@ import com.example.final_project_java.car.service.RentCarService;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
 import com.example.final_project_java.review.dto.response.ReviewDetailResponseDTO;
 import com.example.final_project_java.review.service.ReviewService;
+import com.example.final_project_java.userapi.service.AdminService;
 import com.example.final_project_java.userapi.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class AdminController {
     private final MyPageService myPageService;
     private final RentCarService rentCarService;
     private final ReviewService reviewService;
+    private final AdminService adminService;
 
     @GetMapping("/station")
     public ResponseEntity<?> reservedStation() {
@@ -31,11 +33,29 @@ public class AdminController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @DeleteMapping("/station")
+    public ResponseEntity<?> cancelReservation(@RequestParam Integer reservationNo) {
+        log.info("/admin/station?reservationNo={} : DELETE!", reservationNo);
+        System.out.println(reservationNo);
+
+        adminService.cancelStationReservation(reservationNo);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/car")
     public ResponseEntity<?> reservedCar() {
         log.info("/admin/car : GET!");
         List<RentCarDetailResponseDTO> responseDTO = rentCarService.getList().getRentList();
         return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @DeleteMapping("/car")
+    public ResponseEntity<?> cancelReservationCar(@RequestParam Integer reservationNo) {
+        log.info("/admin/car?reservationNo={} : DELETE!", reservationNo);
+        System.out.println(reservationNo);
+
+        adminService.cancelCarReservation(reservationNo);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/review")
@@ -51,7 +71,7 @@ public class AdminController {
         log.info("/admin/review?reviewNo={} : DELETE!", reviewNo);
         System.out.println(reviewNo);
 
-        reviewService.deleteReviewByAdmin(reviewNo);
+        adminService.deleteReviewByAdmin(reviewNo);
         return ResponseEntity.ok().build();
     }
 
