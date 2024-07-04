@@ -19,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, String> {
    boolean existsByEmailAndLoginMethod(String email, LoginMethod loginMethod);
 
    // 이메일 찾기
-   Optional<User> findByEmail(String email);
+   Optional<User> findByEmail(@Param("email") String email);
 
 
    boolean existsByEmail(String email);

@@ -83,6 +83,8 @@ public class WebSecurityConfig {
                               .requestMatchers("/api/auth/load-profile").authenticated()
                               .requestMatchers("/api/auth/logout").authenticated()
                               .requestMatchers(HttpMethod.PATCH,"/events").authenticated()
+                              .requestMatchers(HttpMethod.POST, "/review").authenticated()
+//                              .requestMatchers(HttpMethod.POST, "/review/charge").authenticated()
                               .requestMatchers(HttpMethod.GET, "/car/res").permitAll()
                               .requestMatchers(HttpMethod.GET, "/car/res/{id}").permitAll()
                               .requestMatchers(HttpMethod.GET,"/events/list").permitAll()
