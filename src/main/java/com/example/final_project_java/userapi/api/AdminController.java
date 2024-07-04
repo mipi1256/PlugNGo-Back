@@ -9,9 +9,7 @@ import com.example.final_project_java.userapi.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,4 +45,14 @@ public class AdminController {
         List<ReviewDetailResponseDTO> responseDTO = reviewService.getList().getReviews();
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    @DeleteMapping("/review")
+    public ResponseEntity<?> deleteReview(@RequestParam Integer reviewNo) {
+        log.info("/admin/review?reviewNo={} : DELETE!", reviewNo);
+        System.out.println(reviewNo);
+
+        reviewService.deleteReviewByAdmin(reviewNo);
+        return ResponseEntity.ok().build();
+    }
+
 }

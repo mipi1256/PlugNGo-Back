@@ -78,6 +78,7 @@ public class WebSecurityConfig {
                               .requestMatchers(HttpMethod.GET, "/mypage").authenticated()
                               .requestMatchers(HttpMethod.DELETE, "/mypage").authenticated()
                               .requestMatchers(HttpMethod.GET, "/admin").authenticated()
+                              .requestMatchers(HttpMethod.DELETE, "/admin").authenticated()
                               .requestMatchers(HttpMethod.POST,"/events").authenticated()
                               .requestMatchers(HttpMethod.DELETE,"/events/{no}").authenticated()
                               .requestMatchers("/api/auth/load-profile").authenticated()

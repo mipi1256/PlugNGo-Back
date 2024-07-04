@@ -152,4 +152,10 @@ public class ReviewService {
         return getList();
     }
 
+    // 관리자 보기/삭제용
+    public void deleteReviewByAdmin(Integer reviewNo) {
+        reviewRepository.deleteByReviewNo(reviewNo);
+        log.info("리뷰번호 '{}' 리뷰 삭제됨.", reviewNo);
+    }
+
 }
