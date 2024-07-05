@@ -1,5 +1,6 @@
 package com.example.final_project_java.car.repository;
 
+import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.entity.RentCar;
 import com.example.final_project_java.userapi.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
