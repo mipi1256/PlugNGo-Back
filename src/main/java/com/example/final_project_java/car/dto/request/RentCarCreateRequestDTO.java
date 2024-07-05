@@ -19,7 +19,12 @@ public class RentCarCreateRequestDTO {
     private int reservationNo;
 
     @NotBlank
+    private String userId;
+
     private String userName;
+
+    @NotBlank
+    private int carNo;
 
     private String carName;
 

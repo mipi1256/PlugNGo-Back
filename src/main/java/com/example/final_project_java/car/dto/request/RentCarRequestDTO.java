@@ -18,7 +18,7 @@ public class RentCarRequestDTO {
 
     // 전기차 예약하기 -> 회원이름, 전화번호, 생일, 차 id, 차 이름, 픽업 날짜, 픽업 시간, 반납 날짜, 반납 시간, 비고
 
-    private int carId; // 차id
+    private String carId; // 차id
     private String userName;
     private String phoneNumber;
     private LocalDate birthday;

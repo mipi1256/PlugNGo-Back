@@ -1,6 +1,5 @@
 package com.example.final_project_java.car.service;
 
-import com.example.final_project_java.car.dto.request.RentCarCreateRequestDTO;
 import com.example.final_project_java.car.dto.request.RentCarRequestDTO;
 import com.example.final_project_java.car.dto.request.RentCarResModifyRequestDTO;
 import com.example.final_project_java.car.dto.response.RentCarDetailResponseDTO;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -33,22 +33,9 @@ public class RentCarService {
    private final UserRepository userRepository;
    private final RentCarRepository rentCarRepository;
 
-   // 권환 확인
-   public RentCarListResponseDTO create(RentCarCreateRequestDTO requestDTO, String userId) {
-      Optional<User> user = getUserRole(userId);
 
-      if (user.get().getRole() != Role.ADMIN) {
-         log.warn("권한이 없습니다. 나가주세요.");
-         throw new RuntimeException("조회 권한이 없습니다.");
-      }
-
-      rentCarRepository.save(requestDTO.toEntity());
-      return getList();
-   }
-
-   // 전기차 목록
+   // 전기차 예약 목록 보기 (관리자가 모든 예약 보는것)
    public RentCarListResponseDTO getList() {
-
       List<RentCar> entityList = rentCarRepository.findAll();
 
       List<RentCarDetailResponseDTO> dtoList = entityList.stream()
@@ -62,32 +49,16 @@ public class RentCarService {
 
 
    // 사용자 Role 통해서 정보 불러오기
-   private Optional<User> getUserRole(String userId) {
-
-      Optional<User> user = rentCarRepository.findUserByUserIdOnly(userId);
-
-      return user;
-   }
-
-
-   // 전기차 예약 목록 보기 (관리자가 모든 예약 보는것)
-   public RentCarListResponseDTO getRentList() {
-      List<RentCar> entityList = rentCarRepository.findAll();
-
-      List<RentCarDetailResponseDTO> dtoList = entityList.stream()
-              .map(RentCarDetailResponseDTO::new)
-              .collect(Collectors.toList());
-
-      return RentCarListResponseDTO.builder()
-              .rentList(dtoList)
-              .build();
-   }
+//   private Optional<User> getUserRole(String userId) {
+//
+//      Optional<User> user = rentCarRepository.findUserByUserIdOnly(userId);
+//
+//      return user;
+//   }
 
 
    // 한 유저의 전기차 예약 목록을 가져온다.
    public RentCarListResponseDTO getRentListByUser(String userId) {
-
-      User user = getUser(userId);
 
       List<RentCar> entityList = rentCarRepository.findByUserId(userId);
       List<RentCarDetailResponseDTO> dtoList = entityList.stream()
@@ -98,7 +69,6 @@ public class RentCarService {
               .rentList(dtoList)
               .build();
    }
-
 
 
    // 전기차 예약 상세보기 가져오기
@@ -122,26 +92,29 @@ public class RentCarService {
       );
    }
 
-
    // 예약하기
-   public RentCarDetailResponseDTO create (
+   public RentCarDetailResponseDTO reservation (
            final RentCarRequestDTO requestDTO,
-           final String userId,
+//           final String userId,
+           final String email,
            final String carId,
+           final String carName,
            final LocalDateTime rentDate,
-           final LocalDateTime turninDate
+           final LocalDateTime turninDate,
+           final Time rentTime,
+           final Time turninTime
            ) {
-      User user = getUser(userId);
+      User user = getUser(email);
       Car carInfo = getCarInfo(carId);
+      log.info("carInfo - {}", carInfo);
 
-      // 한 유저가 동일 예약한 날짜에 예약 못하게
-      if(rentCarRepository.existsByUserIdAndRentDateBetween(userId, rentDate, turninDate)) {
+      // 한 유저가 동일 예약한 날짜에 다른 차 예약 못하게
+      if(rentCarRepository.existsByUserIdAndRentDateBetween(email, rentDate, turninDate)) {
          throw new IllegalStateException("이미 예약하신 차가 있습니다.");
-      } else if(rentCarRepository.existsByCarId(carId)) {
+      } else if(rentCarRepository.existsByCarId(carId)) { // 같은 날에 동일 차를 예약 하려면 안됨.
          throw new IllegalStateException("예약 불가능");
       }
-
-      rentCarRepository.save(requestDTO.toEntity(user,carInfo));
+      RentCar save = rentCarRepository.save(requestDTO.toEntity(user, carInfo));
       log.info("차량 예약 완료.");
 
       return null;
@@ -156,16 +129,33 @@ public class RentCarService {
    }
 
    // 유저
-   private User getUser(String userId) {
-      User user = userRepository.findById(userId).orElseThrow(
+   private User getUser(String email) {
+      User user = userRepository.findByEmail(email).orElseThrow(
               () -> new RuntimeException("회원정보가 존재하지 않습니다.")
       );
       return user;
    }
 
 
+   // 렌트카 예약 삭제 (유저가 본인 예약 삭제하는것)
+//   public RentCarListResponseDTO delete(int carNo, String userId) {
+//      RentCar deleteReservation = rentCarRepository.findById(carNo).orElseThrow(
+//              () -> {
+//                 log.error("예약번호가 조회되지 않아 삭제가 불가능합니다. 예약순서: {}", carNo);
+//                 throw new RuntimeException("예약번호가 존재하지 않아 삭제에 실패했습니다.");
+//              }
+//      );
+//      rentCarRepository.deleteById(carNo);
+//
+//      return getRentListByUser(userId);
+//   }
+
+
    // 렌트카 예약 삭제
-   public RentCarListResponseDTO delete(int carNo, String userId) {
+   public RentCarListResponseDTO delete(int carNo, String email) {
+      User user = getUser(email);
+
+
       RentCar deleteReservation = rentCarRepository.findById(carNo).orElseThrow(
               () -> {
                  log.error("예약번호가 조회되지 않아 삭제가 불가능합니다. 예약순서: {}", carNo);
@@ -174,26 +164,46 @@ public class RentCarService {
       );
       rentCarRepository.deleteById(carNo);
 
-      return getRentList();
+      return getList();
    }
 
    // 렌트카 예약 수정
-//   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
-//      User user = getUser(userId);
-//
-//      Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
-//
-//      if (targetEntity.isPresent()) {
-//         RentCar reservation = targetEntity.get();
-//         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
-//         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
-//         RentCar savedReservation = rentCarRepository.save(reservation);
-//         return new RentCarListResponseDTO(savedReservation); // 반환할 DTO 생성 및 반환
-//      } else {
-//         throw new IllegalArgumentException("예약 번호로 찾을 수 없습니다." + carNo);
-//      }
-//
-//   }
+   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
+      User user = getUser(userId);
+
+      // 회원인지 확인
+      if (user.getRole() != Role.COMMON) {
+         throw new IllegalArgumentException("해당 사용자는 수정 권한이 없습니다.");
+      }
+
+      Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
+
+
+      if (targetEntity.isPresent()) {
+         RentCar reservation = targetEntity.get();
+         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
+         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
+         reservation.setExtra(reservation.getExtra()); // 비고 설정
+         RentCar savedReservation = rentCarRepository.save(reservation);
+
+         // RentCarDetailResponseDTO 객체를 생성
+         RentCarDetailResponseDTO detailResponseDTO = new RentCarDetailResponseDTO(savedReservation);
+
+         // RentCarListResponseDTO 객체 생성하고 rentList에 detailResponseDTO를 포함.
+         List<RentCarDetailResponseDTO> rentList = Collections.singletonList(detailResponseDTO);
+         RentCarListResponseDTO responseDTO = RentCarListResponseDTO.builder()
+                 .rentList(rentList)
+                 .build();
+
+         // 응답 DTO를 반환
+         return responseDTO;
+      } else {
+         // 예약 정보를 찾을 수 없을 때 예외를 발생
+         throw new IllegalArgumentException("예약 정보를 찾을 수 없습니다." + carNo);
+      }
+
+   }
+   // 예약 수정
 //      Optional<User> user = getUserRole(userId);
 //
 //      if (user.get().getRole() != Role.ADMIN) {

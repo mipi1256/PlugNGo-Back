@@ -1,5 +1,6 @@
 package com.example.final_project_java.car.dto.response;
 
+import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.entity.RentCar;
 import lombok.*;
 
@@ -15,6 +16,7 @@ public class RentCarDetailResponseDTO {
 
     // 전기차 예약확인-> 예약번호, 회원이름, 전화번호, 차 이름, 픽업 날짜, 픽업 시간, 반납 날짜, 반납 시간, 비고
 
+    private int carNo;
     private int reservationNo; // 예약번호
     private String userName;
     private String phoneNumber;

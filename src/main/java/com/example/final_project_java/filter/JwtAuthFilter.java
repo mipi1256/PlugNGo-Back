@@ -103,7 +103,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       // 요청 헤더에서 가져온 토큰은 순수 토큰 값이 아닌
       // 앞에 Bearer가 붙어있으니 이것을 제거하는 작업.
       if (StringUtils.hasText(bearerToken)
-            && bearerToken.startsWith("Bearer")) {
+            && bearerToken.startsWith("Bearer ")) {
          return bearerToken.substring(7);
       }
       return null;

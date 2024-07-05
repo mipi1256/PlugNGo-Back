@@ -22,9 +22,11 @@ public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
 
     //boolean existsCar (String carId); // 대여 확인
 
+    Car findByCarId(String carId);
+
     boolean existsByCarId(String carId);
 
-    boolean existsByUserIdAndRentDateBetween(String userId, LocalDateTime rentDate, LocalDateTime turninDate); // 유저랑 대여 날에 중복이 있는지
+    boolean existsByUserIdAndRentDateBetween(String email, LocalDateTime rentDate, LocalDateTime turninDate); // 유저랑 대여 날에 중복이 있는지
 
 //    boolean existsByCarAndRentDateBetween(Car car, LocalDateTime rentDate, LocalDateTime turninDate); // 차랑 대여 날에 중복이 있는지
 
