@@ -105,7 +105,7 @@ public class RentCarController {
    @PatchMapping("/{carNo}")
    public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
-                                          String userId,
+                                          @RequestHeader("email") String email,
                                           BindingResult result
                                           ) {
       log.info("/car PATCH!! 수정");
@@ -120,7 +120,7 @@ public class RentCarController {
 
       try {
          // 서비스 메서드 호출
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userId);
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, email);
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();

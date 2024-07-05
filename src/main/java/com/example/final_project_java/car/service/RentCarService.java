@@ -168,8 +168,8 @@ public class RentCarService {
    }
 
    // 렌트카 예약 수정
-   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
-      User user = getUser(userId);
+   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String email) {
+      User user = getUser(email);
 
       // 회원인지 확인
       if (user.getRole() != Role.COMMON) {
@@ -183,7 +183,7 @@ public class RentCarService {
          RentCar reservation = targetEntity.get();
          reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
          reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
-         reservation.setExtra(reservation.getExtra()); // 비고 설정
+         reservation.setExtra(requestDTO.getExtra()); // 비고 설정
          RentCar savedReservation = rentCarRepository.save(reservation);
 
          // RentCarDetailResponseDTO 객체를 생성

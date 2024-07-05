@@ -14,7 +14,7 @@ import java.sql.Time;
 @Builder
 public class RentCarResModifyRequestDTO {
 
-    @NotBlank
+//    @NotBlank
     private int carNo; // 렌트 pk
 
     private Time rentTime; // 픽업시간
