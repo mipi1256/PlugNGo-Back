@@ -1,10 +1,10 @@
 package com.example.final_project_java.review.api;
 
 import com.example.final_project_java.auth.TokenUserInfo;
-import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.review.dto.request.ReviewCarCreateRequestDTO;
 import com.example.final_project_java.review.dto.request.ReviewChargeCreateRequestDTO;
-import com.example.final_project_java.review.dto.request.ReviewModifyRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewCarModifyRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewChargeModifyRequestDTO;
 import com.example.final_project_java.review.dto.response.ReviewDetailResponseDTO;
 import com.example.final_project_java.review.dto.response.ReviewListResponseDTO;
 import com.example.final_project_java.review.service.ReviewService;
@@ -102,11 +102,31 @@ public class ReviewController {
         }
     }
 
-    // 리뷰 수정 요청
-    @PatchMapping("/{no}")
+    // 전기차 리뷰 수정 요청
+    @PatchMapping("/car/{no}")
     public ResponseEntity<?> updateReview(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody ReviewModifyRequestDTO requestDTO,
+            @Validated @RequestBody ReviewCarModifyRequestDTO requestDTO,
+            @PathVariable("no") int reviewNo,
+            BindingResult result
+    ) {
+        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+        if (validatedResult != null) return validatedResult;
+
+        log.info("/review/{} - PATCH", reviewNo);
+
+        try {
+            return ResponseEntity.ok().body(reviewService.update(reviewNo, requestDTO, userInfo.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    // 충전소 리뷰 수정 요청
+    @PatchMapping("/charge/{no}")
+    public ResponseEntity<?> updateReview(
+            @AuthenticationPrincipal TokenUserInfo userInfo,
+            @Validated @RequestBody ReviewChargeModifyRequestDTO requestDTO,
             @PathVariable("no") int reviewNo,
             BindingResult result
     ) {

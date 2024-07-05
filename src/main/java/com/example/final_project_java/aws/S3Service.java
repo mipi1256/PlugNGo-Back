@@ -30,6 +30,9 @@ public class S3Service {
    @Value("${spring.cloud.aws.s3.bucket}")
    private String bucketName;
 
+   @Value("${spring.cloud.aws.s3.bucketAdmin}")
+   private String bucketAdmin;
+
    // S3에 연결해서 인증을 처리하는 로직
    @PostConstruct // S3Service가 생성될 때 1번만 실행되는 아노테이션
    private void initializeAmazon() {
@@ -67,6 +70,24 @@ public class S3Service {
             .getUrl(b -> b.bucket(bucketName).key(fileName))
             .toString();
 
+   }
+
+   public String uploadToS3BucketAdmin(byte[] uploadFile, String fileName) {
+
+      // 업로드 할 파일 S3 오브젝트로 생성
+      PutObjectRequest request
+              = PutObjectRequest.builder()
+              .bucket(bucketAdmin)
+              .key(fileName)
+              .build();
+
+      // 오브젝트를 버킷에 업로드 (위에서 생성한 오브젝트, 업로드 하고자 하는 파일(바이트 배열))
+      s3.putObject(request, RequestBody.fromBytes(uploadFile));
+
+      // 업로드 된 파일의 url 반환
+      return s3.utilities()
+              .getUrl(b -> b.bucket(bucketAdmin).key(fileName))
+              .toString();
    }
 
 }
