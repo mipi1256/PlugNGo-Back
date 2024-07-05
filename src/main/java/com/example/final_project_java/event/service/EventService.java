@@ -41,11 +41,11 @@ public class EventService {
 
     public EventListResponseDTO create(
             final EventCreateRequestDTO requestDTO,
-            final String userId) {
-        Optional<User> user = getUser(userId);
+            final String email) {
+        User user = getUser(email);
 
         // 관리자만 글을 쓸 수 있게 처리
-        if (user.get().getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN) {
             log.warn("권한이 없습니다.");
             throw new RuntimeException("권한이 없습니다.");
         }
@@ -56,11 +56,11 @@ public class EventService {
         return getList();
     }
 
-    public EventListResponseDTO delete(final int eventNo, final String userId) throws Exception {
-        Optional<User> user = getUser(userId);
+    public EventListResponseDTO delete(final int eventNo, final String email) throws Exception {
+        User user = getUser(email);
 
         // 관리자만 글을 삭제할 수 있게 처리
-        if (user.get().getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN) {
             log.warn("권한이 없습니다.");
             throw new RuntimeException("권한이 없습니다.");
         }
@@ -76,11 +76,11 @@ public class EventService {
         return getList();
     }
 
-    public EventListResponseDTO update(final int eventNo, final EventModifyRequestDTO requestDTO, final String userId) throws Exception {
-        Optional<User> user = getUser(userId);
+    public EventListResponseDTO update(final int eventNo, final EventModifyRequestDTO requestDTO, final String email) throws Exception {
+        User user = getUser(email);
 
         // 관리자만 글을 수정할 수 있게 처리
-        if (user.get().getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN) {
             log.warn("권한이 없습니다.");
             throw new RuntimeException("권한이 없습니다.");
         }
@@ -109,9 +109,10 @@ public class EventService {
 
     }
 
-    private Optional<User> getUser(String userId) {
-        Optional<User> user = userRepository.findUserByUserIdOnly(userId);
-
+    private User getUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new RuntimeException("회원 정보가 없습니다.")
+        );
         return user;
     }
 
