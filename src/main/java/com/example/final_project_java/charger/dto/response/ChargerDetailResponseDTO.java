@@ -12,6 +12,8 @@ public class ChargerDetailResponseDTO {
 
     private String stationId; // 충전소 id
     private String stationName; // 충전소명
+    private String province; // 시 & 도
+    private String districts; // 시 & 군 & 구
     private String address; // 충전소 위치
     private String speed; // 충전 스피드 (급속 / 완속)
     private String chargerType; // 충전기 타입
@@ -28,6 +30,8 @@ public class ChargerDetailResponseDTO {
     public ChargerDetailResponseDTO(ChargingStation station) {
         this.stationId = station.getStationId();
         this.stationName = station.getStationName();
+        this.province = station.getProvince();
+        this.districts = station.getDistricts();
         this.address = station.getAddress();
         this.speed = station.getSpeed();
         this.chargerType = station.getChargerType();
