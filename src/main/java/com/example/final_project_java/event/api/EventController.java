@@ -35,7 +35,7 @@ public class EventController {
     }
 
     // 이벤트 글 상세보기 요청
-    @GetMapping("/list/{no}")
+    @GetMapping("/{no}")
     public ResponseEntity<?> retrieve(
             @PathVariable("no") int eventNo
     ) {
@@ -104,7 +104,6 @@ public class EventController {
                     .body(e.getMessage());
         }
     }
-
 
     // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드
     private static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {

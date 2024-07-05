@@ -20,8 +20,12 @@ public class CustomServletConfig implements WebMvcConfigurer {
 
    @Override
    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-      registry.addResourceHandler("/static/**")
-              .addResourceLocations("classpath:/static/");
+      if (!registry.hasMappingForPattern("/static/**")) {
+         registry.addResourceHandler("/static/**")
+                 .addResourceLocations("classpath:/static/")
+                 .setCachePeriod(3600)
+                 .resourceChain(true);
+      }
    }
 
 
