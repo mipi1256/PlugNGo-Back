@@ -6,6 +6,8 @@ import com.example.final_project_java.event.dto.request.EventModifyRequestDTO;
 import com.example.final_project_java.event.dto.response.EventDetailResponseDTO;
 import com.example.final_project_java.event.dto.response.EventListResponseDTO;
 import com.example.final_project_java.event.service.EventService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -54,18 +58,46 @@ public class EventController {
     @PostMapping
     public ResponseEntity<?> createEvent(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody EventCreateRequestDTO requestDTO,
+            @Validated @RequestPart("eventData") EventCreateRequestDTO requestDTO,
+//            @RequestPart("eventData") String eventDataJson,
+            @RequestPart("eventImage") MultipartFile eventImage,
             BindingResult result
     ) {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        EventCreateRequestDTO requestDTO;
+//        try {
+//            requestDTO = objectMapper.readValue(eventDataJson, EventCreateRequestDTO.class);
+//        } catch (JsonProcessingException e) {
+//            return ResponseEntity.badRequest().body("Invalid JSON format for eventData");
+//        }
+
         log.info("/events - POST , dto : {}", requestDTO);
         log.info("userInfo : {}", userInfo);
         log.info("userInfo.id : {}", userInfo.getUserId());
 
-        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-        if (validatedResult != null) return validatedResult;
+//        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
+//        if (validatedResult != null) return validatedResult;
 
-        EventListResponseDTO responseDTO = eventService.create(requestDTO, userInfo.getUserId());
-        return ResponseEntity.ok().body(responseDTO);
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(result.getAllErrors());
+        }
+
+        try {
+            String imgUrl = eventService.uploadEventImage(eventImage);
+            requestDTO.setContent(imgUrl); // 업로드 된 이미지 url을 DTO에 설정
+            EventListResponseDTO responseDTO = eventService.create(requestDTO, imgUrl ,userInfo.getUserId());
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+//        try {
+//            String uploadedFilePath = null;
+//            if (eventImage != null) {
+//                log.info("attached file name: {}", eventImage.getOriginalFilename());
+//                uploadedFilePath = eventService.uploadEventImage(eventImage);
+//            }
+//        }
+
     }
 
     // 이벤트 삭제 요청

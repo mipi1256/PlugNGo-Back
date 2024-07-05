@@ -4,6 +4,7 @@ import com.example.final_project_java.event.Entity.Event;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Setter @Getter @ToString
 @EqualsAndHashCode
@@ -19,10 +20,10 @@ public class EventCreateRequestDTO {
     @NotBlank
     private String content;
 
-    public Event toEntity() {
+    public Event toEntity(String uploadedFilePath) {
         return Event.builder()
                 .title(title)
-                .content(content)
+                .content(uploadedFilePath)
                 .build();
     }
 

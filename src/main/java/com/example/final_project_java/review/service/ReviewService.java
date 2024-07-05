@@ -6,7 +6,8 @@ import com.example.final_project_java.charger.Entity.ChargingStation;
 import com.example.final_project_java.charger.repository.ChargerRepository;
 import com.example.final_project_java.review.dto.request.ReviewCarCreateRequestDTO;
 import com.example.final_project_java.review.dto.request.ReviewChargeCreateRequestDTO;
-import com.example.final_project_java.review.dto.request.ReviewModifyRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewCarModifyRequestDTO;
+import com.example.final_project_java.review.dto.request.ReviewChargeModifyRequestDTO;
 import com.example.final_project_java.review.dto.response.ReviewDetailResponseDTO;
 import com.example.final_project_java.review.dto.response.ReviewListResponseDTO;
 import com.example.final_project_java.review.entity.Review;
@@ -124,7 +125,44 @@ public class ReviewService {
         return getList();
     }
 
-    public ReviewListResponseDTO update(final int reviewNo, final ReviewModifyRequestDTO requestDTO, final String email) throws Exception {
+    // 전기차 리뷰 수정
+    public ReviewListResponseDTO update(
+            final int reviewNo,
+            final ReviewCarModifyRequestDTO requestDTO,
+            final String email
+    ) throws Exception {
+        Optional<User> user = userRepository.findByEmail(email);
+
+        Optional<Review> targetEntity = reviewRepository.findByReviewNo(reviewNo);
+
+        // 작성자만 글을 수정할 수 있게 처리
+        if (!email.equals(targetEntity.get().getEmail())) {
+            log.warn("권한이 없습니다.");
+            throw new RuntimeException("권한이 없습니다.");
+        }
+
+        if (!targetEntity.isPresent()) {
+            log.warn("리뷰를 찾을 수 없습니다.");
+            throw new RuntimeException("리뷰를 찾을 수 없습니다.");
+        }
+
+        targetEntity.ifPresent(review -> {
+            review.setContent(requestDTO.getContent());
+            review.setPhoto(requestDTO.getPhoto());
+            review.setRating(requestDTO.getRating());
+        });
+
+        reviewRepository.save(targetEntity.get());
+
+        return getList();
+    }
+
+    // 충전소 리뷰 수정
+    public ReviewListResponseDTO update(
+            final int reviewNo,
+            final ReviewChargeModifyRequestDTO requestDTO,
+            final String email
+    ) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
 
         Optional<Review> targetEntity = reviewRepository.findByReviewNo(reviewNo);
