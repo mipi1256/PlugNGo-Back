@@ -23,7 +23,7 @@ public class RentCarCreateRequestDTO {
 
     private String userName;
 
-    @NotBlank
+//    @NotBlank
     private int carNo;
 
     private String carName;
