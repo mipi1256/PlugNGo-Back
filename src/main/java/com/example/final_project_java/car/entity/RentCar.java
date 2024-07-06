@@ -51,7 +51,7 @@ public class RentCar {
    private Time turninTime;
 
    @Column(nullable = false)
-   private int rentCarPrice;
+   private int totalPrice; // 총 결제 금액
 
    @Column(nullable = false)
    private String phoneNumber;

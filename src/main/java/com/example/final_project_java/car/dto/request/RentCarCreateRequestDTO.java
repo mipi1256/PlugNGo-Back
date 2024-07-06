@@ -36,7 +36,7 @@ public class RentCarCreateRequestDTO {
 
     private Time turninTime;
 
-    private int rentCarPrice;
+    private int totalPrice;
 
     private String phoneNumber;
 
@@ -54,7 +54,7 @@ public class RentCarCreateRequestDTO {
                 .rentTime(rentTime)
                 .turninDate(turninDate)
                 .turninTime(turninTime)
-                .rentCarPrice(rentCarPrice)
+                .totalPrice(totalPrice)
                 .phoneNumber(phoneNumber)
                 .extra(extra)
                 .build();
