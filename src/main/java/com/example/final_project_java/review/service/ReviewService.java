@@ -1,5 +1,6 @@
 package com.example.final_project_java.review.service;
 
+import com.example.final_project_java.aws.S3Service;
 import com.example.final_project_java.car.entity.Car;
 import com.example.final_project_java.car.repository.CarRepository;
 import com.example.final_project_java.charger.Entity.ChargingStation;
@@ -19,9 +20,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -33,6 +37,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final CarRepository carRepository;
     private final ChargerRepository chargerRepository;
+    private final S3Service s3Service;
 
     public ReviewListResponseDTO getList() {
         List<Review> entityList = reviewRepository.findAll();
@@ -59,6 +64,7 @@ public class ReviewService {
     // 렌트카 리뷰 등록
     public ReviewListResponseDTO createCar(
             final ReviewCarCreateRequestDTO requestDTO,
+            final String uploadFilePath,
             final String email,
             final String carName) {
         User user = userRepository.findByEmail(email).orElseThrow();
@@ -67,7 +73,7 @@ public class ReviewService {
         Car car = carRepository.findByCarName(carName).orElseThrow();
         log.info("선택한 차 : {}", car.toString());
 
-        Review review = requestDTO.toEntity(user, car);
+        Review review = requestDTO.toEntity(user, car, uploadFilePath);
         log.info("완성된 Review: {}", review);
 
         reviewRepository.save(review);
@@ -79,6 +85,7 @@ public class ReviewService {
     // 충전소 리뷰 등록
     public ReviewListResponseDTO createCharge(
             final ReviewChargeCreateRequestDTO requestDTO,
+            final String uploadedFilePath,
             final String email,
             final String stationName) {
         User foundUser = userRepository.findByEmail(email).orElseThrow();
@@ -87,7 +94,7 @@ public class ReviewService {
         ChargingStation station = chargerRepository.findById(stationName).orElseThrow();
         log.info("조회한 충전소: {}", station.toString());
 
-        Review review = requestDTO.toEntity(foundUser, station);
+        Review review = requestDTO.toEntity(foundUser, station, uploadedFilePath);
         log.info("완성된 Review: {}", review);
 
         reviewRepository.save(review);
@@ -129,6 +136,7 @@ public class ReviewService {
     public ReviewListResponseDTO update(
             final int reviewNo,
             final ReviewCarModifyRequestDTO requestDTO,
+            final String uploadedFilePath,
             final String email
     ) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
@@ -141,18 +149,12 @@ public class ReviewService {
             throw new RuntimeException("권한이 없습니다.");
         }
 
-        if (!targetEntity.isPresent()) {
-            log.warn("리뷰를 찾을 수 없습니다.");
-            throw new RuntimeException("리뷰를 찾을 수 없습니다.");
-        }
-
         targetEntity.ifPresent(review -> {
             review.setContent(requestDTO.getContent());
-            review.setPhoto(requestDTO.getPhoto());
+            review.setPhoto(uploadedFilePath);
             review.setRating(requestDTO.getRating());
+            reviewRepository.save(review);
         });
-
-        reviewRepository.save(targetEntity.get());
 
         return getList();
     }
@@ -161,6 +163,7 @@ public class ReviewService {
     public ReviewListResponseDTO update(
             final int reviewNo,
             final ReviewChargeModifyRequestDTO requestDTO,
+            final String uploadedFilePath,
             final String email
     ) throws Exception {
         Optional<User> user = userRepository.findByEmail(email);
@@ -173,20 +176,27 @@ public class ReviewService {
             throw new RuntimeException("권한이 없습니다.");
         }
 
-        if (!targetEntity.isPresent()) {
-            log.warn("리뷰를 찾을 수 없습니다.");
-            throw new RuntimeException("리뷰를 찾을 수 없습니다.");
-        }
-
         targetEntity.ifPresent(review -> {
             review.setContent(requestDTO.getContent());
-            review.setPhoto(requestDTO.getPhoto());
+            review.setPhoto(uploadedFilePath);
             review.setRating(requestDTO.getRating());
+            reviewRepository.save(review);
         });
 
-        reviewRepository.save(targetEntity.get());
-
         return getList();
+    }
+
+    public String uploadReviewImage(MultipartFile reviewImage) throws IOException {
+
+        // 파일명을 유니크하게 변경
+        String uniqueFileName = UUID.randomUUID() + "_" + reviewImage.getOriginalFilename();
+
+        return s3Service.uploadToS3BucketAdmin(reviewImage.getBytes(), uniqueFileName);
+    }
+
+    public String findReviewPath(int reviewNo) {
+        Review review = reviewRepository.findByReviewNo(reviewNo).orElseThrow(() -> new RuntimeException());
+        return review.getPhoto();
     }
 
 }

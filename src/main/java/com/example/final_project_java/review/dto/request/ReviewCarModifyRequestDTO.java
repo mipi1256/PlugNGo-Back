@@ -13,8 +13,6 @@ public class ReviewCarModifyRequestDTO {
     @NotNull
     private String content;
 
-    private String photo;
-
     private int rating;
 
 }
