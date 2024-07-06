@@ -25,7 +25,7 @@ public class RentCarDetailResponseDTO {
     private Time rentTime;
     private LocalDateTime turninDate;
     private Time turninTime;
-    private int rentCarPrice;
+    private int totalPrice;
     private String extra; // 비고
 
     public RentCarDetailResponseDTO(RentCar rentCar) {
@@ -37,7 +37,7 @@ public class RentCarDetailResponseDTO {
         this.rentTime = rentCar.getRentTime();
         this.turninDate = rentCar.getTurninDate();
         this.turninTime = rentCar.getTurninTime();
-        this.rentCarPrice = rentCar.getRentCarPrice();
+        this.totalPrice = rentCar.getTotalPrice();
         this.extra = rentCar.getExtra();
     }
 
