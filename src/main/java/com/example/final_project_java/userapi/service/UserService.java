@@ -53,7 +53,7 @@ public class UserService {
       } else return false;
    }
 
-   public UserSignUpResponseDTO create (final UserSignUpRequestDTO dto, final String uploadRootPath) {
+   public UserSignUpResponseDTO create(final UserSignUpRequestDTO dto, final String uploadRootPath) {
       String email = dto.getEmail();
 
       if (isDuplicateByEmail(email)) {
@@ -73,7 +73,7 @@ public class UserService {
 
    public String uploadProfileImage(MultipartFile profilePicture) throws IOException {
 
-      String uniqueFileName = UUID.randomUUID()+ "_" + profilePicture.getOriginalFilename();
+      String uniqueFileName = UUID.randomUUID() + "_" + profilePicture.getOriginalFilename();
 
       return s3Service.uploadToS3Bucket(profilePicture.getBytes(), uniqueFileName);
    }
@@ -146,7 +146,7 @@ public class UserService {
 
    // 회원 정보 수정하기
    public UserInfoListResponseDTO update(final UserUpdateRequestDTO requestDTO,
-                                     final String userId) throws Exception {
+                                         final String userId) throws Exception {
       Optional<User> targetEntity = userRepository.findUserByUserIdOnly(userId);
 
       targetEntity.ifPresent(user -> {
@@ -166,17 +166,32 @@ public class UserService {
       Optional<User> user = userRepository.findUserByUserIdOnly(userId);
 
       List<UserInfoResponseDTO> collect = user.stream()
-              .map(UserInfoResponseDTO::new)
-              .collect(Collectors.toList());
+            .map(UserInfoResponseDTO::new)
+            .collect(Collectors.toList());
 
       return UserInfoListResponseDTO.builder()
-              .users(collect)
-              .build();
+            .users(collect)
+            .build();
 
    }
 
+   public void deleteUser(String userId) {
+      Optional<User> user = getUser(userId);
 
+      if (user.isPresent()) {
+         userRepository.delete(user.get());
+         log.info("회원 삭제 ID: {}", userId);
+      } else {
+         log.warn("User not found with ID: {}", userId);
+         throw new RuntimeException("User not found with ID: " + userId);
+      }
+   }
 
+   private Optional<User> getUser(String userId) {
+      Optional<User> user = userRepository.findUserByUserIdOnly(userId);
+
+      return user;
+   }
 
 
 }

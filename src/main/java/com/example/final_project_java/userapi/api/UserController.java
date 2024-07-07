@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -181,7 +182,7 @@ public class UserController {
 
    @GetMapping("/info")
    private ResponseEntity<?> myInfo(
-           @AuthenticationPrincipal TokenUserInfo userInfo
+         @AuthenticationPrincipal TokenUserInfo userInfo
    ) {
       log.info("/api/auth/info - GET");
       UserInfoListResponseDTO responseDTO = userService.retrieve(userInfo.getUserId());
@@ -191,9 +192,9 @@ public class UserController {
 
    @PutMapping("/update")
    private ResponseEntity<?> updateUserInfo(
-           @AuthenticationPrincipal TokenUserInfo userInfo,
-           @Validated @RequestBody UserUpdateRequestDTO requestDTO,
-           BindingResult result
+         @AuthenticationPrincipal TokenUserInfo userInfo,
+         @Validated @RequestBody UserUpdateRequestDTO requestDTO,
+         BindingResult result
    ) {
       ResponseEntity<FieldError> validatedResult = getFieldErrorResponseEntity(result);
       if (validatedResult != null) return validatedResult;
@@ -206,7 +207,7 @@ public class UserController {
          return ResponseEntity.ok().body(userService.update(requestDTO, userInfo.getUserId()));
       } catch (Exception e) {
          return ResponseEntity.internalServerError()
-                 .body(e.getMessage());
+               .body(e.getMessage());
       }
    }
 
@@ -218,6 +219,21 @@ public class UserController {
                .body(result.getFieldError());
       }
       return null;
+   }
+
+   @DeleteMapping("/delete")
+   public ResponseEntity<?> deleteUser(@AuthenticationPrincipal TokenUserInfo userInfo) {
+      log.info("/api/auth/delete - DELETE! - user: {}", userInfo.getEmail());
+      log.info("userInfo - {}", userInfo);
+
+
+      try {
+         userService.deleteUser(userInfo.getUserId());
+         return ResponseEntity.ok().body("User deleted successfully");
+      } catch (Exception e) {
+         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+               .body("Error deleting user: " + e.getMessage());
+      }
    }
 
 
