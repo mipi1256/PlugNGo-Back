@@ -3,6 +3,7 @@ package com.example.final_project_java.userapi.service;
 import com.example.final_project_java.charger.Entity.ReservationCharger;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
 import com.example.final_project_java.charger.repository.ReservationChargerRepository;
+import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ import java.util.List;
 public class MyPageService {
 
     private final ReservationChargerRepository reservationRepository;
+    private final UserRepository userRepository;
+
+
 
     public List<ReservationChargerResponseDTO> myReservedStation() {
         List<ReservationCharger> entityList = reservationRepository.findAll();
@@ -33,5 +37,9 @@ public class MyPageService {
         log.info("예약번호 '{}' 예약 취소됨.", reservationNo);
     }
 
+//    public void deleteAccount(String email) {
+//        userRepository.deleteAccount(email);
+//        log.info("이메일 '{}' 회원 탈퇴됨");
+//    }
 
 }
