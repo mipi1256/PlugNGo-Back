@@ -50,14 +50,14 @@ public class RentCar {
    @Column(nullable = false)
    private Time turninTime;
 
+   @Builder.Default
    @Column(nullable = false)
-   private int totalPrice; // 총 결제 금액
+   private int totalPrice = 0; // 총 결제 금액
 
    @Column(nullable = false)
    private String phoneNumber;
 
    private String extra; // 비고
-
 
 }
 
