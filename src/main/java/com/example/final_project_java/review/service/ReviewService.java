@@ -191,7 +191,7 @@ public class ReviewService {
         // 파일명을 유니크하게 변경
         String uniqueFileName = UUID.randomUUID() + "_" + reviewImage.getOriginalFilename();
 
-        return s3Service.uploadToS3BucketAdmin(reviewImage.getBytes(), uniqueFileName);
+        return s3Service.uploadToS3Bucket(reviewImage.getBytes(), uniqueFileName);
     }
 
     public String findReviewPath(int reviewNo) {
