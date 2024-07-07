@@ -6,8 +6,6 @@ import com.example.final_project_java.event.dto.request.EventModifyRequestDTO;
 import com.example.final_project_java.event.dto.response.EventDetailResponseDTO;
 import com.example.final_project_java.event.dto.response.EventListResponseDTO;
 import com.example.final_project_java.event.service.EventService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

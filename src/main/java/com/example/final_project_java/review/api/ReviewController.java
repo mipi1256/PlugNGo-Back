@@ -69,6 +69,11 @@ public class ReviewController {
         ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
         if (validatedResult != null) return validatedResult;
 
+        if (result.hasErrors()) {
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            return ResponseEntity.badRequest().body(fieldErrors);
+        }
+
         try {
             String uploadedFilePath = null;
             if (reviewImage != null) {
