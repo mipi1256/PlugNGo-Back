@@ -71,6 +71,7 @@ public class WebSecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/car/{id}").authenticated()
                                         .requestMatchers(HttpMethod.POST, "/car").authenticated()
                                         .requestMatchers(HttpMethod.PUT, "/api/auth/update").authenticated()
+                                        .requestMatchers(HttpMethod.DELETE, "/api/auth/delete").authenticated()
                                         .requestMatchers("/api/auth/load-profile").authenticated()
                                         .requestMatchers("/api/auth/logout").authenticated()
                                         .requestMatchers(HttpMethod.PATCH, "/noti/{id}").authenticated()
