@@ -17,8 +17,6 @@ public class ReviewChargeCreateRequestDTO {
     @NotBlank
     private String content;
 
-    private String photo;
-
     @NotNull
     private int rating;
 
@@ -28,10 +26,10 @@ public class ReviewChargeCreateRequestDTO {
 
     private String email;
 
-    public Review toEntity(User user, ChargingStation station) {
+    public Review toEntity(User user, ChargingStation station, String uploadedFilePath) {
         return Review.builder()
                 .content(content)
-                .photo(photo)
+                .photo(uploadedFilePath)
                 .rating(rating)
                 .name(user.getName())
                 .email(user.getEmail())

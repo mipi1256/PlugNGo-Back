@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
@@ -58,46 +59,35 @@ public class EventController {
     @PostMapping
     public ResponseEntity<?> createEvent(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestPart("eventData") EventCreateRequestDTO requestDTO,
-//            @RequestPart("eventData") String eventDataJson,
-            @RequestPart("eventImage") MultipartFile eventImage,
+            @RequestPart(value = "eventImage", required = false) MultipartFile eventImage,
+            @Validated @RequestPart(value = "title") EventCreateRequestDTO requestDTO,
             BindingResult result
     ) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        EventCreateRequestDTO requestDTO;
-//        try {
-//            requestDTO = objectMapper.readValue(eventDataJson, EventCreateRequestDTO.class);
-//        } catch (JsonProcessingException e) {
-//            return ResponseEntity.badRequest().body("Invalid JSON format for eventData");
-//        }
 
         log.info("/events - POST , dto : {}", requestDTO);
         log.info("userInfo : {}", userInfo);
         log.info("userInfo.id : {}", userInfo.getUserId());
 
-//        ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
-//        if (validatedResult != null) return validatedResult;
+//        ResponseEntity<List<FieldError>> resultEntity = getValidatedResult(result);
+//        if (resultEntity != null) return resultEntity;
 
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            return ResponseEntity.badRequest().body(fieldErrors);
         }
 
         try {
-            String imgUrl = eventService.uploadEventImage(eventImage);
-            requestDTO.setContent(imgUrl); // 업로드 된 이미지 url을 DTO에 설정
-            EventListResponseDTO responseDTO = eventService.create(requestDTO, imgUrl ,userInfo.getUserId());
-            return ResponseEntity.ok().body(responseDTO);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
-        }
-//        try {
-//            String uploadedFilePath = null;
-//            if (eventImage != null) {
-//                log.info("attached file name: {}", eventImage.getOriginalFilename());
-//                uploadedFilePath = eventService.uploadEventImage(eventImage);
-//            }
-//        }
+            String uploadedFilePath = null;
+            if (eventImage != null) {
+                log.info("attached file name : {}", eventImage.getOriginalFilename());
+                uploadedFilePath = eventService.uploadEventImage(eventImage);
+            }
 
+            EventListResponseDTO responseDTO = eventService.create(requestDTO, uploadedFilePath, userInfo.getUserId());
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // 이벤트 삭제 요청
@@ -120,7 +110,8 @@ public class EventController {
     @PatchMapping("/{no}")
     public ResponseEntity<?> updateEvent(
             @AuthenticationPrincipal TokenUserInfo userInfo,
-            @Validated @RequestBody EventModifyRequestDTO requestDTO,
+            @RequestPart(value = "eventImage", required = false) MultipartFile eventImage,
+            @Validated @RequestPart(value = "title") EventModifyRequestDTO requestDTO,
             @PathVariable("no") int eventNo,
             BindingResult result
     ) {
@@ -130,7 +121,12 @@ public class EventController {
         log.info("/events/{} - PATCH", eventNo);
 
         try {
-            return ResponseEntity.ok().body(eventService.update(eventNo, requestDTO, userInfo.getUserId()));
+            String uploadedFilePath = null;
+            if (eventImage != null) {
+                log.info("attached file name : {}", eventImage.getOriginalFilename());
+                uploadedFilePath = eventService.uploadEventImage(eventImage);
+            }
+            return ResponseEntity.ok().body(eventService.update(eventNo, requestDTO, uploadedFilePath, userInfo.getUserId()));
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
                     .body(e.getMessage());
@@ -147,6 +143,33 @@ public class EventController {
             return ResponseEntity.badRequest().body(fieldErrors);
         }
         return null;
+    }
+
+    @GetMapping("/load-event")
+    public ResponseEntity<?> loadFile(int eventNo) {
+        String filePath = eventService.findEventPath(eventNo);
+        log.info("filePath: {}", filePath);
+
+        if (filePath != null) {
+            return ResponseEntity.ok().body(filePath);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private MediaType findExtensionAndGetMediaType(String filePath) {
+        String ext = filePath.substring(filePath.lastIndexOf(".") + 1);
+
+        switch (ext.toUpperCase()) {
+            case "JPG": case "JPEG":
+                return MediaType.IMAGE_JPEG;
+            case "PNG":
+                return MediaType.IMAGE_PNG;
+            case "GIF":
+                return MediaType.IMAGE_GIF;
+            default:
+                return null;
+        }
     }
 
 }

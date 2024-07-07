@@ -17,9 +17,6 @@ public class EventCreateRequestDTO {
     @Size(min = 2, max = 30)
     private String title;
 
-    @NotBlank
-    private String content;
-
     public Event toEntity(String uploadedFilePath) {
         return Event.builder()
                 .title(title)

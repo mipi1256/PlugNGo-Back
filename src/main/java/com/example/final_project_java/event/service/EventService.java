@@ -47,19 +47,17 @@ public class EventService {
     public EventListResponseDTO create(
             final EventCreateRequestDTO requestDTO,
             final String uploadedFilePath,
-            final String email) {
-//        User user = getUser(userId);
-        Optional<User> user = userRepository.findByEmail(email);
+            final String userId) {
+        User user = getUser(userId);
 
         // 관리자만 글을 쓸 수 있게 처리
-        if (user.get().getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN) {
             log.warn("권한이 없습니다.");
             throw new RuntimeException("권한이 없습니다.");
         }
 
         eventRepository.save(requestDTO.toEntity(uploadedFilePath));
         log.info("이벤트 저장 완료! 제목 : {}", requestDTO.getTitle());
-        log.info("이미지 파일 : {}", requestDTO.getContent());
 
         return getList();
     }
@@ -84,7 +82,11 @@ public class EventService {
         return getList();
     }
 
-    public EventListResponseDTO update(final int eventNo, final EventModifyRequestDTO requestDTO, final String userId) throws Exception {
+    public EventListResponseDTO update(
+            final int eventNo,
+            final EventModifyRequestDTO requestDTO,
+            final String uploadedFilePath,
+            final String userId) throws Exception {
         User user = getUser(userId);
 
         // 관리자만 글을 수정할 수 있게 처리
@@ -97,7 +99,7 @@ public class EventService {
 
         targetEntity.ifPresent(event -> {
             event.setTitle(requestDTO.getTitle());
-            event.setContent(requestDTO.getContent());
+            event.setContent(uploadedFilePath);
             eventRepository.save(event);
         });
 
@@ -134,8 +136,9 @@ public class EventService {
         return user;
     }
 
-//    public String findEventPath(int eventNo) {
-//        Event event = eventRepository.findByEventNo(eventNo).orElseThrow(() -> new RuntimeException());
-//        return event.getContent();
-//    }
+    public String findEventPath(int eventNo) {
+        Event event = eventRepository.findByEventNo(eventNo).orElseThrow(() -> new RuntimeException());
+        return event.getContent();
+    }
+
 }

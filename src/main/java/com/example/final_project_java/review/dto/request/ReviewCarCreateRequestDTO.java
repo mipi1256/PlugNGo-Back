@@ -17,17 +17,15 @@ public class ReviewCarCreateRequestDTO {
     @NotBlank
     private String content;
 
-    private String photo;
-
     @NotNull
     private int rating;
 
     private String carName;
 
-    public Review toEntity(User user, Car car) {
+    public Review toEntity(User user, Car car, String uploadedFilePath) {
         return Review.builder()
                 .content(content)
-                .photo(photo)
+                .photo(uploadedFilePath)
                 .rating(rating)
                 .name(user.getName())
                 .email(user.getEmail())
