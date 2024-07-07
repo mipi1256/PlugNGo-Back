@@ -27,9 +27,13 @@ public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
 
     boolean existsByCarId(String carId);
 
-    boolean existsByUserIdAndRentDateBetween(String email, LocalDateTime rentDate, LocalDateTime turninDate); // 유저랑 대여 날에 중복이 있는지
+//    boolean existsByUserIdAndRentDateBetween(String userId, String carId, LocalDateTime startDate, LocalDateTime endDate); // 유저랑 대여 날에 중복이 있는지
 
-//    boolean existsByCarAndRentDateBetween(Car car, LocalDateTime rentDate, LocalDateTime turninDate); // 차랑 대여 날에 중복이 있는지
+    boolean existsByCarIdAndRentDateBetween(String carId, LocalDateTime rentDate, LocalDateTime turninDate); // 차랑 대여 날에 중복이 있는지
+
+    // 해당 차량에 예약된 날짜를 가져온다.
+    @Query("SELECT r.rentDate FROM RentCar r WHERE r.carId = :carId")
+    List<LocalDateTime> findReservedDatesByCarId(@Param("carId") String carId);
 
     List<RentCar> findByUserId(String userId);
 

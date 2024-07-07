@@ -102,6 +102,7 @@ public class WebSecurityConfig {
                                         .requestMatchers(HttpMethod.POST, "/confirm").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/review/list").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/review/list/{no}").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/rentcar/{carId}").permitAll()
 
                                         .requestMatchers(Arrays.toString(properties.getPermitAllPatterns().toArray()).split(", "))
                                         .permitAll()

@@ -42,6 +42,7 @@ public class RentCarRequestDTO {
                 .email(user.getEmail())
                 .userId(user.getId())
                 .carName(car.getCarName())
+                .totalPrice(totalPrice)
                 .rentDate(rentDate) // 새로 유저에게 받아야 할 때
                 .rentTime(rentTime)
                 .turninDate(turninDate)

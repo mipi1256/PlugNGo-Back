@@ -95,7 +95,6 @@ public class RentCarService {
    // 예약하기
    public RentCarDetailResponseDTO reservation (
            final RentCarRequestDTO requestDTO,
-//           final String userId,
            final String email,
            final String carId,
            final String carName,
@@ -108,12 +107,11 @@ public class RentCarService {
       Car carInfo = getCarInfo(carId);
       log.info("carInfo - {}", carInfo);
 
-      // 한 유저가 동일 예약한 날짜에 다른 차 예약 못하게
-      if(rentCarRepository.existsByUserIdAndRentDateBetween(email, rentDate, turninDate)) {
+      // 예외처리
+      if (rentCarRepository.existsByCarIdAndRentDateBetween(carId, rentDate, turninDate)){
          throw new IllegalStateException("이미 예약하신 차가 있습니다.");
-      } else if(rentCarRepository.existsByCarId(carId)) { // 같은 날에 동일 차를 예약 하려면 안됨.
-         throw new IllegalStateException("예약 불가능");
       }
+
       RentCar save = rentCarRepository.save(requestDTO.toEntity(user, carInfo));
       log.info("차량 예약 완료.");
 
@@ -217,6 +215,18 @@ public class RentCarService {
 //              }
 //      )
 
+   // 달력에 예약한 날짜들 표시하기 (예약 못하게)
+   public List<LocalDateTime> searchDate (String carId) {
+//      Car byCarId = rentCarRepository.findByCarId(carId);
+//
+//      if (carId == null) {
+//         throw new RuntimeException("해당 ID의 차량을 찾을 수 없습니다.");
+//      }
+//      List<LocalDateTime> reservationDates = rentCarRepository.findReservedDatesByCarId(carId);
+//
+//      return reservationDates;
+      return rentCarRepository.findReservedDatesByCarId(carId);
+   }
 
 }
 
