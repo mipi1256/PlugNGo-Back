@@ -115,14 +115,17 @@ public class RentCarController {
 
    // 예약 수정하기 (픽업/반납 시간)
    @PatchMapping("/{carNo}")
-   public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
+   public ResponseEntity<?> updateResInfo(@AuthenticationPrincipal TokenUserInfo userInfo,
+                                          @PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
-                                          @RequestHeader("email") String email,
+
                                           BindingResult result
                                           ) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
+      log.info("requestDTO rentDate: {}", requestDTO.getUpdateRentDate()); // 픽업날짜 수정
       log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
+      log.info("requestDTO TurninDate: {}", requestDTO.getUpdateTurninDate()); // 반납날짜 수정
       log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
       log.info("requestDTO extra: {}", requestDTO.getExtra()); // 비고 수정
 
@@ -132,7 +135,7 @@ public class RentCarController {
 
       try {
          // 서비스 메서드 호출
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, email);
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getEmail());
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();

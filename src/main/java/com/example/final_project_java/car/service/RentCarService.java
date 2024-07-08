@@ -174,12 +174,14 @@ public class RentCarService {
          throw new IllegalArgumentException("해당 사용자는 수정 권한이 없습니다.");
       }
 
-      Optional<RentCar> targetEntity = rentCarRepository.findById(carNo);
+      Optional<RentCar> targetEntity = rentCarRepository.findByCarNo(carNo);
 
 
       if (targetEntity.isPresent()) {
          RentCar reservation = targetEntity.get();
+         reservation.setRentDate(requestDTO.getUpdateRentDate()); // 픽업날짜 설정
          reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
+         reservation.setTurninDate(requestDTO.getUpdateTurninDate()); // 반납날짜 설정
          reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
          reservation.setExtra(requestDTO.getExtra()); // 비고 설정
          RentCar savedReservation = rentCarRepository.save(reservation);
