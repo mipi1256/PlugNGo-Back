@@ -26,6 +26,7 @@ public class ReservationCharger {
     private int reservationNo  = (int)(Math.random() * 89999) + 100000; // 예약 번호
 
     private LocalDateTime rentTime; // 예약 날짜와 시간
+    private LocalDateTime endTime;
 
     private int rentChargePrice; // 가격
 
@@ -51,4 +52,8 @@ public class ReservationCharger {
     @JoinColumn(name = "station_id")
     private ChargingStation station; // 충전소 ID
 
+    @PrePersist
+    private void calculateEndTime() {
+        this.endTime = this.rentTime.plusMinutes(this.time);
+    }
 }
