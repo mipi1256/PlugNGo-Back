@@ -30,6 +30,7 @@ public class RentCarDetailResponseDTO {
     private String extra; // 비고
 
     public RentCarDetailResponseDTO(RentCar rentCar) {
+        this.carNo = rentCar.getCarNo();
         this.reservationNo = rentCar.getReservationNo();
         this.userName = rentCar.getUserName();
         this.phoneNumber = rentCar.getPhoneNumber();
