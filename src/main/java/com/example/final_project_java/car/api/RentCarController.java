@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -133,8 +134,8 @@ public class RentCarController {
 
    // 해당 차의 예약 날짜들을 가져온다.
    @GetMapping("/{carId}")
-   public ResponseEntity<List<LocalDateTime>> getReservedDatesForCar(@PathVariable("carId") String carId){
-      List<LocalDateTime> searchedDate = rentCarService.searchDate(carId);
+   public ResponseEntity<List<LocalDate>> getReservedDatesForCar(@PathVariable("carId") String carId){
+      List<LocalDate> searchedDate = rentCarService.searchDate(carId);
 
       return ResponseEntity.ok().body(searchedDate);
    }

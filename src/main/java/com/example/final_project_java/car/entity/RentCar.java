@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -39,13 +38,13 @@ public class RentCar {
    private String carName;
 
    @Column(nullable = false)
-   private LocalDateTime rentDate;
+   private LocalDate rentDate;
 
    @Column(nullable = false)
    private Time rentTime;
 
    @Column(nullable = false)
-   private LocalDateTime turninDate;
+   private LocalDate turninDate;
 
    @Column(nullable = false)
    private Time turninTime;

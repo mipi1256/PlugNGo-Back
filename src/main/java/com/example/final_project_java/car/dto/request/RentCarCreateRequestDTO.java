@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -28,11 +29,11 @@ public class RentCarCreateRequestDTO {
 
     private String carName;
 
-    private LocalDateTime rentDate;
+    private LocalDate rentDate;
 
     private Time rentTime;
 
-    private LocalDateTime turninDate;
+    private LocalDate turninDate;
 
     private Time turninTime;
 

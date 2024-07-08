@@ -25,9 +25,9 @@ public class RentCarRequestDTO {
     private String email;
     private String userId;
     private String carName;
-    private LocalDateTime rentDate;
+    private LocalDate rentDate;
     private Time rentTime;
-    private LocalDateTime turninDate;
+    private LocalDate turninDate;
     private Time turninTime;
     private int totalPrice;
     private String extra; // 비고
@@ -47,7 +47,6 @@ public class RentCarRequestDTO {
                 .rentTime(rentTime)
                 .turninDate(turninDate)
                 .turninTime(turninTime)
-                .totalPrice(totalPrice)
                 .extra(extra)
                 .build();
     }
