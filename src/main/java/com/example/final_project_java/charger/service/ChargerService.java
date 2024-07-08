@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +72,14 @@ public class ChargerService {
         // 한 유저가 한번에 충전소 2개 이상 예약 금지
         if (reservationRepository.existsByUser(user)) {
             throw new IllegalStateException("이미 예약하신 충전소가 있습니다.");
+        }
+
+        LocalDateTime startTime = requestDTO.getStartDate().toLocalDateTime();
+        LocalDateTime endTime = startTime.plusMinutes(requestDTO.getSelectedValue());
+
+        // 겹치는 예약 시간 확인
+        if (reservationRepository.existsByStationAndTimeOverlap(station.getStationId(), startTime, endTime)) {
+            throw new IllegalStateException("해당 시간대에 이미 예약된 충전소가 있습니다.");
         }
 
         reservationRepository.save(requestDTO.toEntity(user, station));
