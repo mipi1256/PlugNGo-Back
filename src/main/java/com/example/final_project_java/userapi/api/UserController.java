@@ -6,10 +6,7 @@ import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
 import com.example.final_project_java.userapi.dto.response.*;
-import com.example.final_project_java.userapi.service.GoogleService;
-import com.example.final_project_java.userapi.service.KakaoService;
-import com.example.final_project_java.userapi.service.NaverService;
-import com.example.final_project_java.userapi.service.UserService;
+import com.example.final_project_java.userapi.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +41,7 @@ public class UserController {
    private final KakaoService kakaoService;
    private final NaverService naverService;
    private final GoogleService googleService;
+   private final MyPageService myPageService;
 
 
    // 카카오 로그인
@@ -236,6 +234,13 @@ public class UserController {
       }
    }
 
+//   @DeleteMapping
+//   public ResponseEntity<?> deleteAccount(@RequestParam String email) {
+//      log.info("/api/auth?email={} : DELETE!", email);
+//
+//      myPageService.deleteAccount(email);
+//      return ResponseEntity.ok().build();
+//   }
 
 }
 
