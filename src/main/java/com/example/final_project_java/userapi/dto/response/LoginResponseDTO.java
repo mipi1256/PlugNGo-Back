@@ -16,7 +16,7 @@ import java.util.Map;
 @Builder
 public class LoginResponseDTO {
 
-    private String userId;
+//    private String userId;
 
     private String email;
 
@@ -35,11 +35,11 @@ public class LoginResponseDTO {
     private String role; // 권한
 
     public LoginResponseDTO(User user, Map<String, String> token) {
-        this.userId = user.getId();
+//        this.userId = user.getId();
         this.email = user.getEmail();
         this.userName = user.getName();
         this.phoneNumber = user.getPhoneNumber();
-        this.birthDay = LocalDate.from(user.getBirthday());
+        this.birthDay = LocalDate.from(user.getBirthday() != null ? LocalDate.from(user.getBirthday()) : LocalDate.now());
         // 기타 SNS 플랫폼 로그인 유저는 따로 회원가입을 진행한 적이
         // 없으니 joinDate가 null이다.
         this.joinDate = user.getJoinDate() == null ? LocalDate.now() : LocalDate.from(user.getJoinDate()); // LocalDateTime 타입이 다르면 from을 이용해서 넣어라!
