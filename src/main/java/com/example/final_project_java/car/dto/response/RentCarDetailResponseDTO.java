@@ -5,6 +5,7 @@ import com.example.final_project_java.car.entity.RentCar;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter @Getter
@@ -21,9 +22,9 @@ public class RentCarDetailResponseDTO {
     private String userName;
     private String phoneNumber;
     private String carName; // 차 이름
-    private LocalDateTime rentDate;
+    private LocalDate rentDate;
     private Time rentTime;
-    private LocalDateTime turninDate;
+    private LocalDate turninDate;
     private Time turninTime;
     private int totalPrice;
     private String extra; // 비고

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -98,8 +99,8 @@ public class RentCarService {
            final String email,
            final String carId,
            final String carName,
-           final LocalDateTime rentDate,
-           final LocalDateTime turninDate,
+           final LocalDate rentDate,
+           final LocalDate turninDate,
            final Time rentTime,
            final Time turninTime
            ) {
@@ -216,7 +217,7 @@ public class RentCarService {
 //      )
 
    // 달력에 예약한 날짜들 표시하기 (예약 못하게)
-   public List<LocalDateTime> searchDate (String carId) {
+   public List<LocalDate> searchDate (String carId) {
 //      Car byCarId = rentCarRepository.findByCarId(carId);
 //
 //      if (carId == null) {
