@@ -49,8 +49,8 @@ public class TokenProvider {
 
       log.info("phoneNumber : {}", userEntity.getPhoneNumber());
       log.info("birthDay: {}", userEntity.getBirthday());
+      log.info("userId: {}", userEntity.getId());
       log.info("claims: {}", claims);
-
 
       return Jwts.builder()
             // token Header
