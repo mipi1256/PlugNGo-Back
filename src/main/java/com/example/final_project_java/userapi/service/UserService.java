@@ -11,6 +11,7 @@ import com.example.final_project_java.userapi.dto.response.LoginResponseDTO;
 import com.example.final_project_java.userapi.dto.response.UserInfoListResponseDTO;
 import com.example.final_project_java.userapi.dto.response.UserInfoResponseDTO;
 import com.example.final_project_java.userapi.dto.response.UserSignUpResponseDTO;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -191,6 +192,16 @@ public class UserService {
       Optional<User> user = userRepository.findUserByUserIdOnly(userId);
 
       return user;
+   }
+
+   // 카카오 로그인 이메일이 다른 소셜과 중복될 때
+   public LoginMethod checkEmail(String email) {
+      Optional<User> userOptional = userRepository.findByEmail(email);
+      if (userOptional.isPresent()) {
+         User user = userOptional.get();
+         return user.getLoginMethod(); // "kakao", "google", "facebook" 등
+      }
+      return null;
    }
 
 

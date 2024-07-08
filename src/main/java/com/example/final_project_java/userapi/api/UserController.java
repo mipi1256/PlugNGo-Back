@@ -6,6 +6,7 @@ import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
 import com.example.final_project_java.userapi.dto.response.*;
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -234,13 +235,20 @@ public class UserController {
       }
    }
 
-//   @DeleteMapping
-//   public ResponseEntity<?> deleteAccount(@RequestParam String email) {
-//      log.info("/api/auth?email={} : DELETE!", email);
-//
-//      myPageService.deleteAccount(email);
-//      return ResponseEntity.ok().build();
-//   }
+   @GetMapping("/checkEmail")
+   public ResponseEntity<Map<String, String>> checkEmail(@RequestParam String email) {
+      Map<String, String> response = new HashMap<>();
+      LoginMethod loginMethod = userService.checkEmail(email);
+      if (loginMethod != null) {
+         response.put("status", "exists");
+         response.put("email", email);
+      } else {
+         response.put("status", "not_exists");
+      }
+      return ResponseEntity.ok(response);
+   }
+
+
 
 }
 
