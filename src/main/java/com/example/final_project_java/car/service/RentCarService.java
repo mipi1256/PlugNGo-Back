@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -202,30 +201,16 @@ public class RentCarService {
       }
 
    }
-   // 예약 수정
-//      Optional<User> user = getUserRole(userId);
-//
-//      if (user.get().getRole() != Role.ADMIN) {
-//         log.warn("권한이 없습니다. 나가주세요.");
-//         throw new RuntimeException("권한이 없습니다.");
-//      }
-//
-//      rentCarRepository.findById(requestDTO.getCarNo()).orElseThrow(
-//              () -> {
-//                 log.info("수정할 예약이 없습니다.");
-//              }
-//      )
 
    // 달력에 예약한 날짜들 표시하기 (예약 못하게)
-   public List<LocalDate> searchDate (String carId) {
-//      Car byCarId = rentCarRepository.findByCarId(carId);
-//
-//      if (carId == null) {
-//         throw new RuntimeException("해당 ID의 차량을 찾을 수 없습니다.");
-//      }
-//      List<LocalDateTime> reservationDates = rentCarRepository.findReservedDatesByCarId(carId);
-//
-//      return reservationDates;
+   public List<LocalDate> searchDate (String carId ) {
+      Car byCarId = rentCarRepository.findByCarId(carId);
+
+      if (carId == null) {
+         throw new RuntimeException("해당 ID의 차량을 찾을 수 없습니다.");
+      }
+      List<LocalDate> reservationDates = rentCarRepository.findReservedDatesByCarId(carId);
+
       return rentCarRepository.findReservedDatesByCarId(carId);
    }
 
