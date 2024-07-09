@@ -40,13 +40,7 @@ public class RentCar {
    private String carName;
 
    @Column(nullable = false)
-   private LocalDate rentDate;
-
-   @Column(nullable = false)
    private LocalDateTime rentTime;
-
-   @Column(nullable = false)
-   private LocalDate turninDate;
 
    @Column(nullable = false)
    private LocalDateTime turninTime;

@@ -20,7 +20,9 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,8 +102,8 @@ public class RentCarService {
            final String email,
            final String carId,
            final String carName,
-           final LocalDate rentDate,
-           final LocalDate turninDate,
+//           final LocalDate rentDate,
+//           final LocalDate turninDate,
            final LocalDateTime rentTime,
            final LocalDateTime turninTime
            ) {
@@ -110,11 +112,11 @@ public class RentCarService {
       log.info("carInfo - {}", carInfo);
 
       // 예외처리
-      if (rentCarRepository.existsByCarIdAndRentDateBetween(carId, rentDate, turninDate)){
-         throw new IllegalStateException("이미 예약하신 차가 있습니다.");
-      }
+//      if (rentCarRepository.existsByCarIdAndRentDateBetween(requestDTO.getCarId(), rentTime, turninTime)){
+//         throw new IllegalStateException("what is this!!!!!");
+//      }
 
-      RentCar save = rentCarRepository.save(requestDTO.toEntity(user, carInfo));
+      RentCar save = rentCarRepository.save(requestDTO.toEntity(user, carInfo, rentTime, turninTime));
       log.info("차량 예약 완료.");
 
       return null;
@@ -178,31 +180,23 @@ public class RentCarService {
 
       Optional<RentCar> targetEntity = rentCarRepository.findByCarNo(carNo);
 
+      // 문자열 날짜 데이터를 바로 LocalDateTime으로 수정이 안됨
+      // 일단은 java.util.Date으로 변환
+      Date rentTime = new Date(requestDTO.getRentTime());
+      Date turninTime = new Date(requestDTO.getTurninTime());
+
       RentCar reservation = targetEntity.orElseThrow(() -> new IllegalArgumentException("예약 정보를 찾을 수 없습니다. " + carNo));
 
-//         reservation.setRentDate(requestDTO.getUpdateRentDate()); // 픽업날짜 설정
-         reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
-//         reservation.setTurninDate(requestDTO.getUpdateTurninDate()); // 반납날짜 설정
-         reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
-         reservation.setExtra(requestDTO.getExtra()); // 비고 설정
-         RentCar savedReservation = rentCarRepository.save(reservation);
+      // Date 객체를 LocalDateTime으로 변환 -> date객체.toInstant().atZone()....
+      reservation.setRentTime(rentTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()); // 픽업시간 설정
+      reservation.setTurninTime(turninTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()); // 반납 시간 설정
+      reservation.setExtra(requestDTO.getExtra()); // 비고 설정
 
-         // RentCarDetailResponseDTO 객체를 생성
-//         RentCarDetailResponseDTO detailResponseDTO = new RentCarDetailResponseDTO(savedReservation);
-//
-//         // RentCarListResponseDTO 객체 생성하고 rentList에 detailResponseDTO를 포함.
-//         List<RentCarDetailResponseDTO> rentList = Collections.singletonList(detailResponseDTO);
-//         RentCarListResponseDTO responseDTO = RentCarListResponseDTO.builder()
-//                 .rentList(rentList)
-//                 .build();
+      log.info("completed reservation: {}", reservation);
 
-         // 응답 DTO를 반환
-//         return responseDTO;
+      RentCar savedReservation = rentCarRepository.save(reservation);
+
       return getList();
-//      } else {
-//         // 예약 정보를 찾을 수 없을 때 예외를 발생
-//         throw new IllegalArgumentException("예약 정보를 찾을 수 없습니다." + carNo);
-//      }
    }
 
    // 달력에 예약한 날짜들 표시하기 (예약 못하게)

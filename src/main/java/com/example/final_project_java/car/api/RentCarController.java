@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -53,11 +55,15 @@ public class RentCarController {
       ResponseEntity<List<FieldError>> validatedResult = getValidatedResult(result);
       if (validatedResult != null) return validatedResult;
 
+      Date rentTime = new Date(requestDTO.getRentTime());
+      Date turninTime = new Date(requestDTO.getTurninTime());
+
       RentCarDetailResponseDTO responseDTO = rentCarService.reservation(
-              requestDTO, userInfo.getEmail(),
-              requestDTO.getCarId(), requestDTO.getCarName(),
-              requestDTO.getRentDate(), requestDTO.getTurninDate(),
-              requestDTO.getRentTime(), requestDTO.getTurninTime());
+              requestDTO,
+              userInfo.getEmail(),
+              requestDTO.getCarId(),
+              requestDTO.getCarName(),
+              rentTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), turninTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
       return ResponseEntity.ok().body(responseDTO);
    }
 
@@ -122,9 +128,7 @@ public class RentCarController {
                                           ) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
-//      log.info("requestDTO rentDate: {}", requestDTO.getUpdateRentDate()); // 픽업날짜 수정
       log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
-//      log.info("requestDTO turninDate: {}", requestDTO.getUpdateTurninDate()); // 반납날짜 수정
       log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
       log.info("requestDTO extra: {}", requestDTO.getExtra()); // 비고 수정
 

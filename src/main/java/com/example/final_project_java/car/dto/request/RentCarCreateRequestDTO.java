@@ -1,14 +1,11 @@
 package com.example.final_project_java.car.dto.request;
 
 import com.example.final_project_java.car.entity.RentCar;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
@@ -30,13 +27,13 @@ public class RentCarCreateRequestDTO {
 
     private String carName;
 
-    private LocalDate rentDate;
+//    private LocalDate rentDate;
 
-    private LocalDateTime rentTime;
+    private String rentTime;
 
-    private LocalDate turninDate;
+//    private LocalDate turninDate;
 
-    private LocalDateTime turninTime;
+    private String turninTime;
 
     private int totalPrice;
 
@@ -45,16 +42,16 @@ public class RentCarCreateRequestDTO {
     private String extra;
 
     // DTO -> Entity
-    public RentCar toEntity() {
+    public RentCar toEntity(LocalDateTime rentTime, LocalDateTime turninTime) {
         return RentCar.builder()
                 .reservationNo(reservationNo)
                 .userName(userName)
                 .userId(userId)
                 .carName(carName)
                 .carNo(carNo)
-                .rentDate(rentDate)
+//                .rentDate(rentDate)
                 .rentTime(rentTime)
-                .turninDate(turninDate)
+//                .turninDate(turninDate)
                 .turninTime(turninTime)
                 .totalPrice(totalPrice)
                 .phoneNumber(phoneNumber)

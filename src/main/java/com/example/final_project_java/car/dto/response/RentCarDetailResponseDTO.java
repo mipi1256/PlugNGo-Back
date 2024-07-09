@@ -20,12 +20,13 @@ public class RentCarDetailResponseDTO {
 
     private int carNo;
     private int reservationNo; // 예약번호
+    private String email;
     private String userName;
     private String phoneNumber;
     private String carName; // 차 이름
-    private LocalDate rentDate;
+//    private LocalDate rentDate;
     private LocalDateTime rentTime;
-    private LocalDate turninDate;
+//    private LocalDate turninDate;
     private LocalDateTime turninTime;
     private int totalPrice;
     private String extra; // 비고
@@ -33,12 +34,13 @@ public class RentCarDetailResponseDTO {
     public RentCarDetailResponseDTO(RentCar rentCar) {
         this.carNo = rentCar.getCarNo();
         this.reservationNo = rentCar.getReservationNo();
+        this.email = rentCar.getEmail();
         this.userName = rentCar.getUserName();
         this.phoneNumber = rentCar.getPhoneNumber();
         this.carName = rentCar.getCarName();
-        this.rentDate = rentCar.getRentDate();
+//        this.rentDate = rentCar.getRentDate();
         this.rentTime = rentCar.getRentTime();
-        this.turninDate = rentCar.getTurninDate();
+//        this.turninDate = rentCar.getTurninDate();
         this.turninTime = rentCar.getTurninTime();
         this.totalPrice = rentCar.getTotalPrice();
         this.extra = rentCar.getExtra();
