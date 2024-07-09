@@ -16,7 +16,7 @@ import java.util.Map;
 @Builder
 public class LoginResponseDTO {
 
-//    private String userId;
+    private String userId;
 
     private String email;
 
@@ -35,7 +35,7 @@ public class LoginResponseDTO {
     private String role; // 권한
 
     public LoginResponseDTO(User user, Map<String, String> token) {
-//        this.userId = user.getId();
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.userName = user.getName();
         this.phoneNumber = user.getPhoneNumber() != null? user.getPhoneNumber() : "010-0000-0000"; // 핸드폰 번호가 null이면 임의로 번호 줌

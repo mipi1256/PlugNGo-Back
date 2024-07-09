@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,10 @@ public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
 
 //    boolean existsByUserIdAndRentDateBetween(String userId, String carId, LocalDateTime startDate, LocalDateTime endDate); // 유저랑 대여 날에 중복이 있는지
 
-    boolean existsByCarIdAndRentDateBetween(String carId, LocalDate rentDate, LocalDate turninDate); // 차랑 대여 날에 중복이 있는지
+//    boolean existsByCarIdAndRentDateBetween(String carId, LocalDate rentDate, LocalDate turninDate); // 차랑 대여 날에 중복이 있는지
 
     // 해당 차량에 예약된 날짜를 가져온다.
-    @Query("SELECT r.rentDate FROM RentCar r WHERE r.carId = :carId")
+    @Query("SELECT r.rentTime FROM RentCar r WHERE r.carId = :carId")
     List<LocalDate> findReservedDatesByCarId(@Param("carId") String carNo);
 
     List<RentCar> findByUserId(String userId);
