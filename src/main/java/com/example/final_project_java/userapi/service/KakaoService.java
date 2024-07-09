@@ -37,11 +37,8 @@ public class KakaoService {
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
-            log.info("중복된 네이버 이메일입니다. -> {}", email);
-            return true;
-        } else if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.GOOGLE)){
-            log.info("중복된 구글 로그인 입니다. -> {}", email);
+        if (userRepository.existsByEmail(email)) {
+            log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;
     }
@@ -75,12 +72,6 @@ public class KakaoService {
         //토큰을 통해 사용자 정보 가져오기
         KakaoUserDTO userDTO = getKakaoUserInfo(accessToken);
 
-        /*
-        지금 이 메서드가 호출됐다는 것은, 누군가가 카카오 로그인을 시도하는 것.
-        DB에 SELECT -> login_method가 KAKAO면서 email이 userDTO.getKakaoAccount().getEmail() 인 사람.
-        근데 조회가 됐다? 이전에 로그인을 한 경험이 있는 사람이기 때문에 DB에 추가하지 않고 로그인을 진행.
-         */
-
         // 카카오 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
         if(!isDuplicate(userDTO.getKakaoAccount().getEmail())) {
@@ -91,9 +82,8 @@ public class KakaoService {
             return new LoginResponseDTO(newKakaoUser, tokenMap);
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
-
         User foundUser
-                = userRepository.findByEmailAndLoginMethod(userDTO.getKakaoAccount().getEmail(), userDTO.getKakaoAccount().getLoginMethod()).orElseThrow();
+                = userRepository.findByEmail(userDTO.getKakaoAccount().getEmail()).orElseThrow();
 
         // 우리 사이트에서 사용하는 jwt를 생성.
         Map<String, String> token = getTokenMap(foundUser);
