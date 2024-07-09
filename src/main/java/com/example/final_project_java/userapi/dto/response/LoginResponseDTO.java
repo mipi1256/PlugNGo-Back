@@ -1,5 +1,6 @@
 package com.example.final_project_java.userapi.dto.response;
 
+import com.example.final_project_java.userapi.entity.LoginMethod;
 import com.example.final_project_java.userapi.entity.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
@@ -33,6 +34,8 @@ public class LoginResponseDTO {
     private Map<String, String> token; // 인증 토큰 (핵심)
 
     private String role; // 권한
+
+    private LoginMethod loginMethod;
 
     public LoginResponseDTO(User user, Map<String, String> token) {
         this.userId = user.getId();

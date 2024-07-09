@@ -40,6 +40,8 @@ public class NaverUserDTO {
 
         private String mobile;
 
+        private LoginMethod loginMethod;
+
     }
 
     public User toEntity(String accessToken, PasswordEncoder passwordEncoder) {
