@@ -80,6 +80,7 @@ public class WebSecurityConfig {
                                         .requestMatchers(HttpMethod.DELETE, "/mypage").authenticated()
                                         .requestMatchers(HttpMethod.GET, "/admin").authenticated()
                                         .requestMatchers(HttpMethod.POST, "/events").authenticated()
+                                        .requestMatchers(HttpMethod.GET, "/events/list/{no}").permitAll()
                                         .requestMatchers(HttpMethod.DELETE, "/events/{no}").authenticated()
                                         .requestMatchers(HttpMethod.PATCH, "/events/{no}").authenticated()
                                         .requestMatchers("/api/auth/load-profile").authenticated()
@@ -128,4 +129,47 @@ public class WebSecurityConfig {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

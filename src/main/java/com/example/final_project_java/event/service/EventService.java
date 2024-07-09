@@ -35,9 +35,13 @@ public class EventService {
     public EventListResponseDTO getList() {
         List<Event> entityList = eventRepository.findAll();
 
+        log.info(entityList.toString());
+
         List<EventDetailResponseDTO> dtoList = entityList.stream()
                 .map(EventDetailResponseDTO::new)
                 .toList();
+
+        log.info(dtoList.toString());
 
         return EventListResponseDTO.builder()
                 .events(dtoList)
