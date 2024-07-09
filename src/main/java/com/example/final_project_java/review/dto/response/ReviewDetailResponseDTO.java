@@ -24,6 +24,7 @@ public class ReviewDetailResponseDTO {
     private String name;
     private String carName;
     private String stationName;
+    private LocalDateTime regDate;
     private LocalDateTime updateDate;
 
     public ReviewDetailResponseDTO(Review review) {
@@ -36,6 +37,7 @@ public class ReviewDetailResponseDTO {
         this.name = review.getName();
         this.carName = review.getCarName();
         this.stationName = review.getStationName();
+        this.regDate = review.getRegDate();
         this.updateDate = review.getUpdateDate();
     }
 

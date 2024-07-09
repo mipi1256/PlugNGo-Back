@@ -5,7 +5,9 @@ import com.example.final_project_java.car.entity.RentCar;
 import lombok.*;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Setter @Getter
 @ToString
@@ -21,14 +23,15 @@ public class RentCarDetailResponseDTO {
     private String userName;
     private String phoneNumber;
     private String carName; // 차 이름
-    private LocalDateTime rentDate;
-    private Time rentTime;
-    private LocalDateTime turninDate;
-    private Time turninTime;
+    private LocalDate rentDate;
+    private LocalDateTime rentTime;
+    private LocalDate turninDate;
+    private LocalDateTime turninTime;
     private int totalPrice;
     private String extra; // 비고
 
     public RentCarDetailResponseDTO(RentCar rentCar) {
+        this.carNo = rentCar.getCarNo();
         this.reservationNo = rentCar.getReservationNo();
         this.userName = rentCar.getUserName();
         this.phoneNumber = rentCar.getPhoneNumber();

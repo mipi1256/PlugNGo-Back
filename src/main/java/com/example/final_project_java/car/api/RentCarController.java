@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -85,6 +86,16 @@ public class RentCarController {
       }
    }
 
+
+   // 해당 차의 예약 날짜들을 가져온다.
+   @GetMapping("/{carId}")
+   public ResponseEntity<List<LocalDate>> getReservedDatesForCar(@PathVariable("carId") String carId){
+      List<LocalDate> searchedDate = rentCarService.searchDate(carId);
+
+      return ResponseEntity.ok().body(searchedDate);
+   }
+
+
    // 예약 삭제하기
    @DeleteMapping("/delete/{carNo}")
    public ResponseEntity<?> deleteRentCar(@AuthenticationPrincipal TokenUserInfo userInfo,
@@ -104,14 +115,16 @@ public class RentCarController {
 
    // 예약 수정하기 (픽업/반납 시간)
    @PatchMapping("/{carNo}")
-   public ResponseEntity<?> updateResInfo(@PathVariable("carNo") int carNo,
+   public ResponseEntity<?> updateResInfo(@AuthenticationPrincipal TokenUserInfo userInfo,
+                                          @PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
-                                          @RequestHeader("email") String email,
                                           BindingResult result
                                           ) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
+//      log.info("requestDTO rentDate: {}", requestDTO.getUpdateRentDate()); // 픽업날짜 수정
       log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
+//      log.info("requestDTO turninDate: {}", requestDTO.getUpdateTurninDate()); // 반납날짜 수정
       log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
       log.info("requestDTO extra: {}", requestDTO.getExtra()); // 비고 수정
 
@@ -121,7 +134,7 @@ public class RentCarController {
 
       try {
          // 서비스 메서드 호출
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, email);
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getEmail());
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();
@@ -131,13 +144,7 @@ public class RentCarController {
 
    }
 
-   // 해당 차의 예약 날짜들을 가져온다.
-   @GetMapping("/{carId}")
-   public ResponseEntity<List<LocalDateTime>> getReservedDatesForCar(@PathVariable("carId") String carId){
-      List<LocalDateTime> searchedDate = rentCarService.searchDate(carId);
 
-      return ResponseEntity.ok().body(searchedDate);
-   }
 
    // 입력값 검증(Validation)의 결과를 처리해 주는 전역 메서드
    public static ResponseEntity<List<FieldError>> getValidatedResult(BindingResult result) {

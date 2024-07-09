@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class UserInfoResponseDTO {
 
+    private String userId;
     private String email;
     private String userName;
     private String phoneNumber;
@@ -22,6 +23,7 @@ public class UserInfoResponseDTO {
     private LocalDate birthDay;
 
     public UserInfoResponseDTO(User user) {
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.userName = user.getName();
         this.phoneNumber = user.getPhoneNumber();

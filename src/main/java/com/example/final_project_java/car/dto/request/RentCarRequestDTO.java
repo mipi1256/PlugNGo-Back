@@ -8,6 +8,7 @@ import lombok.*;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter @Setter
 @ToString
@@ -25,10 +26,10 @@ public class RentCarRequestDTO {
     private String email;
     private String userId;
     private String carName;
-    private LocalDateTime rentDate;
-    private Time rentTime;
-    private LocalDateTime turninDate;
-    private Time turninTime;
+    private LocalDate rentDate;
+    private LocalDateTime rentTime;
+    private LocalDate turninDate;
+    private LocalDateTime turninTime;
     private int totalPrice;
     private String extra; // 비고
 
@@ -47,7 +48,6 @@ public class RentCarRequestDTO {
                 .rentTime(rentTime)
                 .turninDate(turninDate)
                 .turninTime(turninTime)
-                .totalPrice(totalPrice)
                 .extra(extra)
                 .build();
     }

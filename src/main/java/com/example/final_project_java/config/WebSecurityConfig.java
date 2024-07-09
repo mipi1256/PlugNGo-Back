@@ -93,6 +93,7 @@ public class WebSecurityConfig {
                                         .requestMatchers(HttpMethod.GET, "/rentcar/resInfo/car/{carNo}").authenticated()
                                         .requestMatchers(HttpMethod.DELETE, "/rentcar/delete/{carNo}").authenticated()
                                         .requestMatchers(HttpMethod.PATCH, "/rentcar/{carNo}").authenticated()
+                                        .requestMatchers(HttpMethod.GET,"/rentcar/{carId}").authenticated()
                                         .requestMatchers(HttpMethod.GET, "/noti/info").permitAll()
                                         .requestMatchers(HttpMethod.GET, "/noti/info/{id}").permitAll()
                                         .requestMatchers(HttpMethod.PATCH, "/noti/views/{id}").permitAll()
