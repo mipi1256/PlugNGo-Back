@@ -66,7 +66,7 @@ public class GoogleService {
             userRepository.save(userResponseDTO.toEntity(accessToken, encoder));
          }
 
-         User foundUser = userRepository.findByEmailAndLoginMethod(userResponseDTO.getGoogleEmail(), userResponseDTO.getLoginMethod()).orElseThrow();
+         User foundUser = userRepository.findByEmail(userResponseDTO.getGoogleEmail()).orElseThrow();
 
          Map<String, String> token = getTokenMap(foundUser);
          log.info("accessToken : {}", token);

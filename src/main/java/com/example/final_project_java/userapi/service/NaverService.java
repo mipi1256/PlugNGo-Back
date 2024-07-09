@@ -35,7 +35,7 @@ public class NaverService {
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
+        if (userRepository.existsByEmail(email)) {
             log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;
@@ -70,12 +70,6 @@ public class NaverService {
         // 토큰을 통해 사용자 정보 가져오기
         NaverUserDTO userDTO = getNaverUserInfo(accessToken);
 
-        /*
-        지금 이 메서드가 호출됐다는 것은, 누군가가 네이버 로그인을 시도하는 것.
-        DB에 SELECT -> login_method가 NAVER면서 email이 userDTO.getKakaoAccount().getEmail() 인 사람.
-        근데 조회가 됐다? 이전에 로그인을 한 경험이 있는 사람이기 때문에 DB에 추가하지 않고 로그인을 진행.
-         */
-
         // 네이버 로그인 이메일 중복 체크
         // 이메일이 중복되지 않았으면 이전에 로그인한적 없는 신규 회원 -> DB에 저장.
         if(!isDuplicate(userDTO.getNaverAccount().getEmail())) {
@@ -88,7 +82,7 @@ public class NaverService {
         }
         // 이메일이 중복되었으면 로그인한 이메일 -> DB에 넣지 않는다.
         User foundUser
-                = userRepository.findByEmailAndLoginMethod(userDTO.getNaverAccount().getEmail(), userDTO.getNaverAccount().getLoginMethod()).orElseThrow();
+                = userRepository.findByEmail(userDTO.getNaverAccount().getEmail()).orElseThrow();
 
         // 우리 사이트에서 사용하는 jwt를 생성.
         Map<String, String> token = getTokenMap(foundUser);
