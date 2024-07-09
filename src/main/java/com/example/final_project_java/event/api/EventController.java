@@ -38,7 +38,7 @@ public class EventController {
     }
 
     // 이벤트 글 상세보기 요청
-    @GetMapping("/{no}")
+    @GetMapping("/list/{no}")
     public ResponseEntity<?> retrieve(
             @PathVariable("no") int eventNo
     ) {
