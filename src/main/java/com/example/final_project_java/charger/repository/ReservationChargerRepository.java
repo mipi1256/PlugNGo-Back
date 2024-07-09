@@ -9,9 +9,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface ReservationChargerRepository extends JpaRepository<ReservationCharger, String> {
     boolean existsByUser(User user);
+
+    List<ReservationCharger> findAllByStation_StationId(String stationId);
 
     @Modifying
     @Transactional

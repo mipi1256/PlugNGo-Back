@@ -6,6 +6,7 @@ import com.example.final_project_java.charger.dto.request.ReservationChargerRequ
 import com.example.final_project_java.charger.dto.request.PageDTO;
 import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
+import com.example.final_project_java.charger.dto.response.UnavailableTimeDTO;
 import com.example.final_project_java.charger.service.ChargerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,4 +114,8 @@ public class ChargerController {
         return null;
     }
 
+    @GetMapping("/unavailable-times/{stationId}")
+    public List<UnavailableTimeDTO> getUnavailableTimes(@PathVariable String stationId) {
+        return chargerService.getUnavailableTimes(stationId);
+    }
 }
