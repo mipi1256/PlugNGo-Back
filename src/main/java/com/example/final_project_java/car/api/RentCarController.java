@@ -118,14 +118,13 @@ public class RentCarController {
    public ResponseEntity<?> updateResInfo(@AuthenticationPrincipal TokenUserInfo userInfo,
                                           @PathVariable("carNo") int carNo,
                                           @Validated @RequestBody RentCarResModifyRequestDTO requestDTO,
-
                                           BindingResult result
                                           ) {
       log.info("/car PATCH!! 수정");
       log.info("/requestDTO: {}", requestDTO);
-      log.info("requestDTO rentDate: {}", requestDTO.getUpdateRentDate()); // 픽업날짜 수정
+//      log.info("requestDTO rentDate: {}", requestDTO.getUpdateRentDate()); // 픽업날짜 수정
       log.info("requestDTO rentTime: {}", requestDTO.getRentTime()); // 픽업시간 수정
-      log.info("requestDTO TurninDate: {}", requestDTO.getUpdateTurninDate()); // 반납날짜 수정
+//      log.info("requestDTO turninDate: {}", requestDTO.getUpdateTurninDate()); // 반납날짜 수정
       log.info("requestDTO turninTime: {}", requestDTO.getTurninTime()); // 반납시간 수정
       log.info("requestDTO extra: {}", requestDTO.getExtra()); // 비고 수정
 

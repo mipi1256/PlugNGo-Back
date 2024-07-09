@@ -7,6 +7,7 @@ import lombok.*;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Setter @Getter
 @ToString
@@ -23,9 +24,9 @@ public class RentCarDetailResponseDTO {
     private String phoneNumber;
     private String carName; // 차 이름
     private LocalDate rentDate;
-    private Time rentTime;
+    private LocalDateTime rentTime;
     private LocalDate turninDate;
-    private Time turninTime;
+    private LocalDateTime turninTime;
     private int totalPrice;
     private String extra; // 비고
 
