@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -100,8 +102,8 @@ public class RentCarService {
            final String carName,
            final LocalDate rentDate,
            final LocalDate turninDate,
-           final Time rentTime,
-           final Time turninTime
+           final LocalDateTime rentTime,
+           final LocalDateTime turninTime
            ) {
       User user = getUser(email);
       Car carInfo = getCarInfo(carId);
@@ -176,32 +178,31 @@ public class RentCarService {
 
       Optional<RentCar> targetEntity = rentCarRepository.findByCarNo(carNo);
 
+      RentCar reservation = targetEntity.orElseThrow(() -> new IllegalArgumentException("예약 정보를 찾을 수 없습니다. " + carNo));
 
-      if (targetEntity.isPresent()) {
-         RentCar reservation = targetEntity.get();
-         reservation.setRentDate(requestDTO.getUpdateRentDate()); // 픽업날짜 설정
+//         reservation.setRentDate(requestDTO.getUpdateRentDate()); // 픽업날짜 설정
          reservation.setRentTime(requestDTO.getRentTime()); // 픽업시간 설정
-         reservation.setTurninDate(requestDTO.getUpdateTurninDate()); // 반납날짜 설정
+//         reservation.setTurninDate(requestDTO.getUpdateTurninDate()); // 반납날짜 설정
          reservation.setTurninTime(requestDTO.getTurninTime()); // 반납 시간 설정
          reservation.setExtra(requestDTO.getExtra()); // 비고 설정
          RentCar savedReservation = rentCarRepository.save(reservation);
 
          // RentCarDetailResponseDTO 객체를 생성
-         RentCarDetailResponseDTO detailResponseDTO = new RentCarDetailResponseDTO(savedReservation);
-
-         // RentCarListResponseDTO 객체 생성하고 rentList에 detailResponseDTO를 포함.
-         List<RentCarDetailResponseDTO> rentList = Collections.singletonList(detailResponseDTO);
-         RentCarListResponseDTO responseDTO = RentCarListResponseDTO.builder()
-                 .rentList(rentList)
-                 .build();
+//         RentCarDetailResponseDTO detailResponseDTO = new RentCarDetailResponseDTO(savedReservation);
+//
+//         // RentCarListResponseDTO 객체 생성하고 rentList에 detailResponseDTO를 포함.
+//         List<RentCarDetailResponseDTO> rentList = Collections.singletonList(detailResponseDTO);
+//         RentCarListResponseDTO responseDTO = RentCarListResponseDTO.builder()
+//                 .rentList(rentList)
+//                 .build();
 
          // 응답 DTO를 반환
-         return responseDTO;
-      } else {
-         // 예약 정보를 찾을 수 없을 때 예외를 발생
-         throw new IllegalArgumentException("예약 정보를 찾을 수 없습니다." + carNo);
-      }
-
+//         return responseDTO;
+      return getList();
+//      } else {
+//         // 예약 정보를 찾을 수 없을 때 예외를 발생
+//         throw new IllegalArgumentException("예약 정보를 찾을 수 없습니다." + carNo);
+//      }
    }
 
    // 달력에 예약한 날짜들 표시하기 (예약 못하게)
