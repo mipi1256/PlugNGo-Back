@@ -7,16 +7,19 @@ import com.example.final_project_java.charger.dto.request.ReservationChargerRequ
 import com.example.final_project_java.charger.dto.response.ChargerDetailResponseDTO;
 import com.example.final_project_java.charger.dto.response.ChargerListResponseDTO;
 import com.example.final_project_java.charger.dto.response.ReservationChargerResponseDTO;
+import com.example.final_project_java.charger.dto.response.UnavailableTimeDTO;
 import com.example.final_project_java.charger.repository.ChargerRepository;
 import com.example.final_project_java.charger.repository.ReservationChargerRepository;
 import com.example.final_project_java.userapi.entity.User;
 import com.example.final_project_java.userapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +32,7 @@ public class ChargerService {
 
     private final UserRepository userRepository;
     private final ChargerRepository chargerRepository;
+    @Autowired
     private final ReservationChargerRepository reservationRepository;
 
     // 전국 전기차 충전소 목록
@@ -125,6 +129,15 @@ public class ChargerService {
                 () -> new RuntimeException("회원 정보가 없습니다.")
         );
         return user;
+    }
+
+    public List<UnavailableTimeDTO> getUnavailableTimes(String chargeId) {
+        List<ReservationCharger> reservations = reservationRepository.findAllByStation_StationId(chargeId);
+        List<UnavailableTimeDTO> unavailableTimes = new ArrayList<>();
+        for (ReservationCharger reservation : reservations) {
+            unavailableTimes.add(new UnavailableTimeDTO(reservation.getRentTime(), reservation.getEndTime()));
+        }
+        return unavailableTimes;
     }
 
 }
