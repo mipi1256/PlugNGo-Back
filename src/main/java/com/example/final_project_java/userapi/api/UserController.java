@@ -45,6 +45,8 @@ public class UserController {
    private final MyPageService myPageService;
 
 
+
+
    // 카카오 로그인
    @GetMapping("/kakaoLogin")
    public ResponseEntity<?> kakaoLogin(String code) {
@@ -235,18 +237,7 @@ public class UserController {
       }
    }
 
-   @GetMapping("/checkEmail")
-   public ResponseEntity<Map<String, String>> checkEmail(@RequestParam String email) {
-      Map<String, String> response = new HashMap<>();
-      LoginMethod loginMethod = userService.checkEmail(email);
-      if (loginMethod != null) {
-         response.put("status", "exists");
-         response.put("email", email);
-      } else {
-         response.put("status", "not_exists");
-      }
-      return ResponseEntity.ok(response);
-   }
+
 
 
 
