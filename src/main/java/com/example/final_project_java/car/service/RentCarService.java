@@ -200,15 +200,21 @@ public class RentCarService {
    }
 
    // 달력에 예약한 날짜들 표시하기 (예약 못하게)
-   public List<LocalDate> searchDate (String carId ) {
-      Car byCarId = rentCarRepository.findByCarId(carId);
-
-      if (carId == null) {
-         throw new RuntimeException("해당 ID의 차량을 찾을 수 없습니다.");
-      }
-      List<LocalDate> reservationDates = rentCarRepository.findReservedDatesByCarId(carId);
+   public List<LocalDateTime> searchDate (String carId) {
+//      RentCar rentCar = rentCarRepository.findCarIdByCarNo(carId);
+//
+//      if (rentCar == null) {
+//         throw new RuntimeException("해당 ID의 차량을 찾을 수 없습니다.");
+//      }
+//      List<LocalDateTime> reservationDates = rentCarRepository.findReservedDatesByCarId(carId);
 
       return rentCarRepository.findReservedDatesByCarId(carId);
+   }
+
+   // carNo로 carId를 조회하는 메서드
+   public String getCarIdByCarNo(int carNo) {
+      // 데이터베이스나 다른 저장소에서는 carNo로 carId를 조회하는 로직
+      return rentCarRepository.findCarIdByCarNo(carNo);
    }
 
 }

@@ -19,6 +19,7 @@ public class RentCarDetailResponseDTO {
     // 전기차 예약확인-> 예약번호, 회원이름, 전화번호, 차 이름, 픽업 날짜, 픽업 시간, 반납 날짜, 반납 시간, 비고
 
     private int carNo;
+    private String carId;
     private int reservationNo; // 예약번호
     private String email;
     private String userName;
@@ -33,6 +34,7 @@ public class RentCarDetailResponseDTO {
 
     public RentCarDetailResponseDTO(RentCar rentCar) {
         this.carNo = rentCar.getCarNo();
+        this.carId = rentCar.getCarId();
         this.reservationNo = rentCar.getReservationNo();
         this.email = rentCar.getEmail();
         this.userName = rentCar.getUserName();
