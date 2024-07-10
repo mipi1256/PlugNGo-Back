@@ -6,8 +6,10 @@ import com.example.final_project_java.userapi.dto.request.LoginRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserSignUpRequestDTO;
 import com.example.final_project_java.userapi.dto.request.UserUpdateRequestDTO;
 import com.example.final_project_java.userapi.dto.response.*;
-import com.example.final_project_java.userapi.entity.LoginMethod;
-import com.example.final_project_java.userapi.service.*;
+import com.example.final_project_java.userapi.service.GoogleService;
+import com.example.final_project_java.userapi.service.KakaoService;
+import com.example.final_project_java.userapi.service.NaverService;
+import com.example.final_project_java.userapi.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +44,6 @@ public class UserController {
    private final KakaoService kakaoService;
    private final NaverService naverService;
    private final GoogleService googleService;
-   private final MyPageService myPageService;
 
 
    // 카카오 로그인
@@ -78,7 +79,7 @@ public class UserController {
    public ResponseEntity<?> check(String email) {
       if (email.trim().isEmpty()) {
          return ResponseEntity.badRequest()
-               .body("이메일 업습니다");
+                 .body("이메일 업습니다");
       }
 
       boolean resultFlag = userService.isDuplicateByEmail(email);
@@ -89,9 +90,9 @@ public class UserController {
 
    @PostMapping("/signup")
    public ResponseEntity<?> signUp(
-         @Validated @RequestPart("user") UserSignUpRequestDTO dto,
-         @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture,
-         BindingResult result
+           @Validated @RequestPart("user") UserSignUpRequestDTO dto,
+           @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture,
+           BindingResult result
    ) {
       log.info("/api/auth POST! - {}", dto);
 
@@ -133,7 +134,7 @@ public class UserController {
    // 프로파일 사진 이미지 데이터를 클라이언트에게 응답 처리
    @GetMapping("/load-profile")
    public ResponseEntity<?> loadFile(
-         @AuthenticationPrincipal TokenUserInfo userInfo
+           @AuthenticationPrincipal TokenUserInfo userInfo
    ) {
       // 1. 프로필 사진의 경로부터 얻어야 한다.
       String filePath = userService.findProfilePath(userInfo.getUserId());
@@ -149,7 +150,7 @@ public class UserController {
    // 로그아웃 처리
    @GetMapping("/logout")
    public ResponseEntity<?> logout(
-         @AuthenticationPrincipal TokenUserInfo userInfo
+           @AuthenticationPrincipal TokenUserInfo userInfo
    ) {
       log.info("/api/auth/logout - GET! - user: {}", userInfo.getEmail());
 
@@ -163,7 +164,7 @@ public class UserController {
       // 파일 경로에서 확장자 추출
       // C:/todo_upload/nlskdnakscnlknklcs_abc.jpg
       String ext
-            = filePath.substring(filePath.lastIndexOf(".") + 1);
+              = filePath.substring(filePath.lastIndexOf(".") + 1);
 
       // 추출한 확장자를 바탕으로 MediaType을 설정 -> Header에 들어갈 Content-type이 됨.
       switch (ext.toUpperCase()) {
@@ -181,7 +182,7 @@ public class UserController {
 
    @GetMapping("/info")
    private ResponseEntity<?> myInfo(
-         @AuthenticationPrincipal TokenUserInfo userInfo
+           @AuthenticationPrincipal TokenUserInfo userInfo
    ) {
       log.info("/api/auth/info - GET");
       UserInfoListResponseDTO responseDTO = userService.retrieve(userInfo.getUserId());
@@ -191,9 +192,9 @@ public class UserController {
 
    @PutMapping("/update")
    private ResponseEntity<?> updateUserInfo(
-         @AuthenticationPrincipal TokenUserInfo userInfo,
-         @Validated @RequestBody UserUpdateRequestDTO requestDTO,
-         BindingResult result
+           @AuthenticationPrincipal TokenUserInfo userInfo,
+           @Validated @RequestBody UserUpdateRequestDTO requestDTO,
+           BindingResult result
    ) {
       ResponseEntity<FieldError> validatedResult = getFieldErrorResponseEntity(result);
       if (validatedResult != null) return validatedResult;
@@ -206,18 +207,8 @@ public class UserController {
          return ResponseEntity.ok().body(userService.update(requestDTO, userInfo.getUserId()));
       } catch (Exception e) {
          return ResponseEntity.internalServerError()
-               .body(e.getMessage());
+                 .body(e.getMessage());
       }
-   }
-
-
-   private static ResponseEntity<FieldError> getFieldErrorResponseEntity(BindingResult result) {
-      if (result.hasErrors()) {
-         log.warn(result.toString());
-         return org.springframework.http.ResponseEntity.badRequest()
-               .body(result.getFieldError());
-      }
-      return null;
    }
 
    @DeleteMapping("/delete")
@@ -235,19 +226,15 @@ public class UserController {
       }
    }
 
-   @GetMapping("/checkEmail")
-   public ResponseEntity<Map<String, String>> checkEmail(@RequestParam String email) {
-      Map<String, String> response = new HashMap<>();
-      LoginMethod loginMethod = userService.checkEmail(email);
-      if (loginMethod != null) {
-         response.put("status", "exists");
-         response.put("email", email);
-      } else {
-         response.put("status", "not_exists");
-      }
-      return ResponseEntity.ok(response);
-   }
 
+   private static ResponseEntity<FieldError> getFieldErrorResponseEntity(BindingResult result) {
+      if (result.hasErrors()) {
+         log.warn(result.toString());
+         return org.springframework.http.ResponseEntity.badRequest()
+                 .body(result.getFieldError());
+      }
+      return null;
+   }
 
 
 }

@@ -194,15 +194,7 @@ public class UserService {
       return user;
    }
 
-   // 카카오 로그인 이메일이 다른 소셜과 중복될 때
-   public LoginMethod checkEmail(String email) {
-      Optional<User> userOptional = userRepository.findByEmail(email);
-      if (userOptional.isPresent()) {
-         User user = userOptional.get();
-         return user.getLoginMethod(); // "kakao", "google", "facebook" 등
-      }
-      return null;
-   }
+
 
 
 }

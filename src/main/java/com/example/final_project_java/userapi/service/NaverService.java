@@ -35,7 +35,7 @@ public class NaverService {
 
     // 이메일 중복확인
     public boolean isDuplicate(String email) {
-        if (userRepository.existsByEmailAndLoginMethod(email, LoginMethod.NAVER)) {
+        if (userRepository.existsByEmail(email)) {
             log.info("중복된 이메일입니다. -> {}", email);
             return true;
         } else return false;

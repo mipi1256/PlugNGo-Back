@@ -30,6 +30,7 @@ public class KakaoUserDTO {
 
         private String email;
         private Profile profile;
+        private LoginMethod loginMethod;
 
         @Getter @Setter
         @ToString
