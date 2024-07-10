@@ -4,7 +4,9 @@ import com.example.final_project_java.auth.TokenUserInfo;
 import com.example.final_project_java.car.dto.request.CarCreateRequestDTO;
 import com.example.final_project_java.car.dto.request.CarModifyRequestDTO;
 import com.example.final_project_java.car.dto.response.CarListResponseDTO;
+import com.example.final_project_java.car.repository.RentCarRepository;
 import com.example.final_project_java.car.service.CarService;
+import com.example.final_project_java.car.service.RentCarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -18,6 +20,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Tag(name = "Car API", description = "전기차 조회, 추가, 삭제, 수정 api 입니다. ")
@@ -28,6 +31,7 @@ import java.util.List;
 public class CarController {
 
    private final CarService carService;
+   private final RentCarService rentCarService;
 
    // 전기차 추가
    @PostMapping
@@ -134,47 +138,3 @@ public class CarController {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

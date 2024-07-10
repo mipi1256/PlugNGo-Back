@@ -36,7 +36,10 @@ public interface RentCarRepository extends JpaRepository<RentCar, Integer> {
 
     // 해당 차량에 예약된 날짜를 가져온다.
     @Query("SELECT r.rentTime FROM RentCar r WHERE r.carId = :carId")
-    List<LocalDate> findReservedDatesByCarId(@Param("carId") String carNo);
+    List<LocalDateTime> findReservedDatesByCarId(@Param("carId") String carId);
+
+    @Query("SELECT r.carId FROM RentCar r WHERE r.carNo = :carNo")
+    String findCarIdByCarNo(@Param("carNo") int carNo);
 
     List<RentCar> findByUserId(String userId);
 
