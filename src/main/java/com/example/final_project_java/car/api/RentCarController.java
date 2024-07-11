@@ -60,7 +60,7 @@ public class RentCarController {
 
       RentCarDetailResponseDTO responseDTO = rentCarService.reservation(
               requestDTO,
-              userInfo.getEmail(),
+              userInfo.getUserId(),
               requestDTO.getCarId(),
               requestDTO.getCarName(),
               rentTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), turninTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -111,7 +111,7 @@ public class RentCarController {
       log.info("/rentcar/delete/{} DELETE!", carNo);
 
       try {
-         RentCarListResponseDTO responseDTO = rentCarService.delete(carNo, userInfo.getEmail());
+         RentCarListResponseDTO responseDTO = rentCarService.delete(carNo, userInfo.getUserId());
          return ResponseEntity.ok(responseDTO);
       } catch (Exception e) {
          return ResponseEntity.badRequest().body(e.getMessage());
@@ -139,7 +139,7 @@ public class RentCarController {
 
       try {
          // 서비스 메서드 호출
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getEmail());
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getUserId());
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();
