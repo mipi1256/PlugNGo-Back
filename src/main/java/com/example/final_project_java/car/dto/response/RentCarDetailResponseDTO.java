@@ -20,6 +20,7 @@ public class RentCarDetailResponseDTO {
 
     private int carNo;
     private String carId;
+    private String userId;
     private int reservationNo; // 예약번호
     private String email;
     private String userName;
@@ -36,6 +37,7 @@ public class RentCarDetailResponseDTO {
         this.carNo = rentCar.getCarNo();
         this.carId = rentCar.getCarId();
         this.reservationNo = rentCar.getReservationNo();
+        this.userId = rentCar.getUserId();
         this.email = rentCar.getEmail();
         this.userName = rentCar.getUserName();
         this.phoneNumber = rentCar.getPhoneNumber();

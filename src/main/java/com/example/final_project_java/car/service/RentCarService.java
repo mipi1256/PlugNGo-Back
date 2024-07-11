@@ -99,7 +99,7 @@ public class RentCarService {
    // 예약하기
    public RentCarDetailResponseDTO reservation (
            final RentCarRequestDTO requestDTO,
-           final String email,
+           final String userId,
            final String carId,
            final String carName,
 //           final LocalDate rentDate,
@@ -107,7 +107,7 @@ public class RentCarService {
            final LocalDateTime rentTime,
            final LocalDateTime turninTime
            ) {
-      User user = getUser(email);
+      User user = getUser(userId);
       Car carInfo = getCarInfo(carId);
       log.info("carInfo - {}", carInfo);
 
@@ -131,8 +131,8 @@ public class RentCarService {
    }
 
    // 유저
-   private User getUser(String email) {
-      User user = userRepository.findByEmail(email).orElseThrow(
+   private User getUser(String userId) {
+      User user = userRepository.findUserByUserIdOnly(userId).orElseThrow(
               () -> new RuntimeException("회원정보가 존재하지 않습니다.")
       );
       return user;
@@ -154,8 +154,8 @@ public class RentCarService {
 
 
    // 렌트카 예약 삭제
-   public RentCarListResponseDTO delete(int carNo, String email) {
-      User user = getUser(email);
+   public RentCarListResponseDTO delete(int carNo, String userId) {
+      User user = getUser(userId);
 
 
       RentCar deleteReservation = rentCarRepository.findById(carNo).orElseThrow(
@@ -170,8 +170,8 @@ public class RentCarService {
    }
 
    // 렌트카 예약 수정
-   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String email) {
-      User user = getUser(email);
+   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
+      User user = getUser(userId);
 
       // 회원인지 확인
       if (user.getRole() != Role.COMMON) {
