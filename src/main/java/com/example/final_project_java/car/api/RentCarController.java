@@ -139,7 +139,7 @@ public class RentCarController {
 
       try {
          // 서비스 메서드 호출
-         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getUserId());
+         RentCarListResponseDTO responseDTO = rentCarService.update(requestDTO, carNo, userInfo.getEmail());
          return ResponseEntity.ok().body(responseDTO);
       } catch (Exception e) {
          e.printStackTrace();

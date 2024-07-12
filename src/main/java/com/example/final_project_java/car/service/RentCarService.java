@@ -138,6 +138,13 @@ public class RentCarService {
       return user;
    }
 
+   private User getEmail(String email) {
+      User user = userRepository.findUserByUserIdOnly(email).orElseThrow(
+              () -> new RuntimeException("회원정보가 존재하지 않습니다.")
+      );
+      return user;
+   }
+
 
    // 렌트카 예약 삭제 (유저가 본인 예약 삭제하는것)
 //   public RentCarListResponseDTO delete(int carNo, String userId) {
@@ -170,8 +177,8 @@ public class RentCarService {
    }
 
    // 렌트카 예약 수정
-   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String userId) {
-      User user = getUser(userId);
+   public RentCarListResponseDTO update(RentCarResModifyRequestDTO requestDTO, int carNo, String email) {
+      User user = getEmail(email);
 
       // 회원인지 확인
       if (user.getRole() != Role.COMMON) {
