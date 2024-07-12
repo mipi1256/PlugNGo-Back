@@ -139,7 +139,7 @@ public class RentCarService {
    }
 
    private User getEmail(String email) {
-      User user = userRepository.findUserByUserIdOnly(email).orElseThrow(
+      User user = userRepository.findByEmail(email).orElseThrow(
               () -> new RuntimeException("회원정보가 존재하지 않습니다.")
       );
       return user;
